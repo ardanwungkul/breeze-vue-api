@@ -1,6 +1,11 @@
 import { createWebHistory, createRouter } from 'vue-router'
 import { useUsers } from '@/stores/user'
-import Welcome from '@/pages/Welcome.vue'
+import Welcome from '@/pages/guest/Welcome.vue'
+import AboutUs from '@/pages/guest/AboutUs.vue'
+import Shop from '@/pages/guest/Shop.vue'
+import Article from '@/pages/guest/Article.vue'
+import OfficialAgent from '@/pages/guest/officialAgent.vue'
+
 import PageNotFound from '@/pages/errors/404.vue'
 import Dashboard from '@/pages/Dashboard.vue'
 import Login from '@/pages/auth/Login.vue'
@@ -17,17 +22,13 @@ const routes = [
         name: 'welcome',
         component: Welcome,
         meta: {
-            title: 'Welcome',
+            title: 'Home',
             metaTags: [
                 {
                     name: 'Welcome',
-                    content:
-                        'An application / authentication starter kit frontend in Vue.js 3 for Laravel Breeze.',
                 },
                 {
                     property: 'og:Welcome',
-                    content:
-                        'An application / authentication starter kit frontend in Vue.js 3 for Laravel Breeze.',
                 },
             ],
         },
@@ -41,6 +42,38 @@ const routes = [
         },
         meta: {
             guard: 'auth',
+        },
+    },
+    {
+        path: '/shop',
+        name: 'shop',
+        component: Shop,
+        meta: {
+            title: 'Shop',
+        },
+    },
+    {
+        path: '/article',
+        name: 'article',
+        component: Article,
+        meta: {
+            title: 'Article',
+        },
+    },
+    {
+        path: '/official-agent',
+        name: 'officialAgent',
+        component: OfficialAgent,
+        meta: {
+            title: 'Official Agent',
+        },
+    },
+    {
+        path: '/about-us',
+        name: 'aboutUs',
+        component: AboutUs,
+        meta: {
+            title: 'About Us',
         },
     },
     {
