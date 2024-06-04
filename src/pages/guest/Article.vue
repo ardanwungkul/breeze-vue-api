@@ -10,7 +10,6 @@ import {
 } from 'swiper/modules'
 import 'swiper/css'
 import 'swiper/css/free-mode'
-// import 'swiper/css/navigation'
 import 'swiper/css/thumbs'
 
 const modules = [FreeMode, Thumbs, Navigation, Autoplay, Pagination]
