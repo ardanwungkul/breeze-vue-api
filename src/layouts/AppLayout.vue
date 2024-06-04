@@ -5,7 +5,7 @@ import { RouterView } from 'vue-router'
 <template>
     <Navigation></Navigation>
     <div class="font-poppins bg-[#f8f8f6] min-h-screen pt-[57px]">
-        <div class="max-w-[1140px] mx-auto">
+        <div class="">
             <slot />
         </div>
     </div>

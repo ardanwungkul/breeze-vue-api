@@ -9,7 +9,7 @@ const swiperJs = swiper => {}
 </script>
 <template>
     <AppLayout>
-        <div class="space-y-16">
+        <div class="space-y-16 max-w-[1140px] mx-auto">
             <div class="flex flex-wrap pt-6 gap-3 w-[70%] mx-auto text-center">
                 <p class="text-[40px] text-[#212529] font-medium w-full">
                     Our Official Agent
@@ -41,7 +41,7 @@ const swiperJs = swiper => {}
                 </div>
             </div>
             <div
-                class="w-full rounded-md border p-5 bg-white"
+                class="w-full rounded-md border p-5 bg-[#f4f0ed]"
                 style="box-shadow: 0px 0px 11px rgba(0, 0, 0, 0.2)">
                 <swiper
                     :modules="modules"
@@ -85,7 +85,7 @@ const swiperJs = swiper => {}
                 </swiper>
                 <div class="flex justify-center mt-10">
                     <button
-                        class="rounded-md tracking-widest uppercase font-semibold text-gray-700 transition-all duration-500 hover:bg-[#f4f0ed] hover:shadow bg-white px-10 py-2">
+                        class="rounded-md tracking-widest uppercase font-semibold text-gray-700 transition-all duration-500 hover:bg-[#f8f8f6] hover:shadow px-10 py-2">
                         Let's Become Partners!
                     </button>
                 </div>
@@ -93,7 +93,7 @@ const swiperJs = swiper => {}
             <div class="px-10">
                 <div class="grid grid-cols-3 w-full gap-6">
                     <div
-                        class="bg-white rounded-md p-5 shadow"
+                        class="bg-[#f4f0ed] rounded-md p-5 shadow"
                         v-for="index in 6"
                         :key="index">
                         <p class="font-medium">Beauty Shop</p>
