@@ -4,16 +4,32 @@ import ApplicationLogo from '@/components/ApplicationLogo.vue'
 
 <template>
     <div
-        class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-gray-100">
-        <div>
-            <router-link to="/">
-                <ApplicationLogo class="w-20 h-20 fill-current text-gray-500" />
-            </router-link>
-        </div>
-
-        <div
-            class="w-full sm:max-w-md mt-6 px-6 py-4 bg-white shadow-md overflow-hidden sm:rounded-lg">
-            <slot />
+        class="h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-[#e2d9d9]">
+        <div class="bg-[#f4f0ed] rounded-lg grid grid-cols-2">
+            <div>
+                <svg width="0" height="0">
+                    <defs>
+                        <clipPath
+                            id="polygon-clip"
+                            clipPathUnits="objectBoundingBox">
+                            <path
+                                d="M 0,0 
+                 L 0.76,0 
+                 Q 0.76,0 0.76,0.14 
+                 L 1,0.14 
+                 Q 1,0.14 1,1 
+                 L 0.25,1 
+                 Q 0.25,1 0.25,0.84 
+                 L 0,0.84 
+                 Q 0,0.84 0,0" />
+                        </clipPath>
+                    </defs>
+                </svg>
+                <div class="rounded-polygon"></div>
+            </div>
+            <div class="p-10">
+                <slot />
+            </div>
         </div>
     </div>
 </template>

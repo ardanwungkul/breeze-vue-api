@@ -27,7 +27,7 @@ const navItems = ref([
 </script>
 <template>
     <nav
-        class="bg-[#f4f0ed] border-b border border-white fixed top-0 w-full z-50">
+        class="bg-[#f4f0ed] border-b border border-white fixed top-0 w-full z-[9999]">
         <div class="max-w-[1140px] mx-auto px-1">
             <div class="flex justify-between h-[56px] items-center">
                 <!-- Logo -->
@@ -56,10 +56,12 @@ const navItems = ref([
                             <i class="fa-solid fa-cart-shopping"></i>
                         </div>
                         <div>
-                            <div
-                                class="rounded-full w-[30px] h-[30px] border flex items-center justify-center border-white">
-                                <i class="fa-solid fa-user"></i>
-                            </div>
+                            <router-link to="login">
+                                <div
+                                    class="rounded-full w-[30px] h-[30px] border flex items-center justify-center border-white">
+                                    <i class="fa-solid fa-user"></i>
+                                </div>
+                            </router-link>
                         </div>
                     </div>
                 </div>

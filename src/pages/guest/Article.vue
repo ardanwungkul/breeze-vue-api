@@ -1,6 +1,8 @@
 <script setup>
 import AppLayout from '@/layouts/AppLayout.vue'
 import { Swiper, SwiperSlide } from 'swiper/vue'
+import { ref, onMounted } from 'vue'
+import { setupCarousel } from '@/assets/js/article.js'
 import {
     Navigation,
     Pagination,
@@ -11,6 +13,49 @@ import {
 import 'swiper/css'
 import 'swiper/css/free-mode'
 import 'swiper/css/thumbs'
+import '@/assets/css/article.css'
+
+import banner4 from '@/assets/images/banner4.jpg'
+import banner2 from '@/assets/images/banner2.jpg'
+
+const items = ref([
+    {
+        image: banner4,
+        author: 'Skincare',
+        title: 'Beauty Skin',
+        topic: 'Best skincare',
+        description:
+            'Lorem ipsum dolor, sit amet consectetur adipisicing elit. Ut sequi, rem magnam nesciunt minima placeat, itaque eum neque officiis unde, eaque optio ratione aliquid assumenda facere ab et quasi',
+    },
+    {
+        image: banner2,
+        author: 'Skincare',
+        title: 'Beauty Skin',
+        topic: 'Best skincare',
+        description:
+            'Lorem ipsum dolor, sit amet consectetur adipisicing elit. Ut sequi, rem magnam nesciunt minima placeat, itaque eum neque officiis unde, eaque optio ratione aliquid assumenda facere ab et quasi',
+    },
+])
+
+const thumbnails = ref([
+    {
+        image: banner4,
+        title: 'Name Slider',
+        description: 'Description',
+    },
+    {
+        image: banner2,
+        title: 'Name Slider',
+        description: 'Description',
+    },
+])
+
+const timeRunning = ref(1000)
+const timeAutoNext = ref(7000)
+
+onMounted(() => {
+    setupCarousel()
+})
 
 const modules = [FreeMode, Thumbs, Navigation, Autoplay, Pagination]
 const swiperJs = swiper => {}
@@ -61,12 +106,11 @@ const swiperJs = swiper => {}
         <div class="w-full flex justify-center">
             <div
                 class="w-full flex flex-col md:flex-row align-middle justify-between px-5 md:px-0 py-5 max-w-[1140px]">
-                <div class="flex flex-row">
-                    <div class="w-8 h-8 mb-3 md:mb-0">
+                <div class="flex items-center gap-10">
+                    <div class="mb-3 md:mb-0">
                         <svg
-                            class="feather feather-mail"
+                            class="feather feather-mail w-4 h-4"
                             fill="none"
-                            height="24"
                             stroke="currentColor"
                             stroke-linecap="round"
                             stroke-linejoin="round"
@@ -83,13 +127,13 @@ const swiperJs = swiper => {}
                 </div>
                 <input
                     type="text"
-                    class="mb-3 md:mb-0 border-none h-8 px-4 w-full md:w-2/6"
+                    class="mb-3 md:mb-0 border-none h-8 px-4 w-full md:w-2/6 text-xs"
                     name=""
                     id=""
                     placeholder="Detail name" />
                 <input
                     type="text"
-                    class="mb-3 md:mb-0 border-none h-8 px-4 w-full md:w-2/6"
+                    class="mb-3 md:mb-0 border-none h-8 px-4 w-full md:w-2/6 text-xs"
                     name=""
                     id=""
                     placeholder="Gmail address" />
@@ -98,93 +142,90 @@ const swiperJs = swiper => {}
                 </button>
             </div>
         </div>
-        <!-- Carousel -->
-        <swiper
-            :navigation="true"
-            :modules="modules"
-            :loop="true"
-            :speed="1300"
-            :autoplay="{
-                delay: 5000,
-            }"
-            @swiper="swiperJs">
-            <swiper-slide>
-                <div
-                    style="background-image: url(../assets/images/banner4.jpg)"
-                    class="w-full md:min-h-screen min-h-[50vh] h-[50vh] bg-cover bg-center mb-16">
-                    <div class="max-w-[1320px] mx-auto">
-                        <div
-                            class="w-4/5 md:w-5/12 pl-4 pt-10 md:pt-40 md:pl-0 text-white">
+
+        <section class="h-screen flex items-center justify-center">
+            <div
+                class="carousel h-screen w-full overflow-hidden relative"
+                ref="carousel">
+                <div class="list" ref="list">
+                    <div
+                        class="item w-full h-full absolute inset-0"
+                        v-for="(item, index) in items"
+                        :key="index">
+                        <img
+                            :src="item.image"
+                            class="w-full h-full object-cover" />
+                        <div class="max-w-[1140px] m-auto">
                             <div
-                                class="font-semibold text-base md:text-lg mb-2">
-                                s k i n c a r e
-                            </div>
-                            <div class="text-4xl md:text-5xl font-bold">
-                                Beauty Skin
-                            </div>
-                            <div class="text-4xl md:text-5xl font-bold">
-                                Best skincare
-                            </div>
-                            <div class="text-sm">
-                                Lorem ipsum dolor, sit amet consectetur
-                                adipisicing elit. Ut sequi, rem magnam nesciunt
-                                minima placeat, itaque eum neque officiis unde,
-                                eaque optio ratione aliquid assumenda facere ab
-                                et quasi
-                            </div>
-                            <div class="flex flex-row gap-2">
-                                <button
-                                    class="p-2 text-black bg-white border border-white font-medium">
-                                    SEE MORE
-                                </button>
-                                <button
-                                    class="font-medium p-2 border border-white">
-                                    SUBSCRIBE
-                                </button>
+                                class="content absolute top-[20%] max-w-[80%] pr-[30%] box-border text-[#fff]">
+                                <div class="author font-bold tracking-[10px]">
+                                    {{ item.author }}
+                                </div>
+                                <div
+                                    class="title text-[3em] font-bold leading-[1.3em]">
+                                    {{ item.title }}
+                                </div>
+                                <div
+                                    class="topic text-[3em] font-bold leading-[1.3em]">
+                                    {{ item.topic }}
+                                </div>
+                                <div class="des max-w-[30rem]">
+                                    {{ item.description }}
+                                </div>
+                                <div class="buttons mt-5">
+                                    <button
+                                        class="h-10 w-[130px] border-none bg-[#eee] tracking-[3px] font-medium text-black">
+                                        SEE MORE
+                                    </button>
+                                    <button
+                                        class="h-10 w-[130px] tracking-[3px] font-medium text-white border border-white bg-transparent">
+                                        SUBSCRIBE
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </swiper-slide>
-            <swiper-slide>
                 <div
-                    style="background-image: url(../assets/images/banner2.jpg)"
-                    class="w-full md:min-h-screen min-h-[50vh] h-[50vh] bg-cover bg-center mb-16">
-                    <div class="max-w-[1320px] mx-auto">
+                    class="thumbnail absolute bottom-[50px] left-1/2 w-max z-[100] flex gap-5"
+                    ref="thumbnail">
+                    <div
+                        class="item w-[150px] h-[220px] flex-shrink-0 relative"
+                        v-for="(thumb, index) in thumbnails"
+                        :key="index"
+                        style="cursor: pointer">
+                        <img
+                            :src="thumb.image"
+                            class="w-full h-full object-cover rounded-[20px]" />
                         <div
-                            class="w-4/5 md:w-5/12 pl-4 pt-10 md:pt-40 md:pl-0 text-white">
-                            <div
-                                class="font-semibold text-base md:text-lg mb-2">
-                                s k i n c a r e
+                            class="content text-[#fff] absolute bottom-[10px] left-[10px] right-[10px]">
+                            <div class="title font-medium">
+                                {{ thumb.title }}
                             </div>
-                            <div class="text-4xl md:text-5xl font-bold">
-                                Beauty Skin
-                            </div>
-                            <div class="text-4xl md:text-5xl font-bold">
-                                Best skincare
-                            </div>
-                            <div class="text-sm">
-                                Lorem ipsum dolor, sit amet consectetur
-                                adipisicing elit. Ut sequi, rem magnam nesciunt
-                                minima placeat, itaque eum neque officiis unde,
-                                eaque optio ratione aliquid assumenda facere ab
-                                et quasi
-                            </div>
-                            <div class="flex flex-row">
-                                <button
-                                    class="p-2 text-black bg-white border border-white font-medium">
-                                    SEE MORE
-                                </button>
-                                <button
-                                    class="font-medium p-2 border border-white">
-                                    SUBSCRIBE
-                                </button>
+                            <div class="description font-light">
+                                {{ thumb.description }}
                             </div>
                         </div>
                     </div>
                 </div>
-            </swiper-slide>
-        </swiper>
+                <div
+                    class="arrows absolute top-[80%] right-[52%] z-[100] w-[300px] max-w-[30%] flex gap-[10px] items-center">
+                    <button
+                        class="w-10 h-10 rounded-[50%] bg-[#eee4] border-none text-[#fff] font-mono font-bold duration-500 hover:bg-[#fff] hover:text-black"
+                        id="prev"
+                        ref="prev">
+                        <i class="fa-solid fa-chevron-left"></i>
+                    </button>
+                    <button
+                        class="w-10 h-10 rounded-[50%] bg-[#eee4] border-none text-[#fff] font-mono font-bold duration-500 hover:bg-[#fff] hover:text-black"
+                        id="next"
+                        ref="next">
+                        <i class="fa-solid fa-chevron-right"></i>
+                    </button>
+                </div>
+            </div>
+        </section>
+
         <!-- Saya Orang -->
         <div
             class="w-full max-w-[1140px] mx-auto flex flex-row justify-center min-h-[80vw] md:min-h-screen gap-5 pb-16 py-0 md:py-16 relative">

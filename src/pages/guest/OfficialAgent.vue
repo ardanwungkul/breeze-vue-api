@@ -9,7 +9,7 @@ const swiperJs = swiper => {}
 </script>
 <template>
     <AppLayout>
-        <div class="space-y-16 max-w-[1140px] mx-auto">
+        <div class="space-y-16 max-w-[1140px] mx-auto pb-12">
             <div class="flex flex-wrap pt-6 gap-3 w-[70%] mx-auto text-center">
                 <p class="text-[40px] text-[#212529] font-medium w-full">
                     Our Official Agent
@@ -109,7 +109,6 @@ const swiperJs = swiper => {}
                     </div>
                 </div>
             </div>
-            <div class="h-screen"></div>
         </div>
     </AppLayout>
 </template>
