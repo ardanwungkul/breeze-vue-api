@@ -12,6 +12,12 @@ module.exports = {
             fontFamily: {
                 sans: ['Nunito', ...defaultTheme.fontFamily.sans],
             },
+            colors: {
+                customLightPurple: '#F3F2F8',
+                semupink : '#ee2761',
+                brownshop : '#F4F0ED',
+                darkbrownshop : '#D19C97',
+            },
         },
     },
     plugins: [require('@tailwindcss/forms'), require('flowbite/plugin')],
