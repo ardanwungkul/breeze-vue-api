@@ -34,56 +34,62 @@ const submitLogin = () => {
 
 <template>
     <GuestLayout>
-        <div v-if="status" class="mb-4 font-medium text-sm text-green-600">
-            {{ status }}
+        <div class="flex items-center w-full h-full space-y-4">
+            <div
+                v-if="status"
+                class="font-medium text-sm text-green-600 w-full">
+                {{ status }}
+            </div>
+
+            <ValidationErrors class="w-full" :errors="errors" />
+
+            <form @submit.prevent="submitLogin" class="w-full">
+                <div class="space-y-4">
+                    <div class="flex justify-between items-end">
+                        <p class="text-2xl font-bold text-gray-700">Login</p>
+                        <router-link
+                            class="text-sm text-blue-500 font-medium hover:underline"
+                            :to="{ name: 'register' }">
+                            Register
+                        </router-link>
+                    </div>
+                    <div>
+                        <TextInput
+                            id="email"
+                            v-model="form.email"
+                            type="email"
+                            class="mt-1 block w-full text-sm bg-orange-50 border-orange-100"
+                            required
+                            placeholder="E-mail"
+                            autofocus
+                            autocomplete="username" />
+                    </div>
+
+                    <div class="">
+                        <TextInput
+                            id="password"
+                            v-model="form.password"
+                            type="password"
+                            class="mt-1 block w-full text-sm bg-orange-50 border-orange-100"
+                            placeholder="Password"
+                            required
+                            autocomplete="current-password" />
+                    </div>
+
+                    <div class="flex items-center justify-end">
+                        <router-link
+                            to="/forgot-password"
+                            class="hover:underline text-xs text-gray-600 hover:text-gray-900">
+                            Forgot your password?
+                        </router-link>
+                    </div>
+                    <button
+                        type="submit"
+                        class="font-poppins p-2 text-gray-700 hover:bg-[#f8f8f6] bg-[#f4f0ed] rounded-lg w-full text-center text-sm font-semibold font-cabinet uppercase tracking-widest transition-all shadow-lg">
+                        LOGIN
+                    </button>
+                </div>
+            </form>
         </div>
-
-        <ValidationErrors class="mb-4" :errors="errors" />
-
-        <form @submit.prevent="submitLogin">
-            <div>
-                <InputLabel for="email" value="Email" />
-                <TextInput
-                    id="email"
-                    v-model="form.email"
-                    type="email"
-                    class="mt-1 block w-full"
-                    required
-                    autofocus
-                    autocomplete="username" />
-            </div>
-
-            <div class="mt-4">
-                <InputLabel for="password" value="Password" />
-                <TextInput
-                    id="password"
-                    v-model="form.password"
-                    type="password"
-                    class="mt-1 block w-full"
-                    required
-                    autocomplete="current-password" />
-            </div>
-
-            <div class="block mt-4">
-                <label class="flex items-center">
-                    <Checkbox
-                        v-model="form.remember"
-                        name="remember"
-                        :checked="form.remember" />
-                    <span class="ml-2 text-sm text-gray-600">Remember me</span>
-                </label>
-            </div>
-
-            <div class="flex items-center justify-end mt-4">
-                <router-link
-                    to="/forgot-password"
-                    class="underline text-sm text-gray-600 hover:text-gray-900">
-                    Forgot your password?
-                </router-link>
-                <PrimaryButton class="ml-4" :processing="processing">
-                    Login
-                </PrimaryButton>
-            </div>
-        </form>
     </GuestLayout>
 </template>

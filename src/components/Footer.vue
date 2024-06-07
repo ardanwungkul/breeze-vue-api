@@ -2,7 +2,7 @@
 <template>
     <div class="bg-[#e2d9d9] p-12 font-poppins">
         <div class="max-w-[1140px] mx-auto">
-            <div class="grid grid-cols-3 gap-3 w-full">
+            <div class="grid md:grid-cols-3 grid-cols-1 gap-x-3 gap-y-5 w-full">
                 <div>
                     <p class="text-xl font-medium mb-2">About Us</p>
                     <p class="text-sm">
@@ -11,7 +11,7 @@
                         exercitationem reiciendis obcaecati?
                     </p>
                 </div>
-                <div class="flex justify-center">
+                <div class="flex md:justify-center">
                     <div>
                         <p class="text-xl font-medium mb-2">Follow Us</p>
                         <div class="grid grid-cols-2 gap-x-3 gap-y-1">
@@ -38,7 +38,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="flex justify-end">
+                <div class="flex md:justify-end">
                     <div>
                         <p class="text-xl font-medium mb-2">Help Desk</p>
                         <ul class="space-y-2 text-sm">
@@ -54,8 +54,10 @@
                 </div>
             </div>
             <div>
-                <p class="text-xl font-medium mb-2 text-center">Find Us</p>
-                <div class="grid grid-cols-4 gap-24">
+                <p class="text-xl font-medium mb-2 mt-3 md:mt-0 text-center">
+                    Find Us
+                </p>
+                <div class="grid md:grid-cols-4 md:gap-24">
                     <div>
                         <img
                             src="@/assets/images/sociolla.png"
