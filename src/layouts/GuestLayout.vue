@@ -4,31 +4,31 @@ import ApplicationLogo from '@/components/ApplicationLogo.vue'
 
 <template>
     <div
-        class="h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-[#e2d9d9]">
-        <div class="bg-[#f4f0ed] rounded-lg grid grid-cols-2">
-            <div>
-                <svg width="0" height="0">
-                    <defs>
-                        <clipPath
-                            id="polygon-clip"
-                            clipPathUnits="objectBoundingBox">
-                            <path
-                                d="M 0,0 
-                 L 0.76,0 
-                 Q 0.76,0 0.76,0.14 
-                 L 1,0.14 
-                 Q 1,0.14 1,1 
-                 L 0.25,1 
-                 Q 0.25,1 0.25,0.84 
-                 L 0,0.84 
-                 Q 0,0.84 0,0" />
-                        </clipPath>
-                    </defs>
-                </svg>
-                <div class="rounded-polygon"></div>
+        class="h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-[#f4f0ed]">
+        <div
+            class="bg-white rounded-2xl grid grid-cols-2 max-w-3xl overflow-hidden shadow-2xl">
+            <div class="p-4 group">
+                <div class="overflow-hidden rounded-2xl relative shadow-inner">
+                    <div class="absolute top-0 left-0 z-20 p-4">
+                        <router-link to="/">
+                            <p
+                                class="font-poppins text-3xl leading-none font-medium uppercase group-hover:text-white transition-all duration-1000 drop-shadow-2xl text-gray-700">
+                                Ezzora
+                            </p>
+                        </router-link>
+                    </div>
+                    <div
+                        class="w-full h-full absolute bg-black top-0 opacity-0 group-hover:opacity-20 transition-all duration-1000 rounded-2xl z-10"></div>
+                    <img
+                        class="w-full h-full object-cover rounded-2xl group-hover:scale-105 transition-all duration-1000"
+                        src="@/assets/images/person.jpeg"
+                        alt="" />
+                </div>
             </div>
             <div class="p-10">
-                <slot />
+                <div class="flex flex-col h-full">
+                    <slot />
+                </div>
             </div>
         </div>
     </div>

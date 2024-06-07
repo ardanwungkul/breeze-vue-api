@@ -1,7 +1,6 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-@import '/node_modules/flowbite-vue/dist/index.css';
 
 .font-poppins {
     font-family: 'Poppins', sans-serif;

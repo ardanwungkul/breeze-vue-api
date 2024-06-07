@@ -106,8 +106,8 @@ const swiperJs = swiper => {}
         <div class="w-full flex justify-center">
             <div
                 class="w-full flex flex-col md:flex-row align-middle justify-between px-5 md:px-0 py-5 max-w-[1140px]">
-                <div class="flex items-center gap-10">
-                    <div class="mb-3 md:mb-0">
+                <div class="flex items-center md:gap-10 gap-3 mb-3 md:mb-0">
+                    <div class="">
                         <svg
                             class="feather feather-mail w-4 h-4"
                             fill="none"
@@ -157,7 +157,7 @@ const swiperJs = swiper => {}
                             class="w-full h-full object-cover" />
                         <div class="max-w-[1140px] m-auto">
                             <div
-                                class="content absolute top-[20%] max-w-[80%] pr-[30%] box-border text-[#fff]">
+                                class="content absolute md:top-[20%] top-[10%] md:max-w-[80%] pl-3 md:pl-0 pr-[30%] box-border text-[#fff]">
                                 <div class="author font-bold tracking-[10px]">
                                     {{ item.author }}
                                 </div>
@@ -228,7 +228,7 @@ const swiperJs = swiper => {}
 
         <!-- Saya Orang -->
         <div
-            class="w-full max-w-[1140px] mx-auto flex flex-row justify-center min-h-[80vw] md:min-h-screen gap-5 pb-16 py-0 md:py-16 relative">
+            class="w-full max-w-[1140px] mx-auto flex flex-row justify-center min-h-[80vw] md:min-h-screen gap-5 pb-16 py-0 md:py-16 relative mt-10 md:mt-0">
             <div
                 class="max-w-[70vw] md:max-w-[43%] text-center absolute top-32 md:top-[24rem] left-10 md:left-60 z-20 py-5 px-7 border-black border">
                 <div
