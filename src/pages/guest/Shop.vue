@@ -167,7 +167,7 @@ const swiperConfig = {
                         </div>
                     </div>
                 </swiper>
-                <div class="justify-center max-w-[50%] md:max-w-[25%] px-4">
+                <div class="justify-center max-w-[60%] md:max-w-[25%] px-4">
                     <div
                         class="flex justify-center mb-2 text-2xl font-semibold text-red-600">
                         FLASH SALE
@@ -434,20 +434,20 @@ const swiperConfig = {
                         </div>
                         <div class=" w-full">
                             <img
-                            class=""
+                            class=" min-w-full"
                             src="@/assets/images/banner1.png"
                             alt="" />
                         </div>
                     </div>
                     <div class=" w-full md:w-3/4 flex flex-col">
-                        <div class="flex p-4 md:p-0 flex-col md:flex-row justify-between mb-5">
+                        <div class=" sticky top-14 bg-[#f8f8f6] flex p-4 md:p-0 md:py-2 md:shadow-sm shadow-black flex-col md:flex-row justify-between mb-5 z-30">
                             <div class=" mb-2 md:mb-0 h-8 flex flex-row">
                                 <input
                                     type="text"
                                     class="text-gray-600 border bg-transparent border-gray-200 focus:ring-transparent focus:border-gray-200"
                                     placeholder="Search by name" />
                                 <button
-                                    class="w-10 border flex justify-center items-center border-gray-200">
+                                    class="min-w-10 border flex justify-center items-center border-gray-200">
                                     <svg
                                         height="20"
                                         viewBox="0 0 24 24"
@@ -458,6 +458,11 @@ const swiperConfig = {
                                             d="M10 18a7.952 7.952 0 0 0 4.897-1.688l4.396 4.396 1.414-1.414-4.396-4.396A7.952 7.952 0 0 0 18 10c0-4.411-3.589-8-8-8s-8 3.589-8 8 3.589 8 8 8zm0-14c3.309 0 6 2.691 6 6s-2.691 6-6 6-6-2.691-6-6 2.691-6 6-6z" />
                                     </svg>
                                 </button>
+                                <div class="flex w-full justify-end md:hidden">
+                                    <button @click="togglefilter('yes')" class="flex w-6 h-6 justify-end md:hidden hover:scale-110 duration-200">
+                                        <svg enable-background="new 0 0 32 32" id="Glyph" version="1.1" viewBox="0 0 32 32" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><path fill="#D19C97" d="M29.815,6.168C29.484,5.448,28.783,5,27.986,5H4.014c-0.797,0-1.498,0.448-1.83,1.168  c-0.329,0.714-0.215,1.53,0.297,2.128c0,0,0.001,0.001,0.001,0.001L12,19.371V28c0,0.369,0.203,0.708,0.528,0.882  C12.676,28.961,12.838,29,13,29c0.194,0,0.387-0.057,0.555-0.168l6-4C19.833,24.646,20,24.334,20,24v-4.629l9.519-11.074  C30.031,7.698,30.145,6.882,29.815,6.168z" id="XMLID_276_"/></svg>
+                                    </button>
+                                </div>
                             </div>
                             <ul class="max-h-8 flex flex-row">
                                 <li>
@@ -518,7 +523,7 @@ const swiperConfig = {
                                                     </svg>
                                                 </div>
                                             </div>
-                                            <div class=" md:text-lg">Rp. 200.000</div>
+                                            <div class=" text-right lg:text-sm">Rp. 200.000</div>
                                         </div>
                                     </div>
                                 </div>
@@ -609,178 +614,190 @@ const swiperConfig = {
                         </div>
                     </div>
                     <!-- filter mobile -->
-                    <div class=" p-4 md:p-0 md:hidden block w-full">
-                        <div class="border p-4">
-                            <div class="font-medium mb-2">Filter by Price</div>
-                            <input
-                                id="medium-range"
-                                type="range"
-                                min="0"
-                                max="300000"
-                                value="0"
-                                class="w-full h-1 bg-gray-400 border-none accent-slate-700 rounded-lg cursor-pointer" />
-                            <div class="mt-2 mb-6">Rp.</div>
-                            <div class="font-medium mb-2">Filter By Rating</div>
-                            <select
-                                name=""
-                                id=""
-                                class="border-black/20 bg-transparent py-2 hover:border-black/30 mb-10">
-                                <option value="1star">Select Rating</option>
-                                <option value="1star">*</option>
-                                <option value="2star">**</option>
-                                <option value="3star">***</option>
-                                <option value="4star">****</option>
-                                <option value="5star">*****</option>
-                            </select>
+                    <div class=" flex px-4 justify-center md:hidden w-full">
+                        <img
+                        class=""
+                        src="@/assets/images/banner1.png"
+                        alt="" />
+                    </div>
+                    <div 
+                        :class="{ 'block': activefilter === 'yes', ' hidden': activefilter !== 'yes' }"
+                        class=" bg-black w-screen min-h-screen fixed top-0 left-0 z-30 opacity-40 duration-700 "></div>
+                    <div
+                        :class="{ '': activefilter === 'yes', 'translate-y-full': activefilter !== 'yes' }"
+                        class=" fixed bottom-0 left-0 border-t border-gray-500 rounded-t z-40 max-h-[70vh] p-4 md:p-0 md:hidden w-full duration-700 bg-[#f8f8f6]">
+                        <div class=" w-full flex justify-center h-5 static top-0 mb-3">
+                            <button @click="togglefilter('no')" class=" max-w-6 max-h-6 duration-200 hover:scale-110">
+                                <!DOCTYPE svg  PUBLIC '-//W3C//DTD SVG 1.1//EN'  'http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd'><svg height="24px" id="Layer_1" style="enable-background:new 0 0 512 512;" version="1.1" viewBox="0 0 512 512" width="24px" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><path fill="#D19C97" d="M98.9,184.7l1.8,2.1l136,156.5c4.6,5.3,11.5,8.6,19.2,8.6c7.7,0,14.6-3.4,19.2-8.6L411,187.1l2.3-2.6  c1.7-2.5,2.7-5.5,2.7-8.7c0-8.7-7.4-15.8-16.6-15.8v0H112.6v0c-9.2,0-16.6,7.1-16.6,15.8C96,179.1,97.1,182.2,98.9,184.7z"/></svg>
+                            </button>
                         </div>
-                        <div class="border border-t-transparent py-4 mb-4">
-                            <div class="font-medium mb-4 px-4">Categories</div>
-                            <!-- Skincare -->
-                            <div
-                                @click="toggleClass(1)"
-                                class="w-full flex flex-row px-4 py-2 justify-between hover:text-darkbrownshop">
-                                <div class="">Skincare</div>
-                                <div class="w-4 h-4">
-                                    <svg
-                                        class="feather feather-chevron-down"
-                                        fill="none"
-                                        height="24"
-                                        stroke="currentColor"
-                                        stroke-linecap="round"
-                                        stroke-linejoin="round"
-                                        stroke-width="2"
-                                        viewBox="0 0 24 24"
-                                        width="24"
-                                        xmlns="http://www.w3.org/2000/svg">
-                                        <polyline points="6 9 12 15 18 9" />
-                                    </svg>
+                        <div class=" w-full h-[55vh] overflow-auto">
+                            <div class="border p-4">
+                                <div class="font-medium mb-2">Filter by Price</div>
+                                <input
+                                    id="medium-range"
+                                    type="range"
+                                    min="0"
+                                    max="300000"
+                                    value="0"
+                                    class="w-full h-1 bg-gray-400 border-none accent-slate-700 rounded-lg cursor-pointer" />
+                                <div class="mt-2 mb-6">Rp.</div>
+                                <div class="font-medium mb-2">Filter By Rating</div>
+                                <select
+                                    name=""
+                                    id=""
+                                    class="border-black/20 bg-transparent py-2 hover:border-black/30 mb-10">
+                                    <option value="1star">Select Rating</option>
+                                    <option value="1star">*</option>
+                                    <option value="2star">**</option>
+                                    <option value="3star">***</option>
+                                    <option value="4star">****</option>
+                                    <option value="5star">*****</option>
+                                </select>
+                            </div>
+                            <div class="border border-t-transparent py-4 mb-4">
+                                <div class="font-medium mb-4 px-4">Categories</div>
+                                <!-- Skincare -->
+                                <div
+                                    @click="toggleClass(1)"
+                                    class="w-full flex flex-row px-4 py-2 justify-between hover:text-darkbrownshop">
+                                    <div class="">Skincare</div>
+                                    <div class="w-4 h-4">
+                                        <svg
+                                            class="feather feather-chevron-down"
+                                            fill="none"
+                                            height="24"
+                                            stroke="currentColor"
+                                            stroke-linecap="round"
+                                            stroke-linejoin="round"
+                                            stroke-width="2"
+                                            viewBox="0 0 24 24"
+                                            width="24"
+                                            xmlns="http://www.w3.org/2000/svg">
+                                            <polyline points="6 9 12 15 18 9" />
+                                        </svg>
+                                    </div>
+                                </div>
+                                <div
+                                    :class="{
+                                        block: activeDiv === 1,
+                                        hidden: activeDiv !== 1,
+                                    }"
+                                    class="bg-brownshop py-4">
+                                    <button
+                                        class="w-full py-1 px-4 text-left hover:bg-white">
+                                        Brigthening Series
+                                    </button>
+                                    <button
+                                        class="w-full py-1 px-4 text-left hover:bg-white">
+                                        Acne Series
+                                    </button>
+                                    <button
+                                        class="w-full py-1 px-4 text-left hover:bg-white">
+                                        Youth Series
+                                    </button>
+                                    <button
+                                        class="w-full py-1 px-4 text-left hover:bg-white">
+                                        Eye Cream
+                                    </button>
+                                    <button
+                                        class="w-full py-1 px-4 text-left hover:bg-white">
+                                        Anti Wringkle Serum
+                                    </button>
+                                    <button
+                                        class="w-full py-1 px-4 text-left hover:bg-white">
+                                        Peeling Serum
+                                    </button>
+                                </div>
+                                <!-- Cosmetic -->
+                                <div
+                                    @click="toggleClass(2)"
+                                    class="w-full flex flex-row px-4 py-2 justify-between hover:text-darkbrownshop">
+                                    <div class="">Cosmetic</div>
+                                    <div class="w-4 h-4">
+                                        <svg
+                                            class="feather feather-chevron-down"
+                                            fill="none"
+                                            height="24"
+                                            stroke="currentColor"
+                                            stroke-linecap="round"
+                                            stroke-linejoin="round"
+                                            stroke-width="2"
+                                            viewBox="0 0 24 24"
+                                            width="24"
+                                            xmlns="http://www.w3.org/2000/svg">
+                                            <polyline points="6 9 12 15 18 9" />
+                                        </svg>
+                                    </div>
+                                </div>
+                                <div
+                                    :class="{
+                                        block: activeDiv === 2,
+                                        hidden: activeDiv !== 2,
+                                    }"
+                                    class="bg-brownshop py-4">
+                                    <button
+                                        class="w-full py-1 px-4 text-left hover:bg-white">
+                                        Liptint
+                                    </button>
+                                    <button
+                                        class="w-full py-1 px-4 text-left hover:bg-white">
+                                        Lip Cream
+                                    </button>
+                                    <button
+                                        class="w-full py-1 px-4 text-left hover:bg-white">
+                                        Lip Glose
+                                    </button>
+                                </div>
+                                <!-- Body Care -->
+                                <div
+                                    @click="toggleClass(3)"
+                                    class="w-full flex flex-row px-4 py-2 justify-between hover:text-darkbrownshop">
+                                    <div class="">Body Care</div>
+                                    <div class="w-4 h-4">
+                                        <svg
+                                            class="feather feather-chevron-down"
+                                            fill="none"
+                                            height="24"
+                                            stroke="currentColor"
+                                            stroke-linecap="round"
+                                            stroke-linejoin="round"
+                                            stroke-width="2"
+                                            viewBox="0 0 24 24"
+                                            width="24"
+                                            xmlns="http://www.w3.org/2000/svg">
+                                            <polyline points="6 9 12 15 18 9" />
+                                        </svg>
+                                    </div>
+                                </div>
+                                <div
+                                    :class="{
+                                        block: activeDiv === 3,
+                                        hidden: activeDiv !== 3,
+                                    }"
+                                    class="bg-brownshop py-4">
+                                    <button
+                                        class="w-full py-1 px-4 text-left hover:bg-white">
+                                        Body Wash
+                                    </button>
+                                    <button
+                                        class="w-full py-1 px-4 text-left hover:bg-white">
+                                        Peaching Body Spray
+                                    </button>
+                                    <button
+                                        class="w-full py-1 px-4 text-left hover:bg-white">
+                                        Coffe Mask And Body Scrub
+                                    </button>
+                                    <button
+                                        class="w-full py-1 px-4 text-left hover:bg-white">
+                                        Body Serum
+                                    </button>
+                                    <button
+                                        class="w-full py-1 px-4 text-left hover:bg-white">
+                                        Instant Glow Body Serum
+                                    </button>
                                 </div>
                             </div>
-                            <div
-                                :class="{
-                                    block: activeDiv === 1,
-                                    hidden: activeDiv !== 1,
-                                }"
-                                class="bg-brownshop py-4">
-                                <button
-                                    class="w-full py-1 px-4 text-left hover:bg-white">
-                                    Brigthening Series
-                                </button>
-                                <button
-                                    class="w-full py-1 px-4 text-left hover:bg-white">
-                                    Acne Series
-                                </button>
-                                <button
-                                    class="w-full py-1 px-4 text-left hover:bg-white">
-                                    Youth Series
-                                </button>
-                                <button
-                                    class="w-full py-1 px-4 text-left hover:bg-white">
-                                    Eye Cream
-                                </button>
-                                <button
-                                    class="w-full py-1 px-4 text-left hover:bg-white">
-                                    Anti Wringkle Serum
-                                </button>
-                                <button
-                                    class="w-full py-1 px-4 text-left hover:bg-white">
-                                    Peeling Serum
-                                </button>
-                            </div>
-                            <!-- Cosmetic -->
-                            <div
-                                @click="toggleClass(2)"
-                                class="w-full flex flex-row px-4 py-2 justify-between hover:text-darkbrownshop">
-                                <div class="">Cosmetic</div>
-                                <div class="w-4 h-4">
-                                    <svg
-                                        class="feather feather-chevron-down"
-                                        fill="none"
-                                        height="24"
-                                        stroke="currentColor"
-                                        stroke-linecap="round"
-                                        stroke-linejoin="round"
-                                        stroke-width="2"
-                                        viewBox="0 0 24 24"
-                                        width="24"
-                                        xmlns="http://www.w3.org/2000/svg">
-                                        <polyline points="6 9 12 15 18 9" />
-                                    </svg>
-                                </div>
-                            </div>
-                            <div
-                                :class="{
-                                    block: activeDiv === 2,
-                                    hidden: activeDiv !== 2,
-                                }"
-                                class="bg-brownshop py-4">
-                                <button
-                                    class="w-full py-1 px-4 text-left hover:bg-white">
-                                    Liptint
-                                </button>
-                                <button
-                                    class="w-full py-1 px-4 text-left hover:bg-white">
-                                    Lip Cream
-                                </button>
-                                <button
-                                    class="w-full py-1 px-4 text-left hover:bg-white">
-                                    Lip Glose
-                                </button>
-                            </div>
-                            <!-- Body Care -->
-                            <div
-                                @click="toggleClass(3)"
-                                class="w-full flex flex-row px-4 py-2 justify-between hover:text-darkbrownshop">
-                                <div class="">Body Care</div>
-                                <div class="w-4 h-4">
-                                    <svg
-                                        class="feather feather-chevron-down"
-                                        fill="none"
-                                        height="24"
-                                        stroke="currentColor"
-                                        stroke-linecap="round"
-                                        stroke-linejoin="round"
-                                        stroke-width="2"
-                                        viewBox="0 0 24 24"
-                                        width="24"
-                                        xmlns="http://www.w3.org/2000/svg">
-                                        <polyline points="6 9 12 15 18 9" />
-                                    </svg>
-                                </div>
-                            </div>
-                            <div
-                                :class="{
-                                    block: activeDiv === 3,
-                                    hidden: activeDiv !== 3,
-                                }"
-                                class="bg-brownshop py-4">
-                                <button
-                                    class="w-full py-1 px-4 text-left hover:bg-white">
-                                    Body Wash
-                                </button>
-                                <button
-                                    class="w-full py-1 px-4 text-left hover:bg-white">
-                                    Peaching Body Spray
-                                </button>
-                                <button
-                                    class="w-full py-1 px-4 text-left hover:bg-white">
-                                    Coffe Mask And Body Scrub
-                                </button>
-                                <button
-                                    class="w-full py-1 px-4 text-left hover:bg-white">
-                                    Body Serum
-                                </button>
-                                <button
-                                    class="w-full py-1 px-4 text-left hover:bg-white">
-                                    Instant Glow Body Serum
-                                </button>
-                            </div>
-                        </div>
-                        <div class=" w-full">
-                            <img
-                            class=""
-                            src="@/assets/images/banner1.png"
-                            alt="" />
                         </div>
                     </div>
                 </div>
@@ -952,6 +969,7 @@ export default {
             ],
             price: 0,
             rating: 5,
+            activefilter: 'no',
             activeDiv: null,
             activeVideo: 1,
         }
@@ -959,6 +977,9 @@ export default {
     methods: {
         toggleVideo(i) {
             this.activeVideo = i
+        },
+        togglefilter(i) {
+            this.activefilter = i
         },
         toggleClass(i) {
             if (this.activeDiv === i) {
