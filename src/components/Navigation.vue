@@ -76,7 +76,7 @@ const navItems = ref([
                 </div>
 
                 <!-- Hamburger -->
-                <div>
+                <div class="block md:hidden">
                     <button
                         type="button"
                         id="triggerEl"
@@ -98,7 +98,9 @@ const navItems = ref([
                     </button>
                 </div>
             </div>
-            <div id="targetEl" class="hidden md:hidden p-1">
+            <div
+                id="targetEl"
+                class="hidden md:hidden p-1 shadow-2xl rounded-b-lg">
                 <ul
                     class="w-full text-sm text-gray-900 dark:bg-gray-700 dark:text-white border border-gray-300 rounded-lg p-3">
                     <li v-for="(item, index) in navItems" :key="index">

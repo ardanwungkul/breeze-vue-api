@@ -162,14 +162,15 @@ const swiperJs = swiper => {}
                                     {{ item.author }}
                                 </div>
                                 <div
-                                    class="title text-[3em] font-bold leading-[1.3em]">
+                                    class="title md:text-[3em] font-bold leading-[1.3em] text-lg">
                                     {{ item.title }}
                                 </div>
                                 <div
-                                    class="topic text-[3em] font-bold leading-[1.3em]">
+                                    class="topic md:text-[3em] font-bold leading-[1.3em] text-3xl">
                                     {{ item.topic }}
                                 </div>
-                                <div class="des max-w-[30rem]">
+                                <div
+                                    class="des md:text-base max-w-[30rem] text-sm">
                                     {{ item.description }}
                                 </div>
                                 <div class="buttons mt-5">
@@ -268,7 +269,7 @@ const swiperJs = swiper => {}
         </div>
         <!-- Skincare -->
         <div
-            class="w-full max-w-[1320px] px-3 md:px-0 mx-auto grid grid-cols-1 md:grid-cols-3 py-16 gap-7">
+            class="w-full max-w-[1320px] px-3 md:px-0 mx-auto grid grid-cols-1 md:grid-cols-3 py-16 gap-7 mt-5">
             <div v-for="i in 3" :key="i" class="p-5 bg-white">
                 <div class="w-full min-h-48 mb-5">
                     <img src="@/assets/images/banner-5.jpeg" alt="" srcset="" />
