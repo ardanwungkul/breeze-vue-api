@@ -33,9 +33,33 @@ const routes = [
             ],
         },
     },
+    // Admin
+    {
+        path: '/admin/dashboard',
+        name: 'admin.dashboard',
+        component: () => import('@/pages/admin/Dashboard.vue'),
+        query: {
+            verified: 'verified',
+        },
+        meta: {
+            guard: 'auth',
+        },
+    },
+    {
+        path: '/admin/user',
+        name: 'admin.user',
+        component: () => import('@/pages/admin/User.vue'),
+        query: {
+            verified: 'verified',
+        },
+        meta: {
+            guard: 'auth',
+        },
+    },
     {
         path: '/home',
         redirect: '/dashboard',
+        name: 'dashboard',
         component: Dashboard,
         query: {
             verified: 'verified',

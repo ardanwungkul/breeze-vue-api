@@ -1,7 +1,6 @@
 <script setup>
 import { useUsers } from '@/stores/user'
 import { computed, ref } from 'vue'
-import PrimaryButton from '@/components/PrimaryButton.vue'
 import GuestLayout from '@/layouts/GuestLayout.vue'
 import TextInput from '@/components/TextInput.vue'
 import InputLabel from '@/components/InputLabel.vue'
