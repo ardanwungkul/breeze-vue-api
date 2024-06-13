@@ -15,7 +15,9 @@ provide('rail', rail)
                 </div>
 
                 <div class="min-h-screen w-full p-5">
-                    <slot />
+                    <div class="bg-white rounded-lg p-5">
+                        <slot />
+                    </div>
                 </div>
             </v-layout>
         </v-card>

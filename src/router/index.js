@@ -45,10 +45,12 @@ const routes = [
             guard: 'auth',
         },
     },
+
+    // User
     {
         path: '/admin/user',
-        name: 'admin.user',
-        component: () => import('@/pages/admin/User.vue'),
+        name: 'admin.user.index',
+        component: () => import('@/pages/admin/user/Index.vue'),
         query: {
             verified: 'verified',
         },
@@ -56,6 +58,32 @@ const routes = [
             guard: 'auth',
         },
     },
+    // Product
+    {
+        path: '/admin/product',
+        name: 'admin.product.index',
+        component: () => import('@/pages/admin/product/Index.vue'),
+        query: {
+            verified: 'verified',
+        },
+        meta: {
+            guard: 'auth',
+        },
+    },
+    // Category
+    {
+        path: '/admin/category',
+        name: 'admin.category.index',
+        component: () => import('@/pages/admin/category/Index.vue'),
+        query: {
+            verified: 'verified',
+        },
+        meta: {
+            guard: 'auth',
+        },
+    },
+
+    // home
     {
         path: '/home',
         redirect: '/dashboard',
@@ -68,6 +96,7 @@ const routes = [
             guard: 'auth',
         },
     },
+    // shop
     {
         path: '/shop',
         name: 'shop',
@@ -76,6 +105,7 @@ const routes = [
             title: 'Shop',
         },
     },
+    // Article
     {
         path: '/article',
         name: 'article',
@@ -84,6 +114,7 @@ const routes = [
             title: 'Article',
         },
     },
+    // Official Agent
     {
         path: '/official-agent',
         name: 'officialAgent',
@@ -92,6 +123,7 @@ const routes = [
             title: 'Official Agent',
         },
     },
+    // About Us
     {
         path: '/about-us',
         name: 'aboutUs',
@@ -100,6 +132,7 @@ const routes = [
             title: 'About Us',
         },
     },
+    // Dashboard
     {
         path: '/dashboard',
         name: 'dashboard',
@@ -109,6 +142,7 @@ const routes = [
             guard: 'auth',
         },
     },
+    // Login
     {
         path: '/login',
         name: 'login',
@@ -121,6 +155,7 @@ const routes = [
             guard: 'guest',
         },
     },
+    // Register
     {
         path: '/register',
         name: 'register',
@@ -130,6 +165,7 @@ const routes = [
             guard: 'guest',
         },
     },
+    // Forgot Password
     {
         path: '/forgot-password',
         name: 'forgot-password',
@@ -139,6 +175,7 @@ const routes = [
             guard: 'guest',
         },
     },
+    // Password Token Reset
     {
         path: '/password-reset/:token',
         name: 'password-reset',
@@ -151,6 +188,7 @@ const routes = [
             guard: 'guest',
         },
     },
+    // Verify Email
     {
         path: '/verify-email',
         name: 'verify-email',
@@ -163,6 +201,7 @@ const routes = [
             guard: 'auth',
         },
     },
+    // 404 Page
     {
         path: '/page-not-found',
         name: 'page-not-found',
