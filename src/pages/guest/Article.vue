@@ -105,7 +105,7 @@ const swiperJs = swiper => {}
         <!-- Get Update -->
         <div class="w-full flex justify-center">
             <div
-                class="w-full flex flex-col md:flex-row align-middle justify-between px-5 md:px-0 py-5 max-w-[1140px]">
+                class="w-full flex flex-col md:flex-row align-middle justify-between px-5 md:mx-4 lg:px-0 py-5 max-w-[1140px]">
                 <div class="flex items-center md:gap-10 gap-3 mb-3 md:mb-0">
                     <div class="">
                         <svg
@@ -269,7 +269,7 @@ const swiperJs = swiper => {}
         </div>
         <!-- Skincare -->
         <div
-            class="w-full max-w-[1320px] px-3 md:px-0 mx-auto grid grid-cols-1 md:grid-cols-3 py-16 gap-7 mt-5">
+            class="w-full max-w-[1320px] px-3 mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 pt-24 md:pt-16 gap-7 mt-5">
             <div v-for="i in 3" :key="i" class="p-5 bg-white">
                 <div class="w-full min-h-48 mb-5">
                     <img src="@/assets/images/banner-5.jpeg" alt="" srcset="" />
@@ -285,11 +285,14 @@ const swiperJs = swiper => {}
                 </div>
             </div>
         </div>
+        <div class=" flex justify-center pt-8 pb-16">
+            <button class=" text-gray-600 hover:text-gray-300 p-3 border border-gray-600 hover:border-gray-300">View All</button>
+        </div>
         <!-- Videos -->
         <div
-            class="w-full max-w-[1320px] px-4 md:px-0 mx-auto flex flex-col py-16 justify-center">
+            class="w-full max-w-[1320px] px-4 mx-auto flex flex-col py-16 justify-center">
             <div class="text-3xl text-center mb-5">Videos</div>
-            <div class="w-full grid grid-cols-1 md:grid-cols-3 gap-7">
+            <div class="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-7">
                 <div
                     v-for="i in 3"
                     :key="i"

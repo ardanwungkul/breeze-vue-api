@@ -67,7 +67,7 @@
                     <div>
                         <img
                             src="@/assets/images/FamaleDaily2.png"
-                            class="h-20 w-full object-contain"
+                            class="h-20 w-full object-contain grayscale"
                             alt="female daily" />
                     </div>
                     <div>
@@ -79,7 +79,7 @@
                     <div>
                         <img
                             src="@/assets/images/beautynesia.png"
-                            class="h-20 w-full object-contain"
+                            class="h-20 w-full object-contain grayscale"
                             alt="beauty nesia" />
                     </div>
                 </div>
