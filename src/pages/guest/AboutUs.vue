@@ -23,20 +23,26 @@ const swiperConfig = {
 <template>
     <AppLayout>
         <div
-            class="w-full md:min-h-[95vh] md:max-h-[95vh] min-h-screen flex flex-col mb-12">
+            class=" bg-ala2 bg-cover w-full md:min-h-[95vh] md:max-h-[95vh] min-h-screen flex flex-col">
             <div class="min-h-full w-full flex">
                 <!-- 1 -->
-                <div class="w-full h-screen flex flex-col md:flex-row">
+                <div class="max-w-full md:h-screen flex flex-row">
                     <div
-                        class=" bg-ala2 bg-cover w-full h-full md:w-[66.66vw] md:max-h-[95vh] flex">
+                        class=" w-full h-full md:w-2/3 md:max-h-[95vh] flex">
                         <div
                             v-for="i in about"
                             :key="i.index"
                             class="w-full px-4 md:px-24 flex flex-row">
-                            <div 
-                                :class="{ 'opacity-100 -translate-x-0': activeDiv === i.index, ' -translate-x-full opacity-0': activeDiv !== i.index }"
-                                class="max-w-[34vw] mt-28 duration-1000 md:left-24 absolute">
-                                <div class="text-2xl text-[#794d4a]/70 md:text-4xl md:font-bold pb-2 md:pb-5">
+                            <div
+                                :class="{
+                                    'opacity-100 -translate-x-0':
+                                        activeDiv === i.index,
+                                    ' -translate-x-full opacity-0':
+                                        activeDiv !== i.index,
+                                }"
+                                class=" max-w-[60vw] md:max-w-[34vw] mt-28 duration-1000 left-4 md:left-12 lg:left-24 absolute">
+                                <div
+                                    class="text-2xl text-[#794d4a]/70 md:text-4xl md:font-bold pb-2 md:pb-5">
                                     {{ i.title }}
                                 </div>
                                 <div class="text-xs md:text-base">
@@ -48,103 +54,109 @@ const swiperConfig = {
                                 </div>
                             </div>
                             <div
-                                :class="{ ' -translate-y-1/4 opacity-100': activeDiv === i.index, ' translate-y-0 opacity-0': activeDiv !== i.index }"
-                                class=" w-1/5 min-h-full md:min-h-32 duration-1000 left-1/2 -translate-x-1/3 top-1/2 flex items-center absolute">
+                                :class="{
+                                    ' -translate-y-1/4 opacity-100':
+                                        activeDiv === i.index,
+                                    ' translate-y-0 opacity-0':
+                                        activeDiv !== i.index,
+                                }"
+                                class=" w-28 md:w-1/5 min-h-full md:min-h-32 duration-1000 right-0 md:left-1/2 -translate-x-1/3 top-1/4 md:top-1/2 flex items-center absolute">
                                 <img
                                     class="max-h-full"
                                     :src="i.img"
                                     alt=""
                                     srcset="" />
-                                <!-- desktop -->
-                                <!-- mobile -->
-                                <div
-                                    style="
-                                        box-shadow: 0px -125px 100px rgb(
-                                                248,
-                                                248,
-                                                246
-                                            ) inset;
-                                    "
-                                    class="block md:hidden absolute top-0 left-0 w-full min-h-full"></div>
                             </div>
                         </div>
                     </div>
                     <!-- Pilihan desktop -->
                     <div
-                        class="hidden md:flex w-[33.33vw] max-w-[33.33vw] flex-col min-h-[95vh] max-h-[65vh]">
-                        <div
-                            class="w-full flex flex-row min-h-[65vh] max-h-[65vh] overflow-hidden">
-                            <swiper
-                                class="relative"
-                                :navigation="swiperConfig.navigation"
-                                :modules="swiperModules"
-                                :loop="true"
-                                :speed="1300"
-                                :allowTouchMove="false"
-                                :autoplay="{
-                                    delay: 4000,
-                                }"
-                                @swiper="swiperJs">
-                                <swiper-slide v-for="i in 3" :key="i">
-                                    <img
-                                        src="@/assets/images/gedung.jpg"
-                                        alt="" />
-                                </swiper-slide>
-                                <div
-                                    class="absolute top-0 right-0 w-1/5 h-[65vh] bg-white z-20"></div>
-                                <div
-                                    class="absolute z-30 flex flex-row bottom-0 gap-1 right-0 justify-between">
+                        class="flex w-1/3 max-w-1/3 flex-col md:min-h-[95vh] max-h-[65vh] md:relative">
+                        <div class="w-full flex flex-row relative">
+                            <div
+                                class="w-[80%] hidden md:flex flex-row min-h-[65vh] max-h-[65vh] overflow-hidden">
+                                <swiper
+                                    class="static"
+                                    :navigation="swiperConfig.navigation"
+                                    :modules="swiperModules"
+                                    :loop="true"
+                                    :speed="1300"
+                                    :allowTouchMove="false"
+                                    :autoplay="{
+                                        delay: 4000,
+                                    }"
+                                    @swiper="swiperJs">
+                                    <swiper-slide v-for="i in 3" :key="i">
+                                        <img
+                                            class=" min-h-full"
+                                            src="@/assets/images/gedung.jpg"
+                                            alt="" />
+                                    </swiper-slide>
                                     <div
-                                        class="swiper-button-prev opacity-50 duration-200 hover:opacity-100 flex justify-center items-center cursor-pointer">
-                                        <div class="w-11 h-11 bg-black">
-                                            <svg
-                                                height="44"
-                                                viewBox="0 0 48 48"
-                                                width="44"
-                                                xmlns="http://www.w3.org/2000/svg">
-                                                <path
-                                                    fill="white"
-                                                    d="M30.83 32.67l-9.17-9.17 9.17-9.17-2.83-2.83-12 12 12 12z" />
-                                                <path
-                                                    d="M0-.5h48v48h-48z"
-                                                    fill="none" />
-                                            </svg>
+                                        class="absolute z-30 flex flex-row bottom-0 gap-1 right-1.5 justify-between">
+                                        <div
+                                            class="swiper-button-prev opacity-50 duration-200 hover:opacity-100 flex justify-center items-center cursor-pointer">
+                                            <div class="w-11 h-11 bg-black">
+                                                <svg
+                                                    height="44"
+                                                    viewBox="0 0 48 48"
+                                                    width="44"
+                                                    xmlns="http://www.w3.org/2000/svg">
+                                                    <path
+                                                        fill="white"
+                                                        d="M30.83 32.67l-9.17-9.17 9.17-9.17-2.83-2.83-12 12 12 12z" />
+                                                    <path
+                                                        d="M0-.5h48v48h-48z"
+                                                        fill="none" />
+                                                </svg>
+                                            </div>
+                                        </div>
+                                        <div
+                                            class="swiper-button-next opacity-50 duration-200 hover:opacity-100 flex justify-center items-center cursor-pointer">
+                                            <div class="w-11 h-11 bg-black">
+                                                <svg
+                                                    height="44"
+                                                    viewBox="0 0 48 48"
+                                                    width="44"
+                                                    xmlns="http://www.w3.org/2000/svg">
+                                                    <path
+                                                        fill="white"
+                                                        d="M17.17 32.92l9.17-9.17-9.17-9.17 2.83-2.83 12 12-12 12z" />
+                                                    <path
+                                                        d="M0-.25h48v48h-48z"
+                                                        fill="none" />
+                                                </svg>
+                                            </div>
                                         </div>
                                     </div>
-                                    <div
-                                        class="swiper-button-next opacity-50 duration-200 hover:opacity-100 flex justify-center items-center cursor-pointer">
-                                        <div class="w-11 h-11 bg-black">
-                                            <svg
-                                                height="44"
-                                                viewBox="0 0 48 48"
-                                                width="44"
-                                                xmlns="http://www.w3.org/2000/svg">
-                                                <path
-                                                    fill="white"
-                                                    d="M17.17 32.92l9.17-9.17-9.17-9.17 2.83-2.83 12 12-12 12z" />
-                                                <path
-                                                    d="M0-.25h48v48h-48z"
-                                                    fill="none" />
-                                            </svg>
-                                        </div>
-                                    </div>
-                                </div>
-                            </swiper>
+                                </swiper>
+                            </div>
                         </div>
                         <div
-                            class="bg-alakadabra bg-cover w-[33.33vw] min-h-[30vh] flex flex-rowx bg-blue-500 relative overflow-auto py-9 px-5">
-                            <div class=" absolute w-full min-h-full bg-black/50 top-0 left-0"></div>
+                            class="bg-alakadabra bg-cover md:w-full min-h-[30vh] flex flex-rowx bg-blue-500 absolute left-0 bottom-0 w-[100vw] md:relative overflow-auto py-9 px-5">
                             <swiper
                                 class="relative"
                                 :modules="swiperModules"
-                                :slides-per-view="3"
-                                :space-between="12"
+                                :breakpoints="{
+                                    '320': {
+                                        slidesPerView: 2,
+                                        spaceBetween: 10,
+                                    },
+                                    '768': {
+                                        slidesPerView: 2,
+                                        spaceBetween: 10,
+                                    },
+                                    '1024': {
+                                        slidesPerView: 3,
+                                        spaceBetween: 10,
+                                    },
+                                }"
                                 :speed="1300"
                                 @swiper="swiperJs">
                                 <swiper-slide v-for="i in about" :key="i.index">
                                     <button
                                         @click="toggleClass(i.index)"
-                                        class="bg-white/20 min-w-full border border-white/30 duration-200 hover:opacity-50 h-full backdrop-blur rounded-sm p-5">
+                                        class="bg-white/20 w-full border border-white/30 duration-200 hover:opacity-50 h-full backdrop-blur rounded-sm p-5">
                                         <div
                                             class="w-full max-h-[15vh] flex justify-center mb-2">
                                             <img
@@ -158,36 +170,6 @@ const swiperConfig = {
                                 </swiper-slide>
                             </swiper>
                         </div>
-                    </div>
-                    <!-- Pilihan Mobile -->
-                    <div
-                        class="bg-alakadabra bg-cover bg-center block md:hidden w-full py-5 px-2">
-                        <swiper
-                            class="relative"
-                            :modules="swiperModules"
-                            :slides-per-view="3"
-                            :space-between="8"
-                            :speed="1300"
-                            @swiper="swiperJs">
-                            <swiper-slide
-                                class="min-h-full max-h-full"
-                                v-for="i in about"
-                                :key="i.index">
-                                <button
-                                    @click="toggleClass(i.index)"
-                                    class="bg-white/35 min-w-full min-h-[30vw] duration-200 hover:opacity-50 h-full backdrop-blur-sm rounded-sm p-5">
-                                    <div
-                                        class="w-full min-h-full flex justify-center mb-2">
-                                        <img
-                                            class="max-h-[10vw]"
-                                            :src="i.img"
-                                            alt=""
-                                            srcset="" />
-                                    </div>
-                                    <div class="text-xs">{{ i.title }}</div>
-                                </button>
-                            </swiper-slide>
-                        </swiper>
                     </div>
                 </div>
             </div>

@@ -6,11 +6,51 @@ import vid1 from '@/assets/images/vid1.mp4'
 import vid2 from '@/assets/images/vid2.mp4'
 import vid3 from '@/assets/images/vid3.mp4'
 import { RouterLink } from 'vue-router'
+import { ref, onMounted } from 'vue'
 
 import { Swiper, SwiperSlide } from 'swiper/vue'
 import { Pagination, Navigation, Autoplay } from 'swiper/modules'
 import 'swiper/css'
 import 'swiper/css/pagination'
+
+const mainbanner = ref([
+    {
+        index: 1,
+        video: vid1,
+    },
+    {
+        index: 2,
+        video: vid2,
+    },
+    {
+        index: 3,
+        video: vid3,
+    },
+])
+const secondbanner = ref([
+    {
+        index: 1,
+        banner:banner1
+    },
+    {
+        index: 2,
+        banner:banner2
+    },
+])
+const reseller = ref([
+    {
+        index:1,
+        shop: "toko a"
+    },
+    {
+        index:2,
+        shop: "toko b"
+    },
+    {
+        index:3,
+        shop: "toko c"
+    },
+])
 
 const swiperModules = [Navigation, Autoplay]
 const swiperJs = swiper => {}
@@ -185,7 +225,7 @@ const swiperConfig = {
         <!-- New Product -->
         <div class="w-full pb-16">
             <div
-                class="flex flex-col justify-center mx-auto w-full max-w-[1140px] px-16 relative">
+                class="flex flex-col justify-center mx-auto w-full max-w-[1140px] px-4 md:px-16 relative">
                 <swiper
                     class="max-w-full mb-2"
                     :breakpoints="{
@@ -213,10 +253,10 @@ const swiperConfig = {
                                 <div class=" flex justify-center items-center mb-2">
                                     New Product Upto 50% off
                                 </div>
-                                <div class="flex overflow-hidden text-sm rounded-full w-full bg-gray-500 relative">
+                                <div class="flex overflow-hidden text-sm rounded-full w-full bg-gray-400 relative">
                                     <div 
                                         style="width: 30%"
-                                        class=" bg-orange-400 absolute h-10 top-0 left-0">
+                                        class=" bg-semupink absolute h-10 top-0 left-0">
                                     </div>
                                     <div class=" text-white w-full text-center py-1 relative">300 Terjual</div>
                                 </div>
@@ -843,7 +883,7 @@ const swiperConfig = {
                                 </td>
                                 <td class="w-1/3 p-1 md:p-4">
                                     <div
-                                        class=" w-full md:w-4/6 mx-auto rounded-lg flex justify-center items-center h-40 md:h-52 lg:h-72 bg-gray-600 overflow-hidden">
+                                        class=" w-full md:w-4/6 mx-auto rounded-lg flex justify-center items-center h-32 md:h-52 lg:h-72 bg-gray-600 overflow-hidden">
                                         <img
                                             class="min-h-full min-w-full"
                                             src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/No-Image-Placeholder.svg/1665px-No-Image-Placeholder.svg.png"
@@ -852,7 +892,7 @@ const swiperConfig = {
                                 </td>
                                 <td class="w-1/3 p-1 md:p-4">
                                     <div
-                                        class=" w-full md:w-4/6 mx-auto rounded-lg flex justify-center items-center h-40 md:h-52 lg:h-72 bg-gray-600 overflow-hidden">
+                                        class=" w-full md:w-4/6 mx-auto rounded-lg flex justify-center items-center h-32 md:h-52 lg:h-72 bg-gray-600 overflow-hidden">
                                         <img
                                             class="min-h-full min-w-full"
                                             src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/No-Image-Placeholder.svg/1665px-No-Image-Placeholder.svg.png"
@@ -929,44 +969,6 @@ export default {
     },
     data() {
         return {
-            mainbanner: [
-                {
-                    index: 1,
-                    video: vid1,
-                },
-                {
-                    index: 2,
-                    video: vid2,
-                },
-                {
-                    index: 3,
-                    video: vid3,
-                },
-            ],
-            secondbanner: [
-                {
-                    index: 1,
-                    banner:banner1
-                },
-                {
-                    index: 2,
-                    banner:banner2
-                },
-            ],
-            reseller: [
-                {
-                    index:1,
-                    shop: "toko a"
-                },
-                {
-                    index:2,
-                    shop: "toko b"
-                },
-                {
-                    index:3,
-                    shop: "toko c"
-                },
-            ],
             price: 0,
             rating: 5,
             activefilter: 'no',
