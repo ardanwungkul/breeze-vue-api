@@ -10,6 +10,10 @@ import {
     FreeMode,
     Thumbs,
 } from 'swiper/modules'
+import banner3 from '@/assets/images/banner3.jpg'
+import banner5 from '@/assets/images/banner-5.jpeg'
+import person from '@/assets/images/person.jpeg'
+import flower from '@/assets/images/flower.jpeg'
 import 'swiper/css'
 import 'swiper/css/free-mode'
 import 'swiper/css/thumbs'
@@ -67,16 +71,29 @@ const swiperJs = swiper => {}
             :modules="modules"
             :loop="true"
             :speed="1300"
-            :autoplay="{
-                delay: 3000,
-            }"
+            :allowTouchMove="false"
             @swiper="swiperJs">
             <swiper-slide v-for="i in 3" :key="i">
-                <div class="relative">
-                    <img
-                        src="@/assets/images/banner3.jpg"
-                        class="absolute w-full min-h-44 md:min-h-72"
-                        alt="" />
+                <div class="relative w-full md:h-72">
+                    <div class=" w-full h-full absolute top-0 left-0 bg-black">
+                        <v-img
+                            :src="banner3"
+                            aspect-ratio="1"
+                            class=" min-w-full"
+                            cover   
+                        >
+                            <template v-slot:placeholder>
+                            <div
+                                class=" w-full h-full flex justify-center items-center"
+                            >
+                                <v-progress-circular
+                                color=""
+                                indeterminate
+                                ></v-progress-circular>
+                            </div>
+                            </template>
+                        </v-img>
+                    </div>
                     <div
                         class="w-full min-h-44 md:min-h-72 flex justify-center items-center relative z-10">
                         <div class="flex flex-col min-h-full justify-center">
@@ -260,11 +277,41 @@ const swiperJs = swiper => {}
             </div>
             <div
                 class="w-[47vw] md:w-[47%] h-[30vw] md:min-h-[35vh] max-h-[35vh] relative">
-                <img src="@/assets/images/flower.jpeg" alt="" srcset="" />
+                <v-img
+                    :src="flower"
+                    aspect-ratio="1"
+                    class=" min-w-full min-h-full"
+                >
+                    <template v-slot:placeholder>
+                    <div
+                        class=" w-full h-full flex justify-center items-center"
+                    >
+                        <v-progress-circular
+                        color=""
+                        indeterminate
+                        ></v-progress-circular>
+                    </div>
+                    </template>
+                </v-img>
             </div>
             <div
                 class="w-[35vw] md:w-[35%] h-[40vw] md:min-h-[60vh] max-h-[60vh] relative">
-                <img src="@/assets/images/person.jpeg" alt="" srcset="" />
+                <v-img
+                    :src="person"
+                    aspect-ratio="1"
+                    class=" min-w-full min-h-full"
+                >
+                    <template v-slot:placeholder>
+                    <div
+                        class=" w-full h-full flex justify-center items-center"
+                    >
+                        <v-progress-circular
+                        color=""
+                        indeterminate
+                        ></v-progress-circular>
+                    </div>
+                    </template>
+                </v-img>
             </div>
         </div>
         <!-- Skincare -->
@@ -272,7 +319,22 @@ const swiperJs = swiper => {}
             class="w-full max-w-[1320px] px-3 mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 pt-24 md:pt-16 gap-7 mt-5">
             <div v-for="i in 3" :key="i" class="p-5 bg-white">
                 <div class="w-full min-h-48 mb-5">
-                    <img src="@/assets/images/banner-5.jpeg" alt="" srcset="" />
+                    <v-img
+                        :src="banner5"
+                        aspect-ratio="1"
+                        class=" min-w-full min-h-full"
+                    >
+                        <template v-slot:placeholder>
+                        <div
+                            class=" w-full h-full flex justify-center items-center"
+                        >
+                            <v-progress-circular
+                            color=""
+                            indeterminate
+                            ></v-progress-circular>
+                        </div>
+                        </template>
+                    </v-img>
                 </div>
                 <div class="text-center mb-2 font-medium">Skincare</div>
                 <div class="mb-2">

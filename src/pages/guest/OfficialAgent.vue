@@ -34,11 +34,24 @@ const swiperJs = swiper => {}
                     <div
                         v-for="n in 3"
                         class="w-full px-3 flex items-center justify-center">
-                        <img
+                        <v-img
                             :key="n"
                             src="https://ralfvanveen.com/wp-content/uploads/2021/06/Placeholder-_-Glossary.svg"
-                            class="h-[150px] object-cover rounded-md border"
-                            alt="" />
+                            aspect-ratio="1"
+                            class=" h-[150px] min-w-full min-h-full rounded-md border"
+                            cover
+                        >
+                            <template v-slot:placeholder>
+                            <div
+                                class=" w-full h-full flex justify-center items-center"
+                            >
+                                <v-progress-circular
+                                color=""
+                                indeterminate
+                                ></v-progress-circular>
+                            </div>
+                            </template>
+                        </v-img>
                     </div>
                 </div>
             </div>
@@ -70,10 +83,23 @@ const swiperJs = swiper => {}
                         <swiper-slide v-for="n in 10" :key="n">
                             <div
                                 class="flex flex-col justify-center items-center text-center gap-2">
-                                <img
-                                    src="https://ralfvanveen.com/wp-content/uploads/2021/06/Placeholder-_-Glossary.svg"
-                                    alt=""
-                                    class="w-20 h-20 object-cover rounded-full" />
+                                <v-img
+                                    :src="'https://ralfvanveen.com/wp-content/uploads/2021/06/Placeholder-_-Glossary.svg'"
+                                    aspect-ratio="1"
+                                    class=" w-20 h-20 object-cover rounded-full"
+                                    cover
+                                >
+                                    <template v-slot:placeholder>
+                                    <div
+                                        class=" w-full h-full flex justify-center items-center"
+                                    >
+                                        <v-progress-circular
+                                        color=""
+                                        indeterminate
+                                        ></v-progress-circular>
+                                    </div>
+                                    </template>
+                                </v-img>
                                 <p class="text-gray-600">
                                     Lorem ipsum dolor sit amet, consec
                                     adipiscing elit. Nam eusem scelerisque

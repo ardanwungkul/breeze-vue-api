@@ -6,6 +6,8 @@ import production from '@/assets/images/laboratorium.png'
 import achievement from '@/assets/images/achievement.png'
 import { RouterLink } from 'vue-router'
 
+import gedung from '@/assets/images/gedung.jpg'
+
 import { Swiper, SwiperSlide } from 'swiper/vue'
 import { Navigation, Autoplay } from 'swiper/modules'
 import 'swiper/css'
@@ -60,12 +62,23 @@ const swiperConfig = {
                                     ' translate-y-0 opacity-0':
                                         activeDiv !== i.index,
                                 }"
-                                class=" w-28 md:w-1/5 min-h-full md:min-h-32 duration-1000 right-0 md:left-1/2 -translate-x-1/3 top-1/4 md:top-1/2 flex items-center absolute">
-                                <img
-                                    class="max-h-full"
+                                class=" w-40 md:w-1/5 min-h-full md:h-32 duration-1000 -right-10 md:left-1/2 -translate-x-1/3 top-40 md:top-1/2 lg:top-1/3 flex items-center absolute">
+                                <v-img
                                     :src="i.img"
-                                    alt=""
-                                    srcset="" />
+                                    aspect-ratio="1"
+                                    class=" h-full" 
+                                >
+                                    <template v-slot:placeholder>
+                                    <div
+                                        class=" w-full h-full flex justify-center items-center"
+                                    >
+                                        <v-progress-circular
+                                        color=""
+                                        indeterminate
+                                        ></v-progress-circular>
+                                    </div>
+                                    </template>
+                                </v-img>
                             </div>
                         </div>
                     </div>
@@ -87,10 +100,25 @@ const swiperConfig = {
                                     }"
                                     @swiper="swiperJs">
                                     <swiper-slide v-for="i in 3" :key="i">
-                                        <img
-                                            class=" min-h-full"
-                                            src="@/assets/images/gedung.jpg"
-                                            alt="" />
+                                        <div class=" w-full min-h-full flex">
+                                            <v-img
+                                                :src="gedung"
+                                                aspect-ratio="1"
+                                                class=" min-w-full min-h-full text-transparent"
+                                                cover
+                                            >.
+                                                <template v-slot:placeholder>
+                                                <div
+                                                    class=" w-full h-full flex justify-center items-center"
+                                                >
+                                                    <v-progress-circular
+                                                    color=""
+                                                    indeterminate
+                                                    ></v-progress-circular>
+                                                </div>
+                                                </template>
+                                            </v-img>
+                                        </div>
                                     </swiper-slide>
                                     <div
                                         class="absolute z-30 flex flex-row bottom-0 gap-1 right-1.5 justify-between">
@@ -158,12 +186,23 @@ const swiperConfig = {
                                         @click="toggleClass(i.index)"
                                         class="bg-white/20 w-full border border-white/30 duration-200 hover:opacity-50 h-full backdrop-blur rounded-sm p-5">
                                         <div
-                                            class="w-full max-h-[15vh] flex justify-center mb-2">
-                                            <img
-                                                class="max-h-[8vh]"
+                                            class="w-full max-h-[10vh] flex justify-center mb-2">
+                                            <v-img
                                                 :src="i.img"
-                                                alt=""
-                                                srcset="" />
+                                                aspect-ratio="1"
+                                                class=" min-w-full max-h-full"
+                                            >
+                                                <template v-slot:placeholder>
+                                                <div
+                                                    class=" w-full h-full flex justify-center items-center"
+                                                >
+                                                    <v-progress-circular
+                                                    color=""
+                                                    indeterminate
+                                                    ></v-progress-circular>
+                                                </div>
+                                                </template>
+                                            </v-img>
                                         </div>
                                         <div class="text-sm">{{ i.title }}</div>
                                     </button>
