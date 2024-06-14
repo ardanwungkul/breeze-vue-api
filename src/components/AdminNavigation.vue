@@ -1,6 +1,16 @@
 <script setup>
-import { ref, inject, onMounted } from 'vue'
+import { ref, inject, onMounted, onBeforeMount } from 'vue'
+import { useUsers } from '@/stores/user'
 import { Dropdown } from 'flowbite'
+
+const store = useUsers()
+const auth = store.authUser
+
+onBeforeMount(() => {
+    if (!store.hasUserData) {
+        store.getData()
+    }
+})
 
 const rail = inject('rail')
 const sidebarItem = ref([
@@ -95,6 +105,9 @@ onMounted(() => {
         instanceOptions,
     )
 })
+const submitLogout = () => {
+    store.logout()
+}
 </script>
 <template>
     <v-navigation-drawer
@@ -111,14 +124,14 @@ onMounted(() => {
                 class="fa-solid"
                 :class="!rail ? 'fa-chevron-left' : 'fa-chevron-right'"></i>
         </button>
-        <v-list>
+        <v-list class="!overflow-hidden !rounded-t-2xl">
             <v-list-item
                 prepend-avatar="https://randomuser.me/api/portraits/women/85.jpg"
-                subtitle="sandra_a88@gmailcom"
-                title="Sandra Adams"></v-list-item>
+                :subtitle="store.userData.email"
+                :title="store.userData.name"></v-list-item>
         </v-list>
         <v-divider></v-divider>
-        <ul class="p-2 space-y-1">
+        <ul class="p-2 space-y-1 overflow-hidden relative">
             <li v-for="(item, index) in sidebarItem" :key="index">
                 <div id="accordion-example" v-if="item.isHasChild == true">
                     <h2 id="accordion-example-heading-1" class="bg-transparent">
@@ -177,6 +190,21 @@ onMounted(() => {
                     </div>
                 </router-link>
             </li>
+            <div class="bottom-3">
+                <button
+                    @click="submitLogout"
+                    type="button"
+                    class="w-full py-2 px-2 hover:bg-neutral-200 cursor-pointer rounded-lg flex items-center gap-4">
+                    <div class="w-[28px] flex-none flex justify-center">
+                        <i
+                            class="text-neutral-500 fa-solid fa-right-from-bracket"></i>
+                    </div>
+                    <p
+                        class="font-medium text-sm whitespace-nowrap text-gray-700">
+                        Logout
+                    </p>
+                </button>
+            </div>
         </ul>
     </v-navigation-drawer>
 </template>

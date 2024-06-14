@@ -10,8 +10,10 @@ provide('rail', rail)
     <div class="font-poppins">
         <v-card class="!bg-neutral-100">
             <v-layout>
-                <div class="py-3">
-                    <Navigation></Navigation>
+                <div class="py-3 h-screen relative">
+                    <div class="h-full sticky top-0">
+                        <Navigation></Navigation>
+                    </div>
                 </div>
 
                 <div class="min-h-screen w-full p-5">
