@@ -29,6 +29,10 @@ const mainbanner = ref([
         index: 3,
         video: vid3,
     },
+    {
+        index: 4,
+        video: vid2,
+    },
 ])
 const secondbanner = ref([
     {
@@ -43,7 +47,7 @@ const secondbanner = ref([
 const reseller = ref([
     {
         index:1,
-        shop: "toko a"
+        shop: "Beauty Shop"
     },
     {
         index:2,
@@ -53,6 +57,58 @@ const reseller = ref([
         index:3,
         shop: "toko c"
     },
+    {
+        index:4,
+        shop: "toko d"
+    },
+])
+const categories = ref([
+    {
+        index: 1,
+        category: 'Skincare',
+        subcategories: [
+            {
+                index: 1,
+                subcategory: 'Brigthening Series'
+            },
+            {
+                index: 1,
+                subcategory: 'Acne Series'
+            },
+        ]
+    },
+    {
+        index: 2,
+        category: 'Cosmetics',
+        subcategories: [
+            {
+                index: 1,
+                subcategory: 'Liptint'
+            },
+            {
+                index: 2,
+                subcategory: 'Lip Cream'
+            },
+            {
+                index: 3,
+                subcategory: 'Lip Glose'
+            },
+        ]
+    },
+    {
+        index: 3,
+        category: 'Body Care',
+        subcategories: [
+            {
+                index: 1,
+                subcategory: 'Body Wash'
+            },
+            {
+                index: 2,
+                subcategory: 'Peaching Body Spray'
+            },
+        ]
+    }
 ])
 
 const swiperModules = [Navigation, Autoplay]
@@ -309,9 +365,9 @@ const swiperConfig = {
         <div class="w-full px-0 md:px-8 lg:px-0 pb-16">
             <div
                 class="flex flex-col justify-center mx-auto w-full max-w-[1320px] relative">
-                <div class="w-full flex flex-col md:flex-row gap-5">
+                <div class="w-full flex flex-col md:flex-row gap-5 sm:gap-0">
                     <!-- filter desktop -->
-                    <div class=" hidden  md:block w-1/4">
+                    <div class=" hidden  md:block w-1/4 md:pl-4 2xl:pl-0">
                         <div class="border p-4">
                             <div class="font-medium mb-2">Filter by Price</div>
                             <input
@@ -363,153 +419,50 @@ const swiperConfig = {
                         </div>
                         <div class="border border-t-transparent py-4 mb-5">
                             <div class="font-medium mb-4 px-4">Categories</div>
-                            <!-- Skincare -->
                             <div
-                                @click="toggleClass(1)"
-                                class="w-full flex flex-row px-4 py-2 justify-between hover:text-darkbrownshop">
-                                <div class="">Skincare</div>
-                                <div class="w-4 h-4">
-                                    <svg
-                                        class="feather feather-chevron-down"
-                                        fill="none"
-                                        height="24"
-                                        stroke="currentColor"
-                                        stroke-linecap="round"
-                                        stroke-linejoin="round"
-                                        stroke-width="2"
-                                        viewBox="0 0 24 24"
-                                        width="24"
-                                        xmlns="http://www.w3.org/2000/svg">
-                                        <polyline points="6 9 12 15 18 9" />
-                                    </svg>
+                                v-for="c in categories" :key="c"
+                                class="w-full"
+                            >
+                                <div
+                                    @click="toggleClass(c.index)"
+                                    class="w-full flex flex-row px-4 py-2 justify-between border-b hover:text-darkbrownshop">
+                                    <div class="">{{c.category}}</div>
+                                    <div class="w-4 h-4">
+                                        <svg
+                                            class="feather feather-chevron-down"
+                                            fill="none"
+                                            height="24"
+                                            stroke="currentColor"
+                                            stroke-linecap="round"
+                                            stroke-linejoin="round"
+                                            stroke-width="2"
+                                            viewBox="0 0 24 24"
+                                            width="24"
+                                            xmlns="http://www.w3.org/2000/svg">
+                                            <polyline points="6 9 12 15 18 9" />
+                                        </svg>
+                                    </div>
                                 </div>
-                            </div>
-                            <div
-                                :class="{
-                                    block: activeDiv === 1,
-                                    hidden: activeDiv !== 1,
-                                }"
-                                class="bg-brownshop py-4">
-                                <button
-                                    class="w-full py-1 px-4 text-left hover:bg-white">
-                                    Brigthening Series
-                                </button>
-                                <button
-                                    class="w-full py-1 px-4 text-left hover:bg-white">
-                                    Acne Series
-                                </button>
-                                <button
-                                    class="w-full py-1 px-4 text-left hover:bg-white">
-                                    Youth Series
-                                </button>
-                                <button
-                                    class="w-full py-1 px-4 text-left hover:bg-white">
-                                    Eye Cream
-                                </button>
-                                <button
-                                    class="w-full py-1 px-4 text-left hover:bg-white">
-                                    Anti Wringkle Serum
-                                </button>
-                                <button
-                                    class="w-full py-1 px-4 text-left hover:bg-white">
-                                    Peeling Serum
-                                </button>
-                            </div>
-                            <!-- Cosmetic -->
-                            <div
-                                @click="toggleClass(2)"
-                                class="w-full flex flex-row px-4 py-2 justify-between hover:text-darkbrownshop">
-                                <div class="">Cosmetic</div>
-                                <div class="w-4 h-4">
-                                    <svg
-                                        class="feather feather-chevron-down"
-                                        fill="none"
-                                        height="24"
-                                        stroke="currentColor"
-                                        stroke-linecap="round"
-                                        stroke-linejoin="round"
-                                        stroke-width="2"
-                                        viewBox="0 0 24 24"
-                                        width="24"
-                                        xmlns="http://www.w3.org/2000/svg">
-                                        <polyline points="6 9 12 15 18 9" />
-                                    </svg>
+                                <div
+                                    :class="{
+                                        block: activeDiv === c.index,
+                                        hidden: activeDiv !== c.index,
+                                    }"
+                                    class="bg-brownshop py-4">
+                                    <button
+                                        v-for="sb in c.subcategories" :key="sb"
+                                        class="w-full py-1 px-4 text-left hover:bg-white">
+                                        {{ sb.subcategory }}
+                                    </button>
                                 </div>
-                            </div>
-                            <div
-                                :class="{
-                                    block: activeDiv === 2,
-                                    hidden: activeDiv !== 2,
-                                }"
-                                class="bg-brownshop py-4">
-                                <button
-                                    class="w-full py-1 px-4 text-left hover:bg-white">
-                                    Liptint
-                                </button>
-                                <button
-                                    class="w-full py-1 px-4 text-left hover:bg-white">
-                                    Lip Cream
-                                </button>
-                                <button
-                                    class="w-full py-1 px-4 text-left hover:bg-white">
-                                    Lip Glose
-                                </button>
-                            </div>
-                            <!-- Body Care -->
-                            <div
-                                @click="toggleClass(3)"
-                                class="w-full flex flex-row px-4 py-2 justify-between hover:text-darkbrownshop">
-                                <div class="">Body Care</div>
-                                <div class="w-4 h-4">
-                                    <svg
-                                        class="feather feather-chevron-down"
-                                        fill="none"
-                                        height="24"
-                                        stroke="currentColor"
-                                        stroke-linecap="round"
-                                        stroke-linejoin="round"
-                                        stroke-width="2"
-                                        viewBox="0 0 24 24"
-                                        width="24"
-                                        xmlns="http://www.w3.org/2000/svg">
-                                        <polyline points="6 9 12 15 18 9" />
-                                    </svg>
-                                </div>
-                            </div>
-                            <div
-                                :class="{
-                                    block: activeDiv === 3,
-                                    hidden: activeDiv !== 3,
-                                }"
-                                class="bg-brownshop py-4">
-                                <button
-                                    class="w-full py-1 px-4 text-left hover:bg-white">
-                                    Body Wash
-                                </button>
-                                <button
-                                    class="w-full py-1 px-4 text-left hover:bg-white">
-                                    Peaching Body Spray
-                                </button>
-                                <button
-                                    class="w-full py-1 px-4 text-left hover:bg-white">
-                                    Coffe Mask And Body Scrub
-                                </button>
-                                <button
-                                    class="w-full py-1 px-4 text-left hover:bg-white">
-                                    Body Serum
-                                </button>
-                                <button
-                                    class="w-full py-1 px-4 text-left hover:bg-white">
-                                    Instant Glow Body Serum
-                                </button>
                             </div>
                         </div>
-                        <div class=" min-w-full h-[50vw] lg:h-[88vh]">
+                        <div class=" w-full mt-5 md:h-[500px] lg:h-[700px]">
                             <v-img
                                 :src="sidebanner"
                                 aspect-ratio="1"
-                                class=" min-w-full min-h-full"
-                                
+                                class=" min-h-full"
+                                cover
                             >
                                 <template v-slot:placeholder>
                                 <div
@@ -524,9 +477,10 @@ const swiperConfig = {
                             </v-img>
                         </div>
                     </div>
+                    <!-- Product -->
                     <div class=" w-full md:w-3/4 flex flex-col">
-                        <div class=" sticky top-14 bg-[#f8f8f6] flex p-4 md:p-0 md:py-2 md:shadow-sm shadow-black flex-col md:flex-row justify-between mb-5 z-30">
-                            <div class=" mb-2 md:mb-0 h-8 flex flex-row">
+                        <div class=" sticky top-14 bg-[#f8f8f6] flex p-4 md:px-5 md:py-2 flex-col md:flex-row md:gap-5 justify-between md:items-center mb-5 z-30">
+                            <div class=" mb-2 md:mb-0 flex flex-row max-h-10">
                                 <input
                                     type="text"
                                     class="text-gray-600 border bg-transparent border-gray-200 focus:ring-transparent focus:border-gray-200"
@@ -549,18 +503,18 @@ const swiperConfig = {
                                     </button>
                                 </div>
                             </div>
-                            <ul class="max-h-8 flex flex-row">
-                                <li>
+                            <ul class=" flex flex-row flex-wrap md:flex-wrap-reverse md:justify-end">
+                                <li
+                                    v-for="i in reseller" :key="i.index">
                                     <button
-                                        v-for="i in reseller" :key="i.index"
                                         type="button"
-                                        class="h-8 text-sm px-4 bg-customLightPurple focus:text-white focus:bg-semupink duration-200">
+                                        class=" py-1 text-sm px-4 bg-customLightPurple focus:text-white focus:bg-semupink duration-200">
                                         {{i.shop}}
                                     </button>
                                 </li>
                             </ul>
                         </div>
-                        <div class="grid duration-300 px-4 md:p-0 grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-8 lg:mb-10">
+                        <div class="grid duration-300 px-4 md:px-5 grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-8 lg:mb-10">
                             <div
                                 class="flex flex-col min-w-[32.2%] rounded-3xl overflow-hidden w-full shadow-lg shadow-black/20"
                                 v-for="i in 8"
@@ -631,7 +585,7 @@ const swiperConfig = {
                             </div>
                         </div>
                         <div
-                            class="hidden lg:flex flex-col justify-center mx-auto w-full px-4 md:max-w-[1320px] relative">
+                            class="hidden lg:flex flex-col justify-center mx-auto w-full px-4 lg:px-5 md:max-w-[1320px] relative">
                             <div class="w-full flex flex-row gap-5">
                                 <div class="w-full">
                                     <table class="w-full">
@@ -669,19 +623,45 @@ const swiperConfig = {
                                             <td class="w-1/3 p-1 md:p-4">
                                                 <div
                                                     class=" w-full md:w-4/6 mx-auto rounded-lg flex justify-center items-center h-40 md:h-52 bg-gray-600 overflow-hidden">
-                                                    <img
-                                                        class="min-h-full min-w-full"
+                                                    <v-img
                                                         src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/No-Image-Placeholder.svg/1665px-No-Image-Placeholder.svg.png"
-                                                        alt="" />
+                                                        aspect-ratio="1"
+                                                        class=" min-h-full"
+                                                        cover
+                                                    >
+                                                        <template v-slot:placeholder>
+                                                        <div
+                                                            class=" w-full h-full flex justify-center items-center"
+                                                        >
+                                                            <v-progress-circular
+                                                            color=""
+                                                            indeterminate
+                                                            ></v-progress-circular>
+                                                        </div>
+                                                        </template>
+                                                    </v-img>
                                                 </div>
                                             </td>
                                             <td class="w-1/3 p-1 md:p-4">
                                                 <div
                                                     class=" w-full md:w-4/6 mx-auto rounded-lg flex justify-center items-center h-40 md:h-52 bg-gray-600 overflow-hidden">
-                                                    <img
-                                                        class="min-h-full min-w-full"
+                                                    <v-img
                                                         src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/No-Image-Placeholder.svg/1665px-No-Image-Placeholder.svg.png"
-                                                        alt="" />
+                                                        aspect-ratio="1"
+                                                        class=" min-h-full"
+                                                        cover
+                                                    >
+                                                        <template v-slot:placeholder>
+                                                        <div
+                                                            class=" w-full h-full flex justify-center items-center"
+                                                        >
+                                                            <v-progress-circular
+                                                            color=""
+                                                            indeterminate
+                                                            ></v-progress-circular>
+                                                        </div>
+                                                        </template>
+                                                    </v-img>
                                                 </div>
                                             </td>
                                         </tr>
@@ -715,11 +695,24 @@ const swiperConfig = {
                         </div>
                     </div>
                     <!-- filter mobile -->
-                    <div class=" flex px-4 justify-center md:hidden w-full">
-                        <img
-                        class=""
-                        src="@/assets/images/banner1.png"
-                        alt="" />
+                    <div class=" flex pt-5 px-4 justify-center md:hidden w-full h-[1000px]">
+                        <v-img
+                            :src="sidebanner"
+                            aspect-ratio="1"
+                            class=" min-h-full"
+                            cover
+                        >
+                            <template v-slot:placeholder>
+                            <div
+                                class=" w-full h-full flex justify-center items-center"
+                            >
+                                <v-progress-circular
+                                color=""
+                                indeterminate
+                                ></v-progress-circular>
+                            </div>
+                            </template>
+                        </v-img>
                     </div>
                     <div 
                         :class="{ 'block': activefilter === 'yes', ' hidden': activefilter !== 'yes' }"
@@ -758,145 +751,42 @@ const swiperConfig = {
                             </div>
                             <div class="border border-t-transparent py-4 mb-4">
                                 <div class="font-medium mb-4 px-4">Categories</div>
-                                <!-- Skincare -->
                                 <div
-                                    @click="toggleClass(1)"
-                                    class="w-full flex flex-row px-4 py-2 justify-between hover:text-darkbrownshop">
-                                    <div class="">Skincare</div>
-                                    <div class="w-4 h-4">
-                                        <svg
-                                            class="feather feather-chevron-down"
-                                            fill="none"
-                                            height="24"
-                                            stroke="currentColor"
-                                            stroke-linecap="round"
-                                            stroke-linejoin="round"
-                                            stroke-width="2"
-                                            viewBox="0 0 24 24"
-                                            width="24"
-                                            xmlns="http://www.w3.org/2000/svg">
-                                            <polyline points="6 9 12 15 18 9" />
-                                        </svg>
+                                    v-for="c in categories" :key="c"
+                                    class="w-full"
+                                >
+                                    <div
+                                        @click="toggleClass(c.index)"
+                                        class="w-full flex flex-row px-4 py-2 justify-between border-b hover:text-darkbrownshop">
+                                        <div class="">{{c.category}}</div>
+                                        <div class="w-4 h-4">
+                                            <svg
+                                                class="feather feather-chevron-down"
+                                                fill="none"
+                                                height="24"
+                                                stroke="currentColor"
+                                                stroke-linecap="round"
+                                                stroke-linejoin="round"
+                                                stroke-width="2"
+                                                viewBox="0 0 24 24"
+                                                width="24"
+                                                xmlns="http://www.w3.org/2000/svg">
+                                                <polyline points="6 9 12 15 18 9" />
+                                            </svg>
+                                        </div>
                                     </div>
-                                </div>
-                                <div
-                                    :class="{
-                                        block: activeDiv === 1,
-                                        hidden: activeDiv !== 1,
-                                    }"
-                                    class="bg-brownshop py-4">
-                                    <button
-                                        class="w-full py-1 px-4 text-left hover:bg-white">
-                                        Brigthening Series
-                                    </button>
-                                    <button
-                                        class="w-full py-1 px-4 text-left hover:bg-white">
-                                        Acne Series
-                                    </button>
-                                    <button
-                                        class="w-full py-1 px-4 text-left hover:bg-white">
-                                        Youth Series
-                                    </button>
-                                    <button
-                                        class="w-full py-1 px-4 text-left hover:bg-white">
-                                        Eye Cream
-                                    </button>
-                                    <button
-                                        class="w-full py-1 px-4 text-left hover:bg-white">
-                                        Anti Wringkle Serum
-                                    </button>
-                                    <button
-                                        class="w-full py-1 px-4 text-left hover:bg-white">
-                                        Peeling Serum
-                                    </button>
-                                </div>
-                                <!-- Cosmetic -->
-                                <div
-                                    @click="toggleClass(2)"
-                                    class="w-full flex flex-row px-4 py-2 justify-between hover:text-darkbrownshop">
-                                    <div class="">Cosmetic</div>
-                                    <div class="w-4 h-4">
-                                        <svg
-                                            class="feather feather-chevron-down"
-                                            fill="none"
-                                            height="24"
-                                            stroke="currentColor"
-                                            stroke-linecap="round"
-                                            stroke-linejoin="round"
-                                            stroke-width="2"
-                                            viewBox="0 0 24 24"
-                                            width="24"
-                                            xmlns="http://www.w3.org/2000/svg">
-                                            <polyline points="6 9 12 15 18 9" />
-                                        </svg>
+                                    <div
+                                        :class="{
+                                            block: activeDiv === c.index,
+                                            hidden: activeDiv !== c.index,
+                                        }"
+                                        class="bg-brownshop py-4">
+                                        <button
+                                            v-for="sb in c.subcategories" :key="sb"
+                                            class="w-full py-1 px-4 text-left hover:bg-white">
+                                            {{ sb.subcategory }}
+                                        </button>
                                     </div>
-                                </div>
-                                <div
-                                    :class="{
-                                        block: activeDiv === 2,
-                                        hidden: activeDiv !== 2,
-                                    }"
-                                    class="bg-brownshop py-4">
-                                    <button
-                                        class="w-full py-1 px-4 text-left hover:bg-white">
-                                        Liptint
-                                    </button>
-                                    <button
-                                        class="w-full py-1 px-4 text-left hover:bg-white">
-                                        Lip Cream
-                                    </button>
-                                    <button
-                                        class="w-full py-1 px-4 text-left hover:bg-white">
-                                        Lip Glose
-                                    </button>
-                                </div>
-                                <!-- Body Care -->
-                                <div
-                                    @click="toggleClass(3)"
-                                    class="w-full flex flex-row px-4 py-2 justify-between hover:text-darkbrownshop">
-                                    <div class="">Body Care</div>
-                                    <div class="w-4 h-4">
-                                        <svg
-                                            class="feather feather-chevron-down"
-                                            fill="none"
-                                            height="24"
-                                            stroke="currentColor"
-                                            stroke-linecap="round"
-                                            stroke-linejoin="round"
-                                            stroke-width="2"
-                                            viewBox="0 0 24 24"
-                                            width="24"
-                                            xmlns="http://www.w3.org/2000/svg">
-                                            <polyline points="6 9 12 15 18 9" />
-                                        </svg>
-                                    </div>
-                                </div>
-                                <div
-                                    :class="{
-                                        block: activeDiv === 3,
-                                        hidden: activeDiv !== 3,
-                                    }"
-                                    class="bg-brownshop py-4">
-                                    <button
-                                        class="w-full py-1 px-4 text-left hover:bg-white">
-                                        Body Wash
-                                    </button>
-                                    <button
-                                        class="w-full py-1 px-4 text-left hover:bg-white">
-                                        Peaching Body Spray
-                                    </button>
-                                    <button
-                                        class="w-full py-1 px-4 text-left hover:bg-white">
-                                        Coffe Mask And Body Scrub
-                                    </button>
-                                    <button
-                                        class="w-full py-1 px-4 text-left hover:bg-white">
-                                        Body Serum
-                                    </button>
-                                    <button
-                                        class="w-full py-1 px-4 text-left hover:bg-white">
-                                        Instant Glow Body Serum
-                                    </button>
                                 </div>
                             </div>
                         </div>
