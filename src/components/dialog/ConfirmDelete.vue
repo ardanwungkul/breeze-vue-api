@@ -1,5 +1,6 @@
 <script setup>
 import { ref } from 'vue'
+
 const props = defineProps({
     type: {
         type: String,
@@ -54,7 +55,7 @@ const handleDelete = async () => {
                             d="M10 11V6m0 8h.01M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
                     </svg>
                     <p class="mb-5 text-lg font-normal text-gray-500">
-                        Are you sure you want to delete this ?
+                        Are you sure you want to delete this {{ type }} ?
                     </p>
                     <div class="flex justify-center items-center">
                         <button
