@@ -1,6 +1,8 @@
 import axios from '@/lib/axios'
 import { defineStore, acceptHMRUpdate } from 'pinia'
 
+const csrf = () => axios.get('/sanctum/csrf-cookie')
+
 export const useCategoryStore = defineStore({
     id: 'category',
     state: () => ({
@@ -33,6 +35,19 @@ export const useCategoryStore = defineStore({
             try {
                 const response = await axios.post('/api/category', newCategory)
                 this.categories.push(response.data)
+                processing.value = false
+            } catch (error) {
+                this.error = error
+                processing.value = false
+            } finally {
+                processing.value = false
+            }
+        },
+        async deleteCategory(id, processing) {
+            await csrf()
+            processing.value = true
+            try {
+                const response = await axios.delete(`/api/category/${id}`)
                 processing.value = false
             } catch (error) {
                 this.error = error
