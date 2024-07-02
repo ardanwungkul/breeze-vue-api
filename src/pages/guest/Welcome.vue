@@ -379,7 +379,6 @@ const activeTab = ref('first')
                     </div>
                 </div>
             </div>
-
             <div class="max-w-[1120px] mx-auto px-3 sm:px-3 xl:px-0">
                 <!-- Best Seller -->
                 <div class="w-full py-9 md:grid md:grid-cols-3 md:gap-5">

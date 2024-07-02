@@ -21,3 +21,17 @@
                     Q 0 84% 0 0'
     );
 }
+
+.vs__dropdown-toggle {
+    background-color: #f3f4f6 !important;
+    border: none !important;
+    height: 36px !important;
+    border-radius: 8px !important;
+}
+.vs__search {
+    font-size: 14px !important;
+    color: gray !important;
+}
+.invisible-scrollbar::-webkit-scrollbar {
+    display: none;
+}

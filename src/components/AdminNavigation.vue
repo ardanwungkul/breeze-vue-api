@@ -1,10 +1,8 @@
 <script setup>
 import { ref, inject, onMounted, onBeforeMount } from 'vue'
 import { useUsers } from '@/stores/user'
-import { Dropdown } from 'flowbite'
 
 const store = useUsers()
-const auth = store.authUser
 
 onBeforeMount(() => {
     if (!store.hasUserData) {
@@ -40,7 +38,7 @@ const sidebarItem = ref([
     },
     {
         icon: 'fa-solid fa-store',
-        to: 'admin.dashboard',
+        to: 'admin.shop.index',
         title: 'Shop',
         isHasChild: false,
     },
@@ -52,7 +50,7 @@ const sidebarItem = ref([
     },
     {
         icon: 'fa-solid fa-building',
-        to: 'admin.dashboard',
+        to: 'admin.about-us.index',
         title: 'About Us',
         isHasChild: false,
     },
@@ -70,7 +68,7 @@ const sidebarItem = ref([
     },
     {
         icon: 'fa-solid fa-tags',
-        to: 'admin.dashboard',
+        to: 'admin.voucher.index',
         title: 'Voucher',
         isHasChild: false,
     },

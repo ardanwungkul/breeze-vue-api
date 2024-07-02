@@ -1,4 +1,5 @@
 import Axios from 'axios'
+import router from '../router'
 
 const axios = Axios.create({
     baseURL: import.meta.env.VITE_PUBLIC_BACKEND_URL,
@@ -8,5 +9,16 @@ const axios = Axios.create({
     withCredentials: true,
     withXSRFToken: true,
 })
+axios.interceptors.response.use(
+    response => response,
+    async error => {
+        if (error.response.status === 419 || error.response.status === 401) {
+            localStorage.removeItem('userData')
+            localStorage.removeItem('authStatus')
+            router.push({ name: 'login' })
+        }
+        return Promise.reject(error)
+    },
+)
 
 export default axios

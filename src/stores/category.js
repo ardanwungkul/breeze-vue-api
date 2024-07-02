@@ -30,18 +30,24 @@ export const useCategoryStore = defineStore({
                 this.loading = false
             }
         },
-        async addCategory(newCategory, processing) {
+        async addCategory(newCategory, setErrors, processing) {
+            await csrf()
             processing.value = true
-            try {
-                const response = await axios.post('/api/category', newCategory)
-                this.categories.push(response.data)
-                processing.value = false
-            } catch (error) {
-                this.error = error
-                processing.value = false
-            } finally {
-                processing.value = false
-            }
+            axios
+                .post('/api/category', newCategory)
+                .then(response => {
+                    processing.value = false
+                    this.categories.push(response.data)
+                })
+                .catch(error => {
+                    console.log(error)
+                    if (error.response.status !== 422) throw error
+
+                    setErrors.value = Object.values(
+                        error.response.data.errors,
+                    ).flat()
+                    processing.value = false
+                })
         },
         async deleteCategory(id, processing) {
             await csrf()

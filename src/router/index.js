@@ -83,6 +83,57 @@ const routes = [
         },
     },
 
+    // Shop
+    {
+        path: '/admin/shop',
+        name: 'admin.shop.index',
+        component: () => import('@/pages/admin/shop/Index.vue'),
+        query: {
+            verified: 'verified',
+        },
+        meta: {
+            guard: 'auth',
+        },
+    },
+
+    // About Us
+    {
+        path: '/admin/about-us',
+        name: 'admin.about-us.index',
+        component: () => import('@/pages/admin/about-us/Index.vue'),
+        query: {
+            verified: 'verified',
+        },
+        meta: {
+            guard: 'auth',
+        },
+    },
+    // Voucher
+    {
+        path: '/admin/voucher',
+        name: 'admin.voucher.index',
+        component: () => import('@/pages/admin/voucher/Index.vue'),
+        query: {
+            verified: 'verified',
+        },
+        meta: {
+            guard: 'auth',
+        },
+    },
+
+    // Articles
+    {
+        path: '/admin/voucher',
+        name: 'admin.voucher.index',
+        component: () => import('@/pages/admin/voucher/Index.vue'),
+        query: {
+            verified: 'verified',
+        },
+        meta: {
+            guard: 'auth',
+        },
+    },
+
     // home
     {
         path: '/home',
