@@ -6,11 +6,15 @@ const csrf = () => axios.get('/sanctum/csrf-cookie')
 
 export const useUsers = defineStore('users', {
     state: () => ({
+        products: [],
         userData: useStorage('userData', []),
         authStatus: useStorage('authStatus', []),
     }),
 
     getters: {
+        allUser: state => state.users,
+        isLoading: state => state.loading,
+        getError: state => state.error,
         authUser: state => state.authStatus === 204,
         hasUserData: state => Object.keys(state.userData).length > 0,
         hasVerified: state =>
@@ -31,6 +35,55 @@ export const useUsers = defineStore('users', {
 
                     this.router.push('/verify-email')
                 })
+        },
+        async userAll() {
+            this.loading = true
+            try {
+                const response = await axios
+                    .get('/api/users')
+                    .then(response => {
+                        this.users = response.data
+                    })
+            } catch (error) {
+                this.error = error
+            } finally {
+                this.loading = false
+            }
+        },
+
+        async addUser(newUser, setErrors, processing) {
+            await csrf()
+            processing.value = true
+            axios
+                .post('/api/users', newUser)
+                .then(response => {
+                    processing.value = false
+                    this.users.push(response.data.user)
+                    console.log(response)
+                })
+                .catch(error => {
+                    console.log(error)
+                    if (error.response.status !== 422) throw error
+
+                    setErrors.value = Object.values(
+                        error.response.data.errors,
+                    ).flat()
+                    processing.value = false
+                })
+        },
+
+        async deleteUser(id, processing) {
+            await csrf()
+            processing.value = true
+            try {
+                const response = await axios.delete(`/api/users/${id}`)
+                processing.value = false
+            } catch (error) {
+                this.error = error
+                processing.value = false
+            } finally {
+                processing.value = false
+            }
         },
 
         async register(form, setErrors, processing) {
@@ -70,6 +123,7 @@ export const useUsers = defineStore('users', {
                     this.router.push({ name: 'dashboard' })
                 })
                 .catch(error => {
+                    console.log(error)
                     if (error.response.status !== 422) throw error
 
                     setErrors.value = Object.values(

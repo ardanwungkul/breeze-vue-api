@@ -3,7 +3,7 @@ import { ref, onMounted, computed } from 'vue'
 import { useUsers } from '@/stores/user'
 import AdminLayout from '@/layouts/AdminLayout.vue'
 import 'vuetify/styles'
-import UserTable from '@/components/admin/user/UserTable.vue'
+import AboutUsTable from '@/components/admin/about-us/AboutUsTable.vue'
 
 const storeUser = useUsers()
 
@@ -23,9 +23,9 @@ async function fetchUsers() {
 <template>
     <AdminLayout>
         <div class="w-full space-y-5">
-            <p class="text-2xl font-bold text-ezzora-900">List Users</p>
+            <p class="text-2xl font-bold text-ezzora-900">About Us List</p>
 
-            <UserTable :users="users" :fetchUsers="fetchUsers" />
+            <AboutUsTable :users="users" :fetchUsers="fetchUsers" />
         </div>
     </AdminLayout>
 </template>

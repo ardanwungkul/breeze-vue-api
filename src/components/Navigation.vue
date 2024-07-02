@@ -1,8 +1,10 @@
 <script setup>
 import NavLink from '@/components/NavLink.vue'
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, onBeforeMount } from 'vue'
 import { Collapse } from 'flowbite'
+import { useUsers } from '@/stores/user'
 
+const store = useUsers()
 onMounted(() => {
     const $targetEl = document.getElementById('targetEl')
     const $triggerEl = document.getElementById('triggerEl')
@@ -32,6 +34,9 @@ const navItems = ref([
         to: 'aboutUs',
     },
 ])
+const submitLogout = () => {
+    store.logout()
+}
 </script>
 <template>
     <nav
@@ -64,14 +69,42 @@ const navItems = ref([
                         <div>
                             <i class="fa-solid fa-cart-shopping"></i>
                         </div>
-                        <div>
-                            <router-link to="login">
+                        <v-menu>
+                            <template v-slot:activator="{ props }">
                                 <div
-                                    class="rounded-full w-[30px] h-[30px] border flex items-center justify-center border-white">
+                                    v-bind="props"
+                                    class="rounded-full w-[30px] h-[30px] border flex items-center justify-center border-white cursor-pointer">
                                     <i class="fa-solid fa-user"></i>
                                 </div>
-                            </router-link>
-                        </div>
+                            </template>
+                            <div
+                                class="bg-ezzora-50 mt-4 rounded-lg min-w-40 px-2 py-2 border shadow-lg text-xs">
+                                <ul class="space-y-1">
+                                    <li v-if="store.authUser" class="border-b">
+                                        <div
+                                            class="tracking-wide px-3 py-2 rounded-lg text-gray-600">
+                                            {{ store.userData.email }}
+                                        </div>
+                                    </li>
+                                    <li v-if="store.authUser == false">
+                                        <router-link to="login">
+                                            <div
+                                                class="tracking-wide font-semibold hover:bg-white px-3 py-2 rounded-lg text-gray-600">
+                                                Log In
+                                            </div>
+                                        </router-link>
+                                    </li>
+                                    <li></li>
+                                    <li v-if="store.authUser">
+                                        <div
+                                            @click="submitLogout"
+                                            class="tracking-wide font-semibold hover:bg-white px-3 py-2 rounded-lg text-gray-600 cursor-pointer">
+                                            Log Out
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </v-menu>
                     </div>
                 </div>
 
