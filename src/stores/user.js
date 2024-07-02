@@ -59,7 +59,23 @@ export const useUsers = defineStore('users', {
                 .then(response => {
                     processing.value = false
                     this.users.push(response.data.user)
-                    console.log(response)
+                })
+                .catch(error => {
+                    if (error.response.status !== 422) throw error
+
+                    setErrors.value = Object.values(
+                        error.response.data.errors,
+                    ).flat()
+                    processing.value = false
+                })
+        },
+        async editUser(updateUser, setErrors, processing, id) {
+            await csrf()
+            processing.value = true
+            axios
+                .post(`/api/users/${id}`, updateUser)
+                .then(response => {
+                    processing.value = false
                 })
                 .catch(error => {
                     console.log(error)

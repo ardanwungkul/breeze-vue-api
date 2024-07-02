@@ -39,7 +39,7 @@ const props = defineProps({
 const product_name = ref(props.product.name)
 const product_price = ref(props.product.product_price)
 const product_stock = ref(props.product.product_stock)
-const product_image = ref(props.product.product_image)
+const product_image = ref(null)
 const product_tag = ref(props.product.product_tag)
 const selectedCategory = ref(
     props.product.subcategory ? props.product.subcategory.id : null,
@@ -48,7 +48,7 @@ const processing = ref(false)
 const imageSrc = ref(
     import.meta.env.VITE_PUBLIC_BACKEND_URL +
         '/storage/images/product/' +
-        product_image.value,
+        props.product.product_image,
 )
 
 const handleEdit = async () => {
@@ -60,12 +60,9 @@ const handleEdit = async () => {
     formData.append('product_stock', product_stock.value)
     formData.append('product_image', product_image.value)
     formData.append('product_tag', product_tag.value)
-    // formData.append(
-    //     'sub_category_id',
-    //     selectedCategory ? selectedCategory.id : 'null',
-    // )
-    console.log(formData.entries)
-    // await props.method(formData, props.product.id)
+    formData.append('_method', 'PUT')
+    await props.method(formData, props.product.id)
+    processing.value = false
 }
 
 const changePlaceholder = event => {

@@ -49,6 +49,24 @@ export const useCategoryStore = defineStore({
                     processing.value = false
                 })
         },
+        async editCategory(updateCategory, setErrors, processing, id) {
+            await csrf()
+            processing.value = true
+            axios
+                .post(`/api/category/${id}`, updateCategory)
+                .then(response => {
+                    processing.value = false
+                })
+                .catch(error => {
+                    console.log(error)
+                    if (error.response.status !== 422) throw error
+
+                    setErrors.value = Object.values(
+                        error.response.data.errors,
+                    ).flat()
+                    processing.value = false
+                })
+        },
         async deleteCategory(id, processing) {
             await csrf()
             processing.value = true

@@ -34,6 +34,7 @@ async function fetchSubCategories() {
     subcategories.value = storeSubCategory.allSubCategories.map(
         subcategory => ({
             name: subcategory.sub_category_name,
+            category_id: subcategory.category.id,
             category: subcategory.category.category_name,
             id: subcategory.id,
         }),

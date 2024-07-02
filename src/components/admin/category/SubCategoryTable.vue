@@ -1,8 +1,9 @@
 <script setup>
-import { ref, computed, defineProps } from 'vue'
+import { ref, computed, defineProps, watchEffect } from 'vue'
 import ConfirmDelete from '@/components/dialog/ConfirmDelete.vue'
 import { useSubCategoryStore } from '@/stores/subcategory'
 import AddSubCategory from '@/components/dialog/add/AddSubCategory.vue'
+import EditSubCategory from '@/components/dialog/edit/EditSubCategory.vue'
 import ValidationErrors from '@/components/ValidationErrors.vue'
 
 const setErrors = ref([])
@@ -45,6 +46,17 @@ const deleteSubCategory = async id => {
     await storeSubCategory.deleteSubCategory(id, processing)
     await props.fetchSubCategories()
 }
+const editSubCategory = async (updateSubCategory, id) => {
+    await storeSubCategory.editSubCategory(
+        updateSubCategory,
+        setErrors,
+        processing,
+        id,
+    )
+    watchEffect(() => {
+        props.fetchSubCategories()
+    }, props.subcategories)
+}
 </script>
 <template>
     <div class="relative">
@@ -73,13 +85,10 @@ const deleteSubCategory = async id => {
                 class="border shadow-lg">
                 <template v-slot:item.id="{ item }">
                     <div class="flex gap-3 items-center justify-center text-xs">
-                        <router-link :to="{ name: 'dashboard' }">
-                            <div
-                                class="flex gap-2 items-center text-white bg-orange-400 rounded-lg px-3 py-1">
-                                <i class="fa-solid fa-pen"></i>
-                                <p>Edit</p>
-                            </div>
-                        </router-link>
+                        <EditSubCategory
+                            :subcategory="item"
+                            :categories_option="categories_option"
+                            :method="editSubCategory" />
                         <ConfirmDelete
                             :type="'Sub Category'"
                             :id="item.id"

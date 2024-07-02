@@ -35,7 +35,7 @@ const routes = [
     },
     // Admin
     {
-        path: '/admin/dashboard',
+        path: '/admin/dashboard/',
         name: 'admin.dashboard',
         component: () => import('@/pages/admin/Dashboard.vue'),
         query: {
@@ -83,11 +83,23 @@ const routes = [
         },
     },
 
-    // Shop
+    // Shop Banner
     {
-        path: '/admin/shop',
-        name: 'admin.shop.index',
-        component: () => import('@/pages/admin/shop/Index.vue'),
+        path: '/admin/shop/banner',
+        name: 'admin.shop.index.banner',
+        component: () => import('@/pages/admin/shop/Banner.vue'),
+        query: {
+            verified: 'verified',
+        },
+        meta: {
+            guard: 'auth',
+        },
+    },
+    // Shop Flash Sale
+    {
+        path: '/admin/shop/flash-sale',
+        name: 'admin.shop.index.flash-sale',
+        component: () => import('@/pages/admin/shop/FlashSale.vue'),
         query: {
             verified: 'verified',
         },
@@ -123,9 +135,9 @@ const routes = [
 
     // Articles
     {
-        path: '/admin/voucher',
-        name: 'admin.voucher.index',
-        component: () => import('@/pages/admin/voucher/Index.vue'),
+        path: '/admin/articles',
+        name: 'admin.article.index',
+        component: () => import('@/pages/admin/article/Index.vue'),
         query: {
             verified: 'verified',
         },
