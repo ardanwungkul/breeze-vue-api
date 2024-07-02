@@ -1,18 +1,52 @@
 <script setup>
 import AppLayout from '@/layouts/AppLayout.vue'
-import company from '@/assets/images/company.png'
-import award from '@/assets/images/award.png'
-import production from '@/assets/images/laboratorium.png'
-import achievement from '@/assets/images/achievement.png'
+import { ref } from 'vue'
 import { RouterLink } from 'vue-router'
 
 import gedung from '@/assets/images/gedung.jpg'
+import award from '@/assets/images/award.png'
+import production from '@/assets/images/laboratorium.png'
+import achievement from '@/assets/images/achievement.png'
+import company from '@/assets/images/company.png'
+import aboutbg from '@/assets/images/aboutbg.png'
+import lamp from '@/assets/images/lamp.png'
 
 import { Swiper, SwiperSlide } from 'swiper/vue'
 import { Navigation, Autoplay } from 'swiper/modules'
 import 'swiper/css'
 import 'swiper/css/pagination'
 
+const tab = ref(null);
+const about =ref([
+    {
+        index: 1,
+        title: 'Company Profile',
+        Desc: 'Compo',
+        img: company,
+        sideimg: gedung,
+    },
+    {
+        index: 2,
+        title: 'Award',
+        Desc: 'Award',
+        img: award,
+        sideimg: gedung,
+    },
+    {
+        index: 3,
+        title: 'Production',
+        Desc: 'Production',
+        img: production,
+        sideimg: gedung,
+    },
+    {
+        index: 4,
+        title: 'Achievement',
+        Desc: 'Achievement',
+        img: achievement,
+        sideimg: gedung,
+    },
+]);
 const swiperModules = [Navigation, Autoplay]
 const swiperJs = swiper => {}
 const swiperConfig = {
@@ -24,242 +58,336 @@ const swiperConfig = {
 </script>
 <template>
     <AppLayout>
-        <div
-            class=" bg-ala2 bg-cover w-full md:min-h-[95vh] md:max-h-[95vh] min-h-screen flex flex-col">
-            <div class="min-h-full w-full flex">
-                <!-- 1 -->
-                <div class="max-w-full md:h-screen flex flex-row">
-                    <div
-                        class=" w-full h-full md:w-2/3 md:max-h-[95vh] flex">
-                        <div
-                            v-for="i in about"
-                            :key="i.index"
-                            class="w-full px-4 md:px-24 flex flex-row">
-                            <div
-                                :class="{
-                                    'opacity-100 -translate-x-0':
-                                        activeDiv === i.index,
-                                    ' -translate-x-full opacity-0':
-                                        activeDiv !== i.index,
-                                }"
-                                class=" max-w-[60vw] md:max-w-[34vw] mt-28 duration-1000 left-4 md:left-12 lg:left-24 absolute">
-                                <div
-                                    class="text-2xl text-[#794d4a]/70 md:text-4xl md:font-bold pb-2 md:pb-5">
-                                    {{ i.title }}
-                                </div>
-                                <div class="text-xs md:text-base">
-                                    Lorem ipsum dolor sit amet consectetur
-                                    adipisicing elit. Deserunt recusandae
-                                    quaerat error dignissimos fuga ipsam illum
-                                    amet unde modi? Odio.lorem lorem lorem Lorem
-                                    ipsum dolor sit amet consectetur adipisicin
-                                </div>
-                            </div>
-                            <div
-                                :class="{
-                                    ' -translate-y-1/4 opacity-100':
-                                        activeDiv === i.index,
-                                    ' translate-y-0 opacity-0':
-                                        activeDiv !== i.index,
-                                }"
-                                class=" w-40 md:w-1/5 min-h-full md:h-32 duration-1000 -right-10 md:left-1/2 -translate-x-1/3 top-40 md:top-1/2 lg:top-1/3 flex items-center absolute">
-                                <v-img
-                                    :src="i.img"
-                                    aspect-ratio="1"
-                                    class=" h-full" 
-                                >
-                                    <template v-slot:placeholder>
+        <div class=" hidden flex-col w-full min-h-screen max-h-screen sm:flex">
+            <v-card
+                style="
+                border-radius: 0;
+                box-shadow: none;
+                ">
+                <div class=" w-full min-h-[65vh] flex">
+                    <div class=" flex flex-row w-[60%] 2xl:pl-48 sm:pl-8 min-h-full items-center relative">
+                        <div class=" w-full max-h-full absolute top-0 left-0 opacity-40">
+                            <v-img
+                                :key="n"
+                                :src="aboutbg"
+                                aspect-ratio="1"
+                                class=" h-[65vh]"
+                                cover
+                            >
+                                <template v-slot:placeholder>
                                     <div
                                         class=" w-full h-full flex justify-center items-center"
-                                    >
-                                        <v-progress-circular
+                                        >
+                                            <v-progress-circular
                                         color=""
                                         indeterminate
                                         ></v-progress-circular>
                                     </div>
-                                    </template>
-                                </v-img>
-                            </div>
+                                </template>
+                            </v-img>
+                        </div>
+                        <div class=" flex flex-col sm:w-3/4 lg:w-1/2 relative">
+                            <v-card-text>
+                                <v-tabs-window v-model="tab">
+                                    <v-tabs-window-item 
+                                        v-for="i in about" :key="i.index"
+                                        :value="i.index">
+                                        <div class=" text-4xl text-[#284723]/80 font-semibold mb-5">
+                                            {{ i.title }}
+                                        </div>
+                                        <div class="">Lorem ipsum dolor sit amet consectetur adipisicing elit. Deserunt recusandae quaerat error dignissimos fuga ipsam illum amet unde modi? Odio.lorem lorem lorem Lorem ipsum dolor sit amet consectetur adipisicin</div>
+                                    </v-tabs-window-item>
+                                </v-tabs-window>
+                            </v-card-text>
+                        </div>
+                        <div class=" sm:w-2/5 lg:w-1/3 min-h-full absolute sm:top-64 lg:top-44 left-[65%] overflow-hidden">
+                            <v-card-text>
+                                <v-tabs-window v-model="tab">
+                                    <v-tabs-window-item 
+                                        v-for="i in about" :key="i.index"
+                                        :value="i.index">
+                                        <v-img
+                                            :key="n"
+                                            :src="i.img"
+                                            aspect-ratio="1"
+                                            class=" sm:min-h-[360px] lg:min-h-[480px] relative justify-center"
+                                        >
+                                            <template v-slot:placeholder>
+                                            <div
+                                                class=" w-full h-full flex justify-center items-center"
+                                            >
+                                                <v-progress-circular
+                                                color=""
+                                                indeterminate
+                                                ></v-progress-circular>
+                                            </div>
+                                            </template>
+                                            <div
+                                                style="
+                                                box-shadow: 0px -10px 10px 20px #ceddce;"
+                                                class=" absolute left-0 w-full bg-[#ceddce] sm:h-20 lg:h-28 -bottom-1"></div>
+                                        </v-img>
+                                    </v-tabs-window-item>
+                                </v-tabs-window>
+                            </v-card-text>
                         </div>
                     </div>
-                    <!-- Pilihan desktop -->
-                    <div
-                        class="flex w-1/3 max-w-1/3 flex-col md:min-h-[95vh] max-h-[65vh] md:relative">
-                        <div class="w-full flex flex-row relative">
-                            <div
-                                class="w-[80%] hidden md:flex flex-row min-h-[65vh] max-h-[65vh] overflow-hidden">
-                                <swiper
-                                    class="static"
-                                    :navigation="swiperConfig.navigation"
-                                    :modules="swiperModules"
-                                    :loop="true"
-                                    :speed="1300"
-                                    :allowTouchMove="false"
-                                    :autoplay="{
-                                        delay: 4000,
-                                    }"
-                                    @swiper="swiperJs">
-                                    <swiper-slide v-for="i in 3" :key="i">
-                                        <div class=" w-full min-h-full flex">
-                                            <v-img
-                                                :src="gedung"
-                                                aspect-ratio="1"
-                                                class=" min-w-full min-h-full text-transparent"
-                                                cover
-                                            >.
-                                                <template v-slot:placeholder>
-                                                <div
-                                                    class=" w-full h-full flex justify-center items-center"
-                                                >
-                                                    <v-progress-circular
-                                                    color=""
-                                                    indeterminate
-                                                    ></v-progress-circular>
-                                                </div>
-                                                </template>
-                                            </v-img>
-                                        </div>
-                                    </swiper-slide>
-                                    <div
-                                        class="absolute z-30 flex flex-row bottom-0 gap-1 right-1.5 justify-between">
-                                        <div
-                                            class="swiper-button-prev opacity-50 duration-200 hover:opacity-100 flex justify-center items-center cursor-pointer">
-                                            <div class="w-11 h-11 bg-black">
-                                                <svg
-                                                    height="44"
-                                                    viewBox="0 0 48 48"
-                                                    width="44"
-                                                    xmlns="http://www.w3.org/2000/svg">
-                                                    <path
-                                                        fill="white"
-                                                        d="M30.83 32.67l-9.17-9.17 9.17-9.17-2.83-2.83-12 12 12 12z" />
-                                                    <path
-                                                        d="M0-.5h48v48h-48z"
-                                                        fill="none" />
-                                                </svg>
-                                            </div>
-                                        </div>
-                                        <div
-                                            class="swiper-button-next opacity-50 duration-200 hover:opacity-100 flex justify-center items-center cursor-pointer">
-                                            <div class="w-11 h-11 bg-black">
-                                                <svg
-                                                    height="44"
-                                                    viewBox="0 0 48 48"
-                                                    width="44"
-                                                    xmlns="http://www.w3.org/2000/svg">
-                                                    <path
-                                                        fill="white"
-                                                        d="M17.17 32.92l9.17-9.17-9.17-9.17 2.83-2.83 12 12-12 12z" />
-                                                    <path
-                                                        d="M0-.25h48v48h-48z"
-                                                        fill="none" />
-                                                </svg>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </swiper>
-                            </div>
-                        </div>
-                        <div
-                            class="bg-alakadabra bg-cover md:w-full min-h-[30vh] flex flex-rowx bg-blue-500 absolute left-0 bottom-0 w-[100vw] md:relative overflow-auto py-9 px-5">
-                            <swiper
-                                class="relative"
-                                :modules="swiperModules"
-                                :breakpoints="{
-                                    '320': {
-                                        slidesPerView: 2,
-                                        spaceBetween: 10,
-                                    },
-                                    '768': {
-                                        slidesPerView: 2,
-                                        spaceBetween: 10,
-                                    },
-                                    '1024': {
-                                        slidesPerView: 3,
-                                        spaceBetween: 10,
-                                    },
-                                }"
-                                :speed="1300"
-                                @swiper="swiperJs">
-                                <swiper-slide v-for="i in about" :key="i.index">
-                                    <button
-                                        @click="toggleClass(i.index)"
-                                        class="bg-white/20 w-full border border-white/30 duration-200 hover:opacity-50 h-full backdrop-blur rounded-sm p-5">
-                                        <div
-                                            class="w-full max-h-[10vh] flex justify-center mb-2">
-                                            <v-img
-                                                :src="i.img"
-                                                aspect-ratio="1"
-                                                class=" min-w-full max-h-full"
+                    <div class=" w-[40%] flex flex-row min-h-full bg-[#f8f8f6] 2xl:pr-48 sm:pr-8 md:pr-8">
+                        <div class=" w-5/6 min-h-full">
+                            <v-card-text class=" !p-0">
+                                <v-tabs-window v-model="tab">
+                                    <v-tabs-window-item
+                                        v-for="i in about" :key="i.index"
+                                        :value="i.index">
+                                        <v-img
+                                            :key="n"
+                                            :src="i.sideimg"
+                                            aspect-ratio="1"
+                                            class=" w-full min-h-[65vh]"
+                                            cover
+                                        >
+                                            <template v-slot:placeholder>
+                                            <div
+                                                class=" w-full h-full flex justify-center items-center"
                                             >
-                                                <template v-slot:placeholder>
-                                                <div
-                                                    class=" w-full h-full flex justify-center items-center"
-                                                >
-                                                    <v-progress-circular
-                                                    color=""
-                                                    indeterminate
-                                                    ></v-progress-circular>
-                                                </div>
-                                                </template>
-                                            </v-img>
-                                        </div>
-                                        <div class="text-sm">{{ i.title }}</div>
-                                    </button>
-                                </swiper-slide>
-                            </swiper>
+                                                <v-progress-circular
+                                                color=""
+                                                indeterminate
+                                                ></v-progress-circular>
+                                            </div>
+                                            </template>
+                                        </v-img>
+                                    </v-tabs-window-item>
+                                </v-tabs-window>
+                            </v-card-text>
+                        </div>
+                        <div class=" w-1/6 min-h-full flex flex-col py-5 items-center gap-5">
+                            <div v-for="i in 3" :key="i" class=" w-8 max-h-8 flex justify-center items-center">
+                                <svg id="Icons_User" overflow="hidden" version="1.1" viewBox="0 0 96 96" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><g><circle cx="48" cy="30" r="16"/><path d=" M 80 82 L 80 66 C 80 63.6 78.8 61.2 76.8 59.6 C 72.4 56 66.8 53.6 61.2 52 C 57.2 50.8 52.8 50 48 50 C 43.6 50 39.2 50.8 34.8 52 C 29.2 53.6 23.6 56.4 19.2 59.6 C 17.2 61.2 16 63.6 16 66 L 16 82 L 80 82 Z"/></g></svg>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
+                <div class=" w-full min-h-[35vh] flex">
+                    <div class=" w-[60%] min-h-full 2xl:pl-48 sm:pl-8 bg-[#ceddce] gap-5 flex flex-col">
+                        <div class=" flex flex-row sm:gap-5 lg:gap-20 p-5">
+                            <button class=" py-3 px-10 border border-white text-white font-semibold bg-gradient-to-r from-lime-600 to-lime-950 duration-200 hover:opacity-70 rounded-2xl">Check Shop</button>
+                            <button class=" font-semibold duration-200 hover:text-gray-500">Learn more -></button>
+                        </div>
+                        <div class=" w-full flex flex-row static z-10 sm:gap-1 lg:gap-5">
+                            <div class=" flex flex-row sm:gap-1 lg:gap-3" v-for="i in 3" :key="1">
+                                <div class=" min-w-16 h-20">
+                                    <v-img
+                                        :src="lamp"
+                                        aspect-ratio="1"
+                                        class=" min-h-full"
+                                        cover
+                                    >
+                                        <template v-slot:placeholder>
+                                        <div
+                                            class=" w-full h-full flex justify-center items-center"
+                                        >
+                                            <v-progress-circular
+                                            color=""
+                                            indeterminate
+                                            ></v-progress-circular>
+                                        </div>
+                                        </template>
+                                    </v-img>
+                                </div>
+                                <div class=" flex-col sm:max-w-[100px] lg:max-w-28">
+                                    <div class="">Dimwnsions</div>
+                                    <div class=" text-[8px]">Lorem ipsum dolor sit amet consectetur adipisicing elit. Atque perspiciatis asperiores laboriosam rem</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class=" w-[40%] min-h-full 2xl:pr-48 sm:pr-8 md:pr-8 bg-[#f8f8f6] static z-10">
+                        <v-tabs
+                        style="
+                        background-color: #f8f8f6 !important;"
+                        v-model="tab"
+                        center-active
+                        bg-color="primary"
+                        class = "min-h-full w-full flex"
+                        >
+                            <v-tab 
+                                v-for="i in about" :key="i.about" :value="i.index"
+                                class=" hoverea min-h-full  w-1/3 max-w-1/3 duration-300 hover:opacity-100 opacity-70 ">
+                                <div class=" w-full min-h-full flex flex-col justify-center items-center gap-5 relative">
+                                    <v-img
+                                        :src="i.img"
+                                        aspect-ratio="1"
+                                        class=" min-w-[80px] max-w-[140px] min-h-[130px] top-0 left-0"
+                                        cover
+                                    >
+                                        <template v-slot:placeholder>
+                                        <div
+                                            class=" w-full h-full flex justify-center items-center"
+                                        >
+                                            <v-progress-circular
+                                            color=""
+                                            indeterminate
+                                            ></v-progress-circular>
+                                        </div>
+                                        </template>
+                                    </v-img>
+                                </div>
+                            </v-tab>
+                        </v-tabs>
+                    </div>
+                </div>
+            </v-card>
+        </div>
+        <div class=" flex flex-col sm:hidden w-full min-h-full">
+            <v-card
+                class=" !rounded-none !shadow-none">
+                <div class=" flex flex-col w-full h-screen relative">
+                    <div class=" absolute h-[25%] w-[40%] right-2 top-[27%] z-10">
+                        <v-card-text class=" h-full">
+                            <v-tabs-window v-model="tab" class=" h-full">
+                                <v-tabs-window-item 
+                                    class=" h-full"
+                                    v-for="i in about" :key="i.index"
+                                    :value="i.index">                                    
+                                    <v-img
+                                        :key="n"
+                                        :src="i.img"
+                                        aspect-ratio="1"
+                                        class="h-full"
+                                        cover
+                                    >
+                                        <template v-slot:placeholder>
+                                            <div
+                                                class=" w-full h-full flex justify-center items-center"
+                                                >
+                                                    <v-progress-circular
+                                                color=""
+                                                indeterminate
+                                                ></v-progress-circular>
+                                            </div>
+                                        </template>
+                                    </v-img>
+                                </v-tabs-window-item>
+                            </v-tabs-window>
+                        </v-card-text>
+                    </div>
+                    <!-- hidden -->
+                    <div class=" hidden absolute h-[35%] w-[50%] left-0 top-[35%] z-10 overflow-hidden rounded-r-sm">
+                        <v-card-text class=" p-0 h-full">
+                            <v-tabs-window v-model="tab" class=" h-full">
+                                <v-tabs-window-item
+                                    class=" h-full"
+                                    v-for="i in about" :key="i.index"
+                                    :value="i.index">
+                                    <v-img
+                                        :key="n"
+                                        :src="i.sideimg"
+                                        aspect-ratio="1"
+                                        class=" min-h-full"
+                                        cover
+                                    >
+                                        <template v-slot:placeholder>
+                                            <div
+                                                class=" w-full h-full flex justify-center items-center"
+                                                >
+                                                    <v-progress-circular
+                                                color=""
+                                                indeterminate
+                                                ></v-progress-circular>
+                                            </div>
+                                        </template>
+                                    </v-img>
+                                </v-tabs-window-item>
+                            </v-tabs-window>
+                        </v-card-text>
+                    </div>
+                    <div class=" flex flex-col gap-2 w-full pt-24 h-[55%] p-4 relative">
+                        <div class=" absolute top-0 left-0 w-full h-full opacity-40">
+                            <v-img
+                                :key="n"
+                                :src="aboutbg"
+                                aspect-ratio="1"
+                                class=" min-h-full"
+                                cover
+                            >
+                                <template v-slot:placeholder>
+                                    <div
+                                        class=" w-full h-full flex justify-center items-center"
+                                        >
+                                            <v-progress-circular
+                                        color=""
+                                        indeterminate
+                                        ></v-progress-circular>
+                                    </div>
+                                </template>
+                            </v-img>
+                        </div>
+                        <div class=" w-[80%] static z-20">
+                            <v-card-text>
+                                <v-tabs-window v-model="tab">
+                                    <v-tabs-window-item 
+                                        v-for="i in about" :key="i.index"
+                                        :value="i.index">
+                                        <div class=" text-3xl text-[#284723]/80 font-bold">{{ i.title }}</div>
+                                        <div class="">Lorem ipsum dolor sit amet consectetur, adipisicing elit. Odit esse fugiat sapiente necessitatibus mollitia ea. Quasi impedit libero est. Eius quis minima esse repellendus ad cumque perferendis adipisci numquam aut.</div>
+                                    </v-tabs-window-item>
+                                </v-tabs-window>
+                            </v-card-text>
+                        </div>
+                    </div>
+                    
+                    <div class=" flex flex-col w-full h-[45%] bg-[#ceddce] relative">
+                        <div class=" flex flex-col w-full gap-5 sm:gap-5 lg:gap-20 pt-10 py-4 px-5 right-0">
+                            <button class=" py-3 px-10 border border-white text-white font-semibold bg-gradient-to-r from-lime-600 to-lime-950 duration-200 hover:opacity-70 rounded-2xl text-sm">Check Shop</button>
+                            <button class=" text-sm font-semibold duration-200 hover:text-gray-500">Learn more -></button>
+                        </div>
+                        <div class=" w-full h-1/2">
+                            <v-tabs
+                            style="
+                            background-color: #ceddce !important
+                            "
+                            v-model="tab"
+                            center-active
+                            bg-color="primary"
+                            class = "min-h-full w-full flex !bg-[#ceddce]"
+                            >
+                                <v-tab
+                                    v-for="i in about" :key="i.about" :value="i.index" 
+                                    class=" !bg-[#ceddce] !rounded-2xl min-h-full  w-1/3 max-w-1/3 duration-300 hover:opacity-100 opacity-50 overflow-hidden">
+                                    <div class=" !w-full !min-h-full flex flex-col justify-center items-center gap-5 hover:bg-[#ceddce] absolute p-12">
+                                        <v-img
+                                            :src="i.img"
+                                            aspect-ratio="1"
+                                            class=" min-w-[80px] max-w-[140px] min-h-[130px] top-0 left-0"
+                                            cover
+                                        >
+                                            <template v-slot:placeholder>
+                                            <div
+                                                class=" w-full h-full flex justify-center items-center"
+                                            >
+                                                <v-progress-circular
+                                                color=""
+                                                indeterminate
+                                                ></v-progress-circular>
+                                            </div>
+                                            </template>
+                                        </v-img>
+                                    </div>
+                                </v-tab>
+                            </v-tabs>
+                        </div>
+                    </div>
+                </div>
+            </v-card>
         </div>
     </AppLayout>
 </template>
-<script>
-export default {
-    data() {
-        return {
-            about: [
-                {
-                    index: 1,
-                    title: 'Company Profile',
-                    Desc: 'Compo',
-                    img: company,
-                },
-                {
-                    index: 2,
-                    title: 'Award',
-                    Desc: 'Award',
-                    img: award,
-                },
-                {
-                    index: 3,
-                    title: 'Production',
-                    Desc: 'Production',
-                    img: production,
-                },
-                {
-                    index: 4,
-                    title: 'Achievement',
-                    Desc: 'Achievement',
-                    img: achievement,
-                },
-            ],
-            activeDiv: 1,
-        }
-    },
-    methods: {
-        toggleClass(i) {
-            this.activeDiv = i
-        },
-    },
-}
-</script>
 <style>
-.bg-alakadabra {
-    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' version='1.1' xmlns:xlink='http://www.w3.org/1999/xlink' xmlns:svgjs='http://svgjs.dev/svgjs' width='1440' height='560' preserveAspectRatio='none' viewBox='0 0 1440 560'%3e%3cg mask='url(%26quot%3b%23SvgjsMask1092%26quot%3b)' fill='none'%3e%3crect width='1440' height='560' x='0' y='0' fill='rgba(244%2c 240%2c 237%2c 1)'%3e%3c/rect%3e%3cpath d='M 0%2c113 C 72%2c125 216%2c194.4 360%2c173 C 504%2c151.6 576%2c3.6 720%2c6 C 864%2c8.4 936%2c165.8 1080%2c185 C 1224%2c204.2 1368%2c118.6 1440%2c102L1440 560L0 560z' fill='rgba(226%2c 217%2c 217%2c 1)'%3e%3c/path%3e%3cpath d='M 0%2c350 C 96%2c387.8 288%2c531.8 480%2c539 C 672%2c546.2 768%2c403.6 960%2c386 C 1152%2c368.4 1344%2c438 1440%2c451L1440 560L0 560z' fill='rgba(206%2c 194%2c 199%2c 1)'%3e%3c/path%3e%3c/g%3e%3cdefs%3e%3cmask id='SvgjsMask1092'%3e%3crect width='1440' height='560' fill='white'%3e%3c/rect%3e%3c/mask%3e%3c/defs%3e%3c/svg%3e");
+.v-slide-group__prev {
+    margin-left: -52px
 }
-.bg-ala2 {
-    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' version='1.1' xmlns:xlink='http://www.w3.org/1999/xlink' xmlns:svgjs='http://svgjs.dev/svgjs' width='900' height='560' preserveAspectRatio='none' viewBox='0 0 900 560'%3e%3cg mask='url(%26quot%3b%23SvgjsMask1092%26quot%3b)' fill='none'%3e%3crect width='900' height='560' x='0' y='0' fill='rgba(244%2c 240%2c 237%2c 1)'%3e%3c/rect%3e%3cpath d='M0%2c369.257C71.289%2c376.465%2c139.471%2c348.465%2c204.205%2c317.749C276.729%2c283.337%2c356.276%2c250.538%2c396.55%2c181.098C438.126%2c109.413%2c443.705%2c19.513%2c423.838%2c-60.939C404.86%2c-137.789%2c343.018%2c-192.512%2c289.815%2c-251.126C237.847%2c-308.379%2c188.603%2c-369.396%2c117.115%2c-398.857C41.001%2c-430.225%2c-45.866%2c-448.142%2c-123.787%2c-421.579C-200.664%2c-395.372%2c-245.096%2c-319.833%2c-297.278%2c-257.593C-348.587%2c-196.394%2c-413.258%2c-140.091%2c-425.897%2c-61.235C-438.602%2c18.037%2c-412.42%2c101.826%2c-365.301%2c166.828C-321.929%2c226.661%2c-243.924%2c243.156%2c-179.286%2c278.975C-119.55%2c312.078%2c-67.949%2c362.387%2c0%2c369.257' fill='%23c8b4a5'%3e%3c/path%3e%3cpath d='M900 783.407C948.188 792.2760000000001 1000.425 806.467 1044.013 784.0889999999999 1088.481 761.259 1121.605 714.398 1130.296 665.173 1138.504 618.688 1098.493 579.022 1088.3600000000001 532.918 1079.2640000000001 491.532 1093.664 446.751 1074.035 409.198 1051.912 366.875 1020.252 317.668 972.843 311.91999999999996 924.43 306.05 894.072 366.774 847.6610000000001 381.751 803.211 396.095 742.851 362.058 711.158 396.36699999999996 679.734 430.385 717.373 487.016 708.4449999999999 532.458 698.764 581.729 639.307 623.965 657.2239999999999 670.872 674.83 716.9639999999999 741.688 715.933 786.453 736.683 824.353 754.251 858.9159999999999 775.845 900 783.407' fill='white'%3e%3c/path%3e%3c/g%3e%3cdefs%3e%3cmask id='SvgjsMask1092'%3e%3crect width='900' height='560' fill='white'%3e%3c/rect%3e%3c/mask%3e%3c/defs%3e%3c/svg%3e");
+.v-slide-group__next {
+    margin-right: -52px
 }
 </style>

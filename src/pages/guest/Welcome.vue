@@ -4,6 +4,10 @@ import { RouterLink } from 'vue-router'
 import { ref, onMounted } from 'vue'
 import VanillaTilt from 'vanilla-tilt'
 
+import cosmetic from '@/assets/images/cosmetic.jpeg'
+import threed from '@/assets/images/3d-product.png'
+import individualcare from '@/assets/images/individualcare.jpg'
+
 import { Swiper, SwiperSlide } from 'swiper/vue'
 import { Navigation, Autoplay } from 'swiper/modules'
 import { Tabs } from 'flowbite'
@@ -48,7 +52,7 @@ onMounted(() => {
         scale: 1.1,
         speed: 400,
         transition: true,
-        glare: true,
+        glare: false,
         reset: true,
     })
     const tabsElement = document.getElementById('tabs-flash-sale')
@@ -354,10 +358,25 @@ const activeTab = ref('first')
 
             <!-- Title -->
             <div class="w-full relative h-[calc(100vh-57px)]">
-                <img
-                    src="@/assets/images/cosmetic.jpeg"
-                    class="absolute top-[-57px] left-0 w-full h-screen object-cover z-10"
-                    alt="" />
+                <div class="absolute top-[-57px] left-0 w-full h-screen object-cover z-10">
+                    <v-img
+                        :src="cosmetic"
+                        aspect-ratio="1"
+                        class=" min-h-full"
+                        cover
+                    >
+                        <template v-slot:placeholder>
+                        <div
+                            class=" w-full h-full flex justify-center items-center"
+                        >
+                            <v-progress-circular
+                            color=""
+                            indeterminate
+                            ></v-progress-circular>
+                        </div>
+                        </template>
+                    </v-img>
+                </div>
                 <div
                     class="w-full h-screen flex items-center z-20 absolute top-[-57px]">
                     <div class="mx-auto w-full max-w-[1120px] relative">
@@ -428,10 +447,25 @@ const activeTab = ref('first')
                             <swiper-slide v-for="n in 10" :key="n">
                                 <div
                                     class="flex flex-col justify-center items-center bg-[#f4f0ed] rounded-md p-4">
-                                    <img
-                                        src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fstatic.vecteezy.com%2Fsystem%2Fresources%2Fpreviews%2F010%2F175%2F452%2Fnon_2x%2Fwhite-cream-jar-bottle-beauty-cosmetic-blank-mockup-3d-illustration-free-png.png&f=1&nofb=1&ipt=fa54a50dcaf23d1ca8ded9f4daed07a9259ee9373c9933b46731843ffd37b128&ipo=images"
-                                        class="h-[144px]"
-                                        alt="" />
+                                    <div class=" h-[144px] w-5/6">
+                                        <v-img
+                                            src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fstatic.vecteezy.com%2Fsystem%2Fresources%2Fpreviews%2F010%2F175%2F452%2Fnon_2x%2Fwhite-cream-jar-bottle-beauty-cosmetic-blank-mockup-3d-illustration-free-png.png&f=1&nofb=1&ipt=fa54a50dcaf23d1ca8ded9f4daed07a9259ee9373c9933b46731843ffd37b128&ipo=images"
+                                            aspect-ratio="1"
+                                            class=" min-h-full"
+                                            cover
+                                        >
+                                            <template v-slot:placeholder>
+                                            <div
+                                                class=" w-full h-full flex justify-center items-center"
+                                            >
+                                                <v-progress-circular
+                                                color=""
+                                                indeterminate
+                                                ></v-progress-circular>
+                                            </div>
+                                            </template>
+                                        </v-img>
+                                    </div>
                                     <div
                                         class="flex justify-between items-center w-full gap-2">
                                         <p class="font-medium line-clamp-1">
@@ -534,10 +568,25 @@ const activeTab = ref('first')
                             <swiper-slide v-for="n in 10" :key="n">
                                 <div
                                     class="flex flex-col justify-center items-center bg-[#f4f0ed] rounded-md p-4">
-                                    <img
-                                        src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fstatic.vecteezy.com%2Fsystem%2Fresources%2Fpreviews%2F010%2F175%2F452%2Fnon_2x%2Fwhite-cream-jar-bottle-beauty-cosmetic-blank-mockup-3d-illustration-free-png.png&f=1&nofb=1&ipt=fa54a50dcaf23d1ca8ded9f4daed07a9259ee9373c9933b46731843ffd37b128&ipo=images"
-                                        class="h-[144px]"
-                                        alt="" />
+                                    <div class=" h-[144px] w-5/6">
+                                        <v-img
+                                            src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fstatic.vecteezy.com%2Fsystem%2Fresources%2Fpreviews%2F010%2F175%2F452%2Fnon_2x%2Fwhite-cream-jar-bottle-beauty-cosmetic-blank-mockup-3d-illustration-free-png.png&f=1&nofb=1&ipt=fa54a50dcaf23d1ca8ded9f4daed07a9259ee9373c9933b46731843ffd37b128&ipo=images"
+                                            aspect-ratio="1"
+                                            class=" min-h-full"
+                                            cover
+                                        >
+                                            <template v-slot:placeholder>
+                                            <div
+                                                class=" w-full h-full flex justify-center items-center"
+                                            >
+                                                <v-progress-circular
+                                                color=""
+                                                indeterminate
+                                                ></v-progress-circular>
+                                            </div>
+                                            </template>
+                                        </v-img>
+                                    </div>
                                     <div
                                         class="flex justify-between items-center w-full gap-2">
                                         <p class="font-medium line-clamp-1">
@@ -594,10 +643,25 @@ const activeTab = ref('first')
                             <swiper-slide v-for="n in 10" :key="n">
                                 <div
                                     class="flex flex-col justify-center items-center bg-[#f4f0ed] rounded-md p-4">
-                                    <img
-                                        src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fstatic.vecteezy.com%2Fsystem%2Fresources%2Fpreviews%2F010%2F175%2F452%2Fnon_2x%2Fwhite-cream-jar-bottle-beauty-cosmetic-blank-mockup-3d-illustration-free-png.png&f=1&nofb=1&ipt=fa54a50dcaf23d1ca8ded9f4daed07a9259ee9373c9933b46731843ffd37b128&ipo=images"
-                                        class="h-[144px]"
-                                        alt="" />
+                                    <div class=" h-[144px] w-5/6">
+                                        <v-img
+                                            src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fstatic.vecteezy.com%2Fsystem%2Fresources%2Fpreviews%2F010%2F175%2F452%2Fnon_2x%2Fwhite-cream-jar-bottle-beauty-cosmetic-blank-mockup-3d-illustration-free-png.png&f=1&nofb=1&ipt=fa54a50dcaf23d1ca8ded9f4daed07a9259ee9373c9933b46731843ffd37b128&ipo=images"
+                                            aspect-ratio="1"
+                                            class=" min-h-full"
+                                            cover
+                                        >
+                                            <template v-slot:placeholder>
+                                            <div
+                                                class=" w-full h-full flex justify-center items-center"
+                                            >
+                                                <v-progress-circular
+                                                color=""
+                                                indeterminate
+                                                ></v-progress-circular>
+                                            </div>
+                                            </template>
+                                        </v-img>
+                                    </div>
                                     <div
                                         class="flex justify-between items-center w-full gap-2">
                                         <p class="font-medium line-clamp-1">
@@ -654,10 +718,25 @@ const activeTab = ref('first')
                             <swiper-slide v-for="n in 10" :key="n">
                                 <div
                                     class="flex flex-col justify-center items-center bg-[#f4f0ed] rounded-md p-4">
-                                    <img
-                                        src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fstatic.vecteezy.com%2Fsystem%2Fresources%2Fpreviews%2F010%2F175%2F452%2Fnon_2x%2Fwhite-cream-jar-bottle-beauty-cosmetic-blank-mockup-3d-illustration-free-png.png&f=1&nofb=1&ipt=fa54a50dcaf23d1ca8ded9f4daed07a9259ee9373c9933b46731843ffd37b128&ipo=images"
-                                        class="h-[144px]"
-                                        alt="" />
+                                    <div class=" h-[144px] w-5/6">
+                                        <v-img
+                                            src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fstatic.vecteezy.com%2Fsystem%2Fresources%2Fpreviews%2F010%2F175%2F452%2Fnon_2x%2Fwhite-cream-jar-bottle-beauty-cosmetic-blank-mockup-3d-illustration-free-png.png&f=1&nofb=1&ipt=fa54a50dcaf23d1ca8ded9f4daed07a9259ee9373c9933b46731843ffd37b128&ipo=images"
+                                            aspect-ratio="1"
+                                            class=" min-h-full"
+                                            cover
+                                        >
+                                            <template v-slot:placeholder>
+                                            <div
+                                                class=" w-full h-full flex justify-center items-center"
+                                            >
+                                                <v-progress-circular
+                                                color=""
+                                                indeterminate
+                                                ></v-progress-circular>
+                                            </div>
+                                            </template>
+                                        </v-img>
+                                    </div>
                                     <div
                                         class="flex justify-between items-center w-full gap-2">
                                         <p class="font-medium line-clamp-1">
@@ -693,16 +772,31 @@ const activeTab = ref('first')
                 <div class="md:grid md:grid-cols-2 gap-3">
                     <div
                         class="bg-[#f1eee9] rounded-md p-2 max-h-[400px] flex items-center justify-center">
-                        <img
-                            src="@/assets/images/3d-product.png"
-                            alt=""
+                        <div 
                             ref="element"
                             class="object-contain w-full h-full"
                             style="
                                 transform-style: preserve-3d;
                                 transform: perspective(1000px);
                                 position: relative;
-                            " />
+                            ">
+                            <v-img
+                                :src="threed"
+                                aspect-ratio="1"
+                                class=" min-h-full max-w-[50%]"
+                            >
+                                <template v-slot:placeholder>
+                                <div
+                                    class=" w-full h-full flex justify-center items-center"
+                                >
+                                    <v-progress-circular
+                                    color=""
+                                    indeterminate
+                                    ></v-progress-circular>
+                                </div>
+                                </template>
+                            </v-img>
+                        </div>
                     </div>
                     <div class="bg-[#f1eee9] rounded-md p-2 max-h-[400px]">
                         <div class="bg-white w-full p-12 h-full">
@@ -787,11 +881,26 @@ const activeTab = ref('first')
                         </div>
                     </div>
                     <div
-                        class="top-0 h-[500px] relative lg:flex items-center hidden">
-                        <img
-                            src="@/assets/images/individualcare.jpg"
-                            class="h-80 w-full object-cover z-10 -translate-x-20"
-                            alt="" />
+                        class="top-0 w-1/2 h-[500px] relative lg:flex items-center hidden">
+                        <div class="h-80 w-full object-cover z-10 -translate-x-20">
+                            <v-img
+                                :src="individualcare"
+                                aspect-ratio="1"
+                                class=" min-h-full"
+                                cover
+                            >
+                                <template v-slot:placeholder>
+                                <div
+                                    class=" w-full h-full flex justify-center items-center"
+                                >
+                                    <v-progress-circular
+                                    color=""
+                                    indeterminate
+                                    ></v-progress-circular>
+                                </div>
+                                </template>
+                            </v-img>
+                        </div>
                     </div>
                 </div>
 
@@ -823,10 +932,25 @@ const activeTab = ref('first')
                             <swiper-slide v-for="n in 10" :key="n">
                                 <div
                                     class="flex flex-col justify-center items-center text-center gap-2">
-                                    <img
-                                        src="https://ralfvanveen.com/wp-content/uploads/2021/06/Placeholder-_-Glossary.svg"
-                                        alt=""
-                                        class="w-20 h-20 object-cover rounded-full" />
+                                    <div class="w-20 h-20 object-cover rounded-full overflow-hidden">
+                                        <v-img
+                                            src="https://ralfvanveen.com/wp-content/uploads/2021/06/Placeholder-_-Glossary.svg"
+                                            aspect-ratio="1"
+                                            class=" min-h-full"
+                                            cover
+                                        >
+                                            <template v-slot:placeholder>
+                                            <div
+                                                class=" w-full h-full flex justify-center items-center"
+                                            >
+                                                <v-progress-circular
+                                                color=""
+                                                indeterminate
+                                                ></v-progress-circular>
+                                            </div>
+                                            </template>
+                                        </v-img>
+                                    </div>
                                     <p class="text-gray-600">
                                         Lorem ipsum dolor sit amet, consec
                                         adipiscing elit. Nam eusem scelerisque
