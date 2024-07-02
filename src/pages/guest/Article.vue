@@ -71,6 +71,9 @@ const swiperJs = swiper => {}
             :modules="modules"
             :loop="true"
             :speed="1300"
+            :autoplay="{
+                delay: 4000,
+            }"
             :allowTouchMove="false"
             @swiper="swiperJs">
             <swiper-slide v-for="i in 3" :key="i">
@@ -174,7 +177,7 @@ const swiperJs = swiper => {}
                             class="w-full h-full object-cover" />
                         <div class="max-w-[1140px] m-auto">
                             <div
-                                class="content absolute md:top-[20%] top-[10%] md:max-w-[80%] pl-3 md:pl-0 pr-[30%] box-border text-[#fff]">
+                                class="content absolute md:top-[20%] top-[10%] md:max-w-[80%] pl-3 md:pl-0 pr-[30%] box-border text-[#fff] sm:mx-4">
                                 <div class="author font-bold tracking-[10px]">
                                     {{ item.author }}
                                 </div>
@@ -314,15 +317,16 @@ const swiperJs = swiper => {}
                 </v-img>
             </div>
         </div>
-        <!-- Skincare -->
+        <!-- Article -->
         <div
             class="w-full max-w-[1320px] px-3 mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 pt-24 md:pt-16 gap-7 mt-5">
             <div v-for="i in 3" :key="i" class="p-5 bg-white">
-                <div class="w-full min-h-48 mb-5">
+                <div class="w-full h-48 mb-5">
                     <v-img
                         :src="banner5"
                         aspect-ratio="1"
                         class=" min-w-full min-h-full"
+                        cover
                     >
                         <template v-slot:placeholder>
                         <div

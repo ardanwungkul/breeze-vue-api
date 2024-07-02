@@ -65,8 +65,8 @@ const swiperConfig = {
                 box-shadow: none;
                 ">
                 <div class=" w-full min-h-[65vh] flex">
-                    <div class=" flex flex-row w-[60%] 2xl:pl-48 sm:pl-8 min-h-full items-center relative">
-                        <div class=" w-full max-h-full absolute top-0 left-0 opacity-40">
+                    <div class=" flex flex-row w-[60%] xl:pl-48 sm:pl-8 min-h-full items-center relative">
+                        <div class=" w-full max-h-full absolute top-0 left-0 opacity-20">
                             <v-img
                                 :key="n"
                                 :src="aboutbg"
@@ -132,7 +132,7 @@ const swiperConfig = {
                             </v-card-text>
                         </div>
                     </div>
-                    <div class=" w-[40%] flex flex-row min-h-full bg-[#f8f8f6] 2xl:pr-48 sm:pr-8 md:pr-8">
+                    <div class=" w-[40%] flex flex-row min-h-full bg-[#f8f8f6] xl:pr-48 sm:pr-8 md:pr-8">
                         <div class=" w-5/6 min-h-full">
                             <v-card-text class=" !p-0">
                                 <v-tabs-window v-model="tab">
@@ -169,9 +169,9 @@ const swiperConfig = {
                     </div>
                 </div>
                 <div class=" w-full min-h-[35vh] flex">
-                    <div class=" w-[60%] min-h-full 2xl:pl-48 sm:pl-8 bg-[#ceddce] gap-5 flex flex-col">
+                    <div class=" w-[60%] min-h-full xl:pl-48 sm:pl-8 bg-[#ceddce] gap-5 flex flex-col">
                         <div class=" flex flex-row sm:gap-5 lg:gap-20 p-5">
-                            <button class=" py-3 px-10 border border-white text-white font-semibold bg-gradient-to-r from-lime-600 to-lime-950 duration-200 hover:opacity-70 rounded-2xl">Check Shop</button>
+                            <button class=" py-3 px-10 border border-white text-white font-semibold bg-gradient-to-r from-lime-600 to-lime-950 duration-200 hover:opacity-70 rounded-xl">Check Shop</button>
                             <button class=" font-semibold duration-200 hover:text-gray-500">Learn more -></button>
                         </div>
                         <div class=" w-full flex flex-row static z-10 sm:gap-1 lg:gap-5">
@@ -202,7 +202,7 @@ const swiperConfig = {
                             </div>
                         </div>
                     </div>
-                    <div class=" w-[40%] min-h-full 2xl:pr-48 sm:pr-8 md:pr-8 bg-[#f8f8f6] static z-10">
+                    <div class=" w-[40%] min-h-full xl:pr-48 sm:pr-8 md:pr-8 bg-[#f8f8f6] static z-10">
                         <v-tabs
                         style="
                         background-color: #f8f8f6 !important;"
@@ -339,7 +339,7 @@ const swiperConfig = {
                     
                     <div class=" flex flex-col w-full h-[45%] bg-[#ceddce] relative">
                         <div class=" flex flex-col w-full gap-5 sm:gap-5 lg:gap-20 pt-10 py-4 px-5 right-0">
-                            <button class=" py-3 px-10 border border-white text-white font-semibold bg-gradient-to-r from-lime-600 to-lime-950 duration-200 hover:opacity-70 rounded-2xl text-sm">Check Shop</button>
+                            <button class=" py-3 px-10 border border-white text-white font-semibold bg-gradient-to-r from-lime-600 to-lime-950 duration-200 hover:opacity-70 rounded-xl text-sm">Check Shop</button>
                             <button class=" text-sm font-semibold duration-200 hover:text-gray-500">Learn more -></button>
                         </div>
                         <div class=" w-full h-1/2">
@@ -354,7 +354,7 @@ const swiperConfig = {
                             >
                                 <v-tab
                                     v-for="i in about" :key="i.about" :value="i.index" 
-                                    class=" !bg-[#ceddce] !rounded-2xl min-h-full  w-1/3 max-w-1/3 duration-300 hover:opacity-100 opacity-50 overflow-hidden">
+                                    class=" !bg-[#ceddce] !rounded-xl min-h-full  w-1/3 max-w-1/3 duration-300 hover:opacity-100 opacity-50 overflow-hidden">
                                     <div class=" !w-full !min-h-full flex flex-col justify-center items-center gap-5 hover:bg-[#ceddce] absolute p-12">
                                         <v-img
                                             :src="i.img"
