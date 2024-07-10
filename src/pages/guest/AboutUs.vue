@@ -177,9 +177,9 @@ const swiperConfig = {
                         </div>
                     </div>
                 </div>
-                <div class="w-full min-h-[35%] flex">
+                <div class="w-full h-[35%] flex">
                     <div
-                        class="w-[60%] min-h-full xl:pl-48 sm:pl-8 bg-[#ceddce] gap-5 flex flex-col">
+                        class="w-[60%] h-full xl:pl-48 sm:pl-8 bg-[#ceddce] flex flex-col">
                         <div class="flex flex-row sm:gap-5 lg:gap-20 p-5">
                             <button
                                 class="py-3 px-10 border border-white text-white font-semibold bg-gradient-to-r from-lime-600 to-lime-950 duration-200 hover:opacity-70 rounded-xl">
@@ -227,7 +227,7 @@ const swiperConfig = {
                         </div>
                     </div>
                     <div
-                        class="w-[40%] min-h-full xl:pr-48 sm:pr-8 md:pr-8 bg-[#f8f8f6] static z-10">
+                        class="w-[40%] h-full xl:pr-48 sm:pr-8 md:pr-8 bg-[#f8f8f6] static z-10">
                         <v-tabs
                             style="background-color: #f8f8f6 !important"
                             v-model="tab"
