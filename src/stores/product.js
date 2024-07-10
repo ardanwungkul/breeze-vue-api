@@ -54,7 +54,7 @@ export const useProductStore = defineStore({
             await csrf()
             processing.value = true
             axios
-                .put(`/api/product/${id}`, updateProduct)
+                .post(`/api/product/${id}`, updateProduct)
                 .then(response => {
                     processing.value = false
                     console.log(response)

@@ -60,7 +60,6 @@ const addProduct = async newProduct => {
     }, props.products)
 }
 const editProduct = async (updateProduct, id) => {
-    console.log(updateProduct)
     await storeProduct.editProduct(updateProduct, setErrors, processing, id)
     watchEffect(() => {
         props.fetchProducts()
