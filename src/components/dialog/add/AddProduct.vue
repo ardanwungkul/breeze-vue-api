@@ -86,7 +86,7 @@ const changePlaceholder = event => {
         <template v-slot:activator="{ props: activatorProps }">
             <div
                 v-bind="activatorProps"
-                class="bg-ezzora-200 hover:bg-ezzora-300 text-ezzora-800 shadow-lg px-4 py-2 rounded-lg gap-1 flex items-center text-sm cursor-pointer">
+                class="bg-secondary-3 text-white hover:bg-opacity-90 px-4 py-2 rounded-lg gap-1 flex items-center text-sm cursor-pointer shadow-lg">
                 <i class="fa-solid fa-plus"></i>
                 <p>Add Product</p>
             </div>
@@ -200,7 +200,7 @@ const changePlaceholder = event => {
                                 <div></div>
                             </div>
                             <button
-                                class="bg-ezzora-500 hover:bg-ezzora-600 text-white px-3 py-2 rounded-lg text-sm cursor-pointer flex justify-center items-center gap-3">
+                                class="bg-secondary-3 hover:bg-opacity-90 text-white px-3 py-2 rounded-lg text-sm cursor-pointer flex justify-center items-center gap-3">
                                 <p>Add</p>
                                 <i class="fa-solid fa-plus"></i>
                                 <svg

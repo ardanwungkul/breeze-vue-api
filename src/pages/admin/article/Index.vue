@@ -21,10 +21,8 @@ async function fetchUsers() {
 }
 </script>
 <template>
-    <AdminLayout>
-        <div class="w-full space-y-5">
-            <p class="text-2xl font-bold text-ezzora-900">List Articles</p>
-
+    <AdminLayout title="List Articles">
+        <div class="w-full">
             <ArticleTable :users="users" :fetchUsers="fetchUsers" />
         </div>
     </AdminLayout>

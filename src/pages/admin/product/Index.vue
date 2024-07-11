@@ -26,10 +26,8 @@ async function fetchProducts() {
 }
 </script>
 <template>
-    <AdminLayout>
-        <div class="w-full space-y-5">
-            <p class="text-2xl font-bold text-ezzora-900">Product Items</p>
-
+    <AdminLayout title="Product Items">
+        <div class="w-full">
             <ProductTable :products="products" :fetchProducts="fetchProducts" />
         </div>
     </AdminLayout>
