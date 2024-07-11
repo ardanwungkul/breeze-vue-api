@@ -1,6 +1,7 @@
 const defaultTheme = require('tailwindcss/defaultTheme')
 
 module.exports = {
+    darkMode: 'selector',
     content: [
         './index.html',
         './src/**/*.{vue,js,ts,jsx,tsx}',
@@ -28,6 +29,18 @@ module.exports = {
                 'ezzora-800': '#5e594e',
                 'ezzora-900': '#4e4a40',
                 'ezzora-950': '#292721',
+                'light-primary-1': '#ffffff',
+                'light-primary-2': '#f3f3f3',
+                'light-primary-3': '#f2f7ff',
+                'dark-primary-1': '#11121e',
+                'dark-primary-2': '#1d1d29',
+                'secondary-1': '#ffbc11',
+                'secondary-2': '#4578f9',
+                'secondary-3': '#43b430',
+                'secondary-4': '#cb3eff',
+                'typography-1': '#ffffff',
+                'typography-2': '#7b7b7b',
+                'typography-3': '#000000',
             },
         },
     },

@@ -145,6 +145,30 @@ const routes = [
             guard: 'auth',
         },
     },
+    // Payment
+    {
+        path: '/admin/payments',
+        name: 'admin.payment.index',
+        component: () => import('@/pages/admin/payment/Index.vue'),
+        query: {
+            verified: 'verified',
+        },
+        meta: {
+            guard: 'auth',
+        },
+    },
+    // Payment
+    {
+        path: '/admin/agents',
+        name: 'admin.agent.index',
+        component: () => import('@/pages/admin/agent/Index.vue'),
+        query: {
+            verified: 'verified',
+        },
+        meta: {
+            guard: 'auth',
+        },
+    },
 
     // home
     {

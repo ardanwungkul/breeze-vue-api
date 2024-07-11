@@ -1,0 +1,1 @@
+import{o as a,c as e,w as t,_ as s,a as o}from"./index-a8eec92e.js";const l={__name:"Dashboard",setup(r){return(_,c)=>(a(),e(s,null,{default:t(()=>[o("Ini Halaman Dashboard Admin")]),_:1}))}};export{l as default};

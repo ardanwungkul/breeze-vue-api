@@ -133,15 +133,15 @@ export const useUsers = defineStore('users', {
             axios
                 .post('/login', form.value)
                 .then(response => {
+                    console.log(response)
                     this.authStatus = response.status
                     processing.value = false
 
-                    this.router.push({ name: 'dashboard' })
+                    this.router.push({ name: 'admin.dashboard' })
                 })
                 .catch(error => {
                     console.log(error)
                     if (error.response.status !== 422) throw error
-
                     setErrors.value = Object.values(
                         error.response.data.errors,
                     ).flat()

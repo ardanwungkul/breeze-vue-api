@@ -27,7 +27,7 @@ const handleDelete = async () => {
         <template v-slot:activator="{ props: activatorProps }">
             <button v-bind="activatorProps">
                 <div
-                    class="flex gap-2 items-center text-white bg-red-600 rounded-lg px-3 py-1">
+                    class="flex gap-2 items-center text-white bg-red-500 hover:bg-opacity-90 rounded-lg px-3 py-1">
                     <i class="fa-solid fa-trash"></i>
                     <p>Delete</p>
                 </div>
@@ -61,7 +61,7 @@ const handleDelete = async () => {
                         <button
                             @click="handleDelete"
                             type="button"
-                            class="text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm items-center px-5 py-2.5 text-center flex gap-3 justify-center">
+                            class="!text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm items-center px-5 py-2.5 text-center flex gap-3 justify-center">
                             <p>Yes, I'm sure</p>
                             <svg
                                 v-if="processing"

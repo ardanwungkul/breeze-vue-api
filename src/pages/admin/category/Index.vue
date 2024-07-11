@@ -43,9 +43,8 @@ async function fetchSubCategories() {
 </script>
 
 <template>
-    <AdminLayout>
-        <div class="w-full space-y-5">
-            <p class="text-2xl font-bold text-ezzora-900">Product Category</p>
+    <AdminLayout title="Product Category">
+        <div class="w-full">
             <CategoryTable
                 :categories="categories"
                 :fetchCategories="fetchCategories"

@@ -7,10 +7,8 @@ import UserTable from '@/components/admin/user/UserTable.vue'
 const tab = ref(null)
 </script>
 <template>
-    <AdminLayout>
-        <div class="w-full space-y-5">
-            <p class="text-2xl font-bold text-ezzora-900">Banner Shop</p>
-
+    <AdminLayout title="Banner Shop">
+        <div class="w-full">
             <!-- <UserTable :users="users" :fetchUsers="fetchUsers" /> -->
             <div class="bg-ezzora-100 p-5 rounded-lg space-y-3 border">
                 <v-card>

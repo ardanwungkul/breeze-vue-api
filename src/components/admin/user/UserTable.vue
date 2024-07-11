@@ -56,13 +56,14 @@ const deleteUser = async id => {
 <template>
     <div class="relative">
         <ValidationErrors class="w-full" :errors="errors" />
-        <div class="bg-ezzora-100 p-5 rounded-lg space-y-3 border">
+        <div
+            class="bg-light-primary-1 dark:bg-dark-primary-2 p-5 rounded-lg space-y-3 shadow-lg">
             <div class="flex justify-between items-center">
                 <AddUser :method="addUser"></AddUser>
                 <input
                     type="text"
                     v-model="searchUser"
-                    class="rounded-lg text-sm min-w-52"
+                    class="rounded-lg text-sm min-w-52 dark:!border-gray-500 border !border-typography-2/20 shadow-lg bg-light-primary-1 dark:bg-dark-primary-1 text-typography-3 dark:text-white"
                     placeholder="Search User" />
             </div>
             <v-data-table
@@ -72,10 +73,10 @@ const deleteUser = async id => {
                 :items="users"
                 hide-default-footer
                 :header-props="{
-                    class: 'bg-ezzora-200',
+                    class: 'dark:bg-dark-primary-1 bg-light-primary-2 dark:!text-white border-b dark:!border-white/30',
                 }"
                 item-key="id"
-                class="border shadow-lg">
+                class="border dark:!border-typography-2/20 shadow-lg dark:!bg-dark-primary-1 !bg-light-primary-2 dark:!text-typography-1">
                 <template v-slot:item.id="{ item }">
                     <div class="flex gap-3 items-center justify-center text-xs">
                         <EditUser :user="item" :method="editUser" />
@@ -89,7 +90,7 @@ const deleteUser = async id => {
             <v-pagination
                 v-model="pageUser"
                 :length="pageCount"
-                class="bg-ezzora-200 rounded-lg"
+                class="bg-light-primary-2 border !border-typography-2/20 shadow-lg rounded-lg dark:bg-dark-primary-1 dark:text-white"
                 :total-visible="5">
             </v-pagination>
         </div>

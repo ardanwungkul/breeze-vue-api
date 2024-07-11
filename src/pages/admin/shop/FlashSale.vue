@@ -23,10 +23,8 @@ async function fetchUsers() {
 }
 </script>
 <template>
-    <AdminLayout>
-        <div class="w-full space-y-5">
-            <p class="text-2xl font-bold text-ezzora-900">Flash Sale</p>
-
+    <AdminLayout title="Flash Sale">
+        <div class="w-full">
             <FlashSaleTable :users="users" :fetchUsers="fetchUsers" />
         </div>
     </AdminLayout>

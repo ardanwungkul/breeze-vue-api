@@ -4,7 +4,6 @@ import banner1 from '@/assets/images/banner-flash.jpg'
 import banner2 from '@/assets/images/banner-flash2.jpg'
 import skincare6 from '@/assets/images/skincare6.png'
 import sidebanner from '@/assets/images/banner1.png'
-import loading from '@/assets/images/loading.gif'
 import vid1 from '@/assets/images/vid1.mp4'
 import vid2 from '@/assets/images/vid2.mp4'
 import vid3 from '@/assets/images/vid3.mp4'
@@ -37,29 +36,29 @@ const mainbanner = ref([
 const secondbanner = ref([
     {
         index: 1,
-        banner:banner1
+        banner: banner1,
     },
     {
         index: 2,
-        banner:banner2
+        banner: banner2,
     },
 ])
 const reseller = ref([
     {
-        index:1,
-        shop: "Beauty Shop"
+        index: 1,
+        shop: 'Beauty Shop',
     },
     {
-        index:2,
-        shop: "toko b"
+        index: 2,
+        shop: 'toko b',
     },
     {
-        index:3,
-        shop: "toko c"
+        index: 3,
+        shop: 'toko c',
     },
     {
-        index:4,
-        shop: "toko d"
+        index: 4,
+        shop: 'toko d',
     },
 ])
 const categories = ref([
@@ -69,13 +68,13 @@ const categories = ref([
         subcategories: [
             {
                 index: 1,
-                subcategory: 'Brigthening Series'
+                subcategory: 'Brigthening Series',
             },
             {
                 index: 1,
-                subcategory: 'Acne Series'
+                subcategory: 'Acne Series',
             },
-        ]
+        ],
     },
     {
         index: 2,
@@ -83,17 +82,17 @@ const categories = ref([
         subcategories: [
             {
                 index: 1,
-                subcategory: 'Liptint'
+                subcategory: 'Liptint',
             },
             {
                 index: 2,
-                subcategory: 'Lip Cream'
+                subcategory: 'Lip Cream',
             },
             {
                 index: 3,
-                subcategory: 'Lip Glose'
+                subcategory: 'Lip Glose',
             },
-        ]
+        ],
     },
     {
         index: 3,
@@ -101,14 +100,14 @@ const categories = ref([
         subcategories: [
             {
                 index: 1,
-                subcategory: 'Body Wash'
+                subcategory: 'Body Wash',
             },
             {
                 index: 2,
-                subcategory: 'Peaching Body Spray'
+                subcategory: 'Peaching Body Spray',
             },
-        ]
-    }
+        ],
+    },
 ])
 
 const swiperModules = [Navigation, Autoplay]
@@ -123,13 +122,18 @@ const swiperConfig = {
 <template>
     <AppLayout>
         <!-- Videos -->
-        <div class="w-full min-h-52 md:min-h-96 relative overflow-hidden bg-black">
+        <div
+            class="w-full min-h-52 md:min-h-96 relative overflow-hidden bg-black">
             <div
-                v-for="i in mainbanner" :key="i.index"
-                :class="{ active: activeVideo === i.index, 'z-0': activeVideo !== i.index }"
+                v-for="i in mainbanner"
+                :key="i.index"
+                :class="{
+                    active: activeVideo === i.index,
+                    'z-0': activeVideo !== i.index,
+                }"
                 class="absolute top-0 left-0 curved-c w-full min-h-full overflow-hidden flex justify-center items-center">
                 <video
-                    class=" mt-0 md:mt-auto object-cover w-full h-full"
+                    class="mt-0 md:mt-auto object-cover w-full h-full"
                     :src="i.video"
                     autoplay
                     muted
@@ -162,7 +166,7 @@ const swiperConfig = {
                         </defs>
                     </svg>
                 </RouterLink>
-                <RouterLink 
+                <RouterLink
                     to="#"
                     class="w-6 min-h-6 duration-200 hover:scale-125">
                     <svg
@@ -185,7 +189,7 @@ const swiperConfig = {
                             class="fill-000000"></path>
                     </svg>
                 </RouterLink>
-                <RouterLink 
+                <RouterLink
                     to="#"
                     class="w-6 min-h-6 duration-200 hover:scale-125">
                     <svg
@@ -202,7 +206,8 @@ const swiperConfig = {
             <div
                 class="absolute bottom-4 md:bottom-9 flex flow-row w-full gap-5 justify-center z-30">
                 <button
-                    v-for="i in mainbanner" :key="i.index"
+                    v-for="i in mainbanner"
+                    :key="i.index"
                     @click="toggleVideo(i.index)"
                     :class="{
                         'w-8': activeVideo === i.index,
@@ -213,9 +218,10 @@ const swiperConfig = {
         </div>
         <!-- Banner -->
         <div class="w-full py-8 px-4 md:px-8 lg:px-0 md:py-16">
-            <div class="flex flex-col mx-auto w-full max-w-[100vw] md:max-w-[1320px] relative">
+            <div
+                class="flex flex-col mx-auto w-full max-w-[100vw] md:max-w-[1320px] relative">
                 <swiper
-                    class=" w-full max-w-full min-h-full mb-2"
+                    class="w-full max-w-full min-h-full mb-2"
                     :navigation="swiperConfig.navigation"
                     :modules="swiperModules"
                     :loop="true"
@@ -231,18 +237,14 @@ const swiperConfig = {
                             <v-img
                                 :src="i.banner"
                                 aspect-ratio="1"
-                                class=" min-w-full max-w-full min-h-full"
-                                
-                            >
+                                class="min-w-full max-w-full min-h-full">
                                 <template v-slot:placeholder>
                                     <div
-                                        class=" w-full h-full flex justify-center items-center"
-                                    >
-                                    <v-progress-circular
-                                    color=""
-                                    indeterminate
-                                    ></v-progress-circular>
-                                </div>
+                                        class="w-full h-full flex justify-center items-center">
+                                        <v-progress-circular
+                                            color=""
+                                            indeterminate></v-progress-circular>
+                                    </div>
                                 </template>
                             </v-img>
                             <div
@@ -294,7 +296,6 @@ const swiperConfig = {
                         <div>12</div>
                         <div>12</div>
                     </div>
-                    
                 </div>
             </div>
         </div>
@@ -323,36 +324,38 @@ const swiperConfig = {
                     @swiper="swiperJs">
                     <swiper-slide v-for="i in 5" :key="i">
                         <div
-                        style="background-color: rgb(237, 241, 255)"
-                        class=" w-full flex flex-row py-4">
-                            <div class="w-1/3 text-center flex flex-col justify-center items-center ml-9">
-                                <div class=" flex justify-center items-center mb-2">
+                            style="background-color: rgb(237, 241, 255)"
+                            class="w-full flex flex-row py-4">
+                            <div
+                                class="w-1/3 text-center flex flex-col justify-center items-center ml-9">
+                                <div
+                                    class="flex justify-center items-center mb-2">
                                     New Product Upto 50% off
                                 </div>
-                                <div class="flex overflow-hidden text-sm rounded-full w-full bg-gray-400 relative">
-                                    <div 
+                                <div
+                                    class="flex overflow-hidden text-sm rounded-full w-full bg-gray-400 relative">
+                                    <div
                                         style="width: 30%"
-                                        class=" bg-semupink absolute h-10 top-0 left-0">
+                                        class="bg-semupink absolute h-10 top-0 left-0"></div>
+                                    <div
+                                        class="text-white w-full text-center py-1 relative">
+                                        300 Terjual
                                     </div>
-                                    <div class=" text-white w-full text-center py-1 relative">300 Terjual</div>
                                 </div>
                             </div>
-                            <div class="w-1/2 max-h-32 py-2 flex justify-center">
+                            <div
+                                class="w-1/2 max-h-32 py-2 flex justify-center">
                                 <v-img
                                     :src="skincare6"
                                     aspect-ratio="1"
-                                    class=" min-w-full min-h-full"
-                                    
-                                >
+                                    class="min-w-full min-h-full">
                                     <template v-slot:placeholder>
-                                    <div
-                                        class=" w-full h-full flex justify-center items-center"
-                                    >
-                                        <v-progress-circular
-                                        color=""
-                                        indeterminate
-                                        ></v-progress-circular>
-                                    </div>
+                                        <div
+                                            class="w-full h-full flex justify-center items-center">
+                                            <v-progress-circular
+                                                color=""
+                                                indeterminate></v-progress-circular>
+                                        </div>
                                     </template>
                                 </v-img>
                             </div>
@@ -367,7 +370,7 @@ const swiperConfig = {
                 class="flex flex-col justify-center mx-auto w-full max-w-[1320px] relative">
                 <div class="w-full flex flex-col md:flex-row gap-5 sm:gap-0">
                     <!-- filter desktop -->
-                    <div class=" hidden  md:block w-1/4 md:pl-4 2xl:pl-0">
+                    <div class="hidden md:block w-1/4 md:pl-4 2xl:pl-0">
                         <div class="border p-4">
                             <div class="font-medium mb-2">Filter by Price</div>
                             <input
@@ -378,7 +381,7 @@ const swiperConfig = {
                                 max="300000"
                                 value="0"
                                 class="w-full h-1 bg-gray-400 border-none accent-slate-700 rounded-lg cursor-pointer" />
-                            <div class="mt-2 mb-6">Rp. {{price}}</div>
+                            <div class="mt-2 mb-6">Rp. {{ price }}</div>
                             <div class="font-medium mb-2">Filter By Rating</div>
                             <select
                                 v-model.number="rating"
@@ -386,16 +389,17 @@ const swiperConfig = {
                                 id=""
                                 class="border-black/20 text-sm text-gray-600 bg-transparent py-2 focus:ring-transparent w-full hover:border-black/30 mb-2">
                                 <option value="1star">Select Rating</option>
-                                <option value=1>1 star</option>
-                                <option value=2>2 star</option>
-                                <option value=3>3 star</option>
-                                <option value=4>4 star</option>
-                                <option value=5>5 star</option>
+                                <option value="1">1 star</option>
+                                <option value="2">2 star</option>
+                                <option value="3">3 star</option>
+                                <option value="4">4 star</option>
+                                <option value="5">5 star</option>
                             </select>
-                            <div class=" flex flex-row mb-10">
+                            <div class="flex flex-row mb-10">
                                 <div
-                                    v-for="i in rating" :key="i"
-                                    class=" w-5 h-5 flex">
+                                    v-for="i in rating"
+                                    :key="i"
+                                    class="w-5 h-5 flex">
                                     <svg
                                         baseProfile="tiny"
                                         height="24px"
@@ -420,13 +424,13 @@ const swiperConfig = {
                         <div class="border border-t-transparent py-4 mb-5">
                             <div class="font-medium mb-4 px-4">Categories</div>
                             <div
-                                v-for="c in categories" :key="c"
-                                class="w-full"
-                            >
+                                v-for="c in categories"
+                                :key="c"
+                                class="w-full">
                                 <div
                                     @click="toggleClass(c.index)"
                                     class="w-full flex flex-row px-4 py-2 justify-between border-b hover:text-darkbrownshop">
-                                    <div class="">{{c.category}}</div>
+                                    <div class="">{{ c.category }}</div>
                                     <div class="w-4 h-4">
                                         <svg
                                             class="feather feather-chevron-down"
@@ -450,37 +454,36 @@ const swiperConfig = {
                                     }"
                                     class="bg-brownshop py-4">
                                     <button
-                                        v-for="sb in c.subcategories" :key="sb"
+                                        v-for="sb in c.subcategories"
+                                        :key="sb"
                                         class="w-full py-1 px-4 text-left hover:bg-white">
                                         {{ sb.subcategory }}
                                     </button>
                                 </div>
                             </div>
                         </div>
-                        <div class=" w-full mt-5 md:h-[500px] lg:h-[700px]">
+                        <div class="w-full mt-5 md:h-[500px] lg:h-[700px]">
                             <v-img
                                 :src="sidebanner"
                                 aspect-ratio="1"
-                                class=" min-h-full"
-                                cover
-                            >
+                                class="min-h-full"
+                                cover>
                                 <template v-slot:placeholder>
-                                <div
-                                    class=" w-full h-full flex justify-center items-center"
-                                >
-                                    <v-progress-circular
-                                    color=""
-                                    indeterminate
-                                    ></v-progress-circular>
-                                </div>
+                                    <div
+                                        class="w-full h-full flex justify-center items-center">
+                                        <v-progress-circular
+                                            color=""
+                                            indeterminate></v-progress-circular>
+                                    </div>
                                 </template>
                             </v-img>
                         </div>
                     </div>
                     <!-- Product -->
-                    <div class=" w-full md:w-3/4 flex flex-col">
-                        <div class=" sticky top-14 bg-[#f8f8f6] flex p-4 md:px-5 md:py-2 flex-col md:flex-row md:gap-5 justify-between md:items-center mb-5 z-30">
-                            <div class=" mb-2 md:mb-0 flex flex-row max-h-10">
+                    <div class="w-full md:w-3/4 flex flex-col">
+                        <div
+                            class="sticky top-14 bg-[#f8f8f6] flex p-4 md:px-5 md:py-2 flex-col md:flex-row md:gap-5 justify-between md:items-center mb-5 z-30">
+                            <div class="mb-2 md:mb-0 flex flex-row max-h-10">
                                 <input
                                     type="text"
                                     class="text-gray-600 border bg-transparent border-gray-200 focus:ring-transparent focus:border-gray-200"
@@ -498,43 +501,55 @@ const swiperConfig = {
                                     </svg>
                                 </button>
                                 <div class="flex w-full justify-end md:hidden">
-                                    <button @click="togglefilter('yes')" class="flex w-6 h-6 justify-end md:hidden hover:scale-110 duration-200">
-                                        <svg enable-background="new 0 0 32 32" id="Glyph" version="1.1" viewBox="0 0 32 32" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><path fill="#D19C97" d="M29.815,6.168C29.484,5.448,28.783,5,27.986,5H4.014c-0.797,0-1.498,0.448-1.83,1.168  c-0.329,0.714-0.215,1.53,0.297,2.128c0,0,0.001,0.001,0.001,0.001L12,19.371V28c0,0.369,0.203,0.708,0.528,0.882  C12.676,28.961,12.838,29,13,29c0.194,0,0.387-0.057,0.555-0.168l6-4C19.833,24.646,20,24.334,20,24v-4.629l9.519-11.074  C30.031,7.698,30.145,6.882,29.815,6.168z" id="XMLID_276_"/></svg>
+                                    <button
+                                        @click="togglefilter('yes')"
+                                        class="flex w-6 h-6 justify-end md:hidden hover:scale-110 duration-200">
+                                        <svg
+                                            enable-background="new 0 0 32 32"
+                                            id="Glyph"
+                                            version="1.1"
+                                            viewBox="0 0 32 32"
+                                            xml:space="preserve"
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            xmlns:xlink="http://www.w3.org/1999/xlink">
+                                            <path
+                                                fill="#D19C97"
+                                                d="M29.815,6.168C29.484,5.448,28.783,5,27.986,5H4.014c-0.797,0-1.498,0.448-1.83,1.168  c-0.329,0.714-0.215,1.53,0.297,2.128c0,0,0.001,0.001,0.001,0.001L12,19.371V28c0,0.369,0.203,0.708,0.528,0.882  C12.676,28.961,12.838,29,13,29c0.194,0,0.387-0.057,0.555-0.168l6-4C19.833,24.646,20,24.334,20,24v-4.629l9.519-11.074  C30.031,7.698,30.145,6.882,29.815,6.168z"
+                                                id="XMLID_276_" />
+                                        </svg>
                                     </button>
                                 </div>
                             </div>
-                            <ul class=" flex flex-row flex-wrap md:flex-wrap-reverse md:justify-end">
-                                <li
-                                    v-for="i in reseller" :key="i.index">
+                            <ul
+                                class="flex flex-row flex-wrap md:flex-wrap-reverse md:justify-end">
+                                <li v-for="i in reseller" :key="i.index">
                                     <button
                                         type="button"
-                                        class=" py-1 text-sm px-4 bg-customLightPurple focus:text-white focus:bg-semupink duration-200">
-                                        {{i.shop}}
+                                        class="py-1 text-sm px-4 bg-customLightPurple focus:text-white focus:bg-semupink duration-200">
+                                        {{ i.shop }}
                                     </button>
                                 </li>
                             </ul>
                         </div>
-                        <div class="grid duration-300 px-4 md:px-5 grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-8 lg:mb-10">
+                        <div
+                            class="grid duration-300 px-4 md:px-5 grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-8 lg:mb-10">
                             <div
                                 class="flex flex-col min-w-[32.2%] rounded-3xl overflow-hidden w-full shadow-lg shadow-black/20"
                                 v-for="i in 8"
                                 :key="i">
-                                <div class="w-full flex justify-center p-5 items-center bg-brownshop h-40">
+                                <div
+                                    class="w-full flex justify-center p-5 items-center bg-brownshop h-40">
                                     <v-img
                                         :src="skincare6"
                                         aspect-ratio="1"
-                                        class=" min-w-full min-h-full"
-                                        
-                                    >
+                                        class="min-w-full min-h-full">
                                         <template v-slot:placeholder>
-                                        <div
-                                            class=" w-full h-full flex justify-center items-center"
-                                        >
-                                            <v-progress-circular
-                                            color=""
-                                            indeterminate
-                                            ></v-progress-circular>
-                                        </div>
+                                            <div
+                                                class="w-full h-full flex justify-center items-center">
+                                                <v-progress-circular
+                                                    color=""
+                                                    indeterminate></v-progress-circular>
+                                            </div>
                                         </template>
                                     </v-img>
                                 </div>
@@ -578,7 +593,9 @@ const swiperConfig = {
                                                     </svg>
                                                 </div>
                                             </div>
-                                            <div class=" text-right lg:text-sm">Rp. 200.000</div>
+                                            <div class="text-right lg:text-sm">
+                                                Rp. 200.000
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -622,44 +639,40 @@ const swiperConfig = {
                                             </td>
                                             <td class="w-1/3 p-1 md:p-4">
                                                 <div
-                                                    class=" w-full md:w-4/6 mx-auto rounded-lg flex justify-center items-center h-40 md:h-52 bg-gray-600 overflow-hidden">
+                                                    class="w-full md:w-4/6 mx-auto rounded-lg flex justify-center items-center h-40 md:h-52 bg-gray-600 overflow-hidden">
                                                     <v-img
                                                         src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/No-Image-Placeholder.svg/1665px-No-Image-Placeholder.svg.png"
                                                         aspect-ratio="1"
-                                                        class=" min-h-full"
-                                                        cover
-                                                    >
-                                                        <template v-slot:placeholder>
-                                                        <div
-                                                            class=" w-full h-full flex justify-center items-center"
-                                                        >
-                                                            <v-progress-circular
-                                                            color=""
-                                                            indeterminate
-                                                            ></v-progress-circular>
-                                                        </div>
+                                                        class="min-h-full"
+                                                        cover>
+                                                        <template
+                                                            v-slot:placeholder>
+                                                            <div
+                                                                class="w-full h-full flex justify-center items-center">
+                                                                <v-progress-circular
+                                                                    color=""
+                                                                    indeterminate></v-progress-circular>
+                                                            </div>
                                                         </template>
                                                     </v-img>
                                                 </div>
                                             </td>
                                             <td class="w-1/3 p-1 md:p-4">
                                                 <div
-                                                    class=" w-full md:w-4/6 mx-auto rounded-lg flex justify-center items-center h-40 md:h-52 bg-gray-600 overflow-hidden">
+                                                    class="w-full md:w-4/6 mx-auto rounded-lg flex justify-center items-center h-40 md:h-52 bg-gray-600 overflow-hidden">
                                                     <v-img
                                                         src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/No-Image-Placeholder.svg/1665px-No-Image-Placeholder.svg.png"
                                                         aspect-ratio="1"
-                                                        class=" min-h-full"
-                                                        cover
-                                                    >
-                                                        <template v-slot:placeholder>
-                                                        <div
-                                                            class=" w-full h-full flex justify-center items-center"
-                                                        >
-                                                            <v-progress-circular
-                                                            color=""
-                                                            indeterminate
-                                                            ></v-progress-circular>
-                                                        </div>
+                                                        class="min-h-full"
+                                                        cover>
+                                                        <template
+                                                            v-slot:placeholder>
+                                                            <div
+                                                                class="w-full h-full flex justify-center items-center">
+                                                                <v-progress-circular
+                                                                    color=""
+                                                                    indeterminate></v-progress-circular>
+                                                            </div>
                                                         </template>
                                                     </v-img>
                                                 </div>
@@ -670,24 +683,36 @@ const swiperConfig = {
                                                 class="font-bold text-lg w-1/3 text-gray-500">
                                                 Product Price
                                             </td>
-                                            <td class="w-1/3 text-gray-500 p-4">N/A</td>
-                                            <td class="w-1/3 text-gray-500 p-4">N/A</td>
+                                            <td class="w-1/3 text-gray-500 p-4">
+                                                N/A
+                                            </td>
+                                            <td class="w-1/3 text-gray-500 p-4">
+                                                N/A
+                                            </td>
                                         </tr>
                                         <tr class="border-t">
                                             <td
                                                 class="font-bold text-lg w-1/3 text-gray-500">
                                                 Product Description
                                             </td>
-                                            <td class="w-1/3 text-gray-500 p-4">N/A</td>
-                                            <td class="w-1/3 text-gray-500 p-4">N/A</td>
+                                            <td class="w-1/3 text-gray-500 p-4">
+                                                N/A
+                                            </td>
+                                            <td class="w-1/3 text-gray-500 p-4">
+                                                N/A
+                                            </td>
                                         </tr>
                                         <tr class="border-t">
                                             <td
                                                 class="font-bold text-lg w-1/3 text-gray-500">
                                                 Product Brand
                                             </td>
-                                            <td class="w-1/3 text-gray-500 p-4">N/A</td>
-                                            <td class="w-1/3 text-gray-500 p-4">N/A</td>
+                                            <td class="w-1/3 text-gray-500 p-4">
+                                                N/A
+                                            </td>
+                                            <td class="w-1/3 text-gray-500 p-4">
+                                                N/A
+                                            </td>
                                         </tr>
                                     </table>
                                 </div>
@@ -695,39 +720,61 @@ const swiperConfig = {
                         </div>
                     </div>
                     <!-- filter mobile -->
-                    <div class=" flex pt-5 px-4 justify-center md:hidden w-full h-[1000px]">
+                    <div
+                        class="flex pt-5 px-4 justify-center md:hidden w-full h-[1000px]">
                         <v-img
                             :src="sidebanner"
                             aspect-ratio="1"
-                            class=" min-h-full"
-                            cover
-                        >
+                            class="min-h-full"
+                            cover>
                             <template v-slot:placeholder>
-                            <div
-                                class=" w-full h-full flex justify-center items-center"
-                            >
-                                <v-progress-circular
-                                color=""
-                                indeterminate
-                                ></v-progress-circular>
-                            </div>
+                                <div
+                                    class="w-full h-full flex justify-center items-center">
+                                    <v-progress-circular
+                                        color=""
+                                        indeterminate></v-progress-circular>
+                                </div>
                             </template>
                         </v-img>
                     </div>
-                    <div 
-                        :class="{ 'block': activefilter === 'yes', ' hidden': activefilter !== 'yes' }"
-                        class=" bg-black w-screen min-h-screen fixed top-0 left-0 z-30 opacity-40 duration-700 "></div>
                     <div
-                        :class="{ '': activefilter === 'yes', 'translate-y-full': activefilter !== 'yes' }"
-                        class=" fixed bottom-0 left-0 border-t border-gray-500 rounded-t z-40 max-h-[70vh] p-4 md:p-0 md:hidden w-full duration-700 bg-[#f8f8f6]">
-                        <div class=" w-full flex justify-center h-5 static top-0 mb-3">
-                            <button @click="togglefilter('no')" class=" max-w-6 max-h-6 duration-200 hover:scale-110">
-                                <svg height="24px" id="Layer_1" style="enable-background:new 0 0 512 512;" version="1.1" viewBox="0 0 512 512" width="24px" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><path fill="#D19C97" d="M98.9,184.7l1.8,2.1l136,156.5c4.6,5.3,11.5,8.6,19.2,8.6c7.7,0,14.6-3.4,19.2-8.6L411,187.1l2.3-2.6  c1.7-2.5,2.7-5.5,2.7-8.7c0-8.7-7.4-15.8-16.6-15.8v0H112.6v0c-9.2,0-16.6,7.1-16.6,15.8C96,179.1,97.1,182.2,98.9,184.7z"/></svg>
+                        :class="{
+                            block: activefilter === 'yes',
+                            ' hidden': activefilter !== 'yes',
+                        }"
+                        class="bg-black w-screen min-h-screen fixed top-0 left-0 z-30 opacity-40 duration-700"></div>
+                    <div
+                        :class="{
+                            '': activefilter === 'yes',
+                            'translate-y-full': activefilter !== 'yes',
+                        }"
+                        class="fixed bottom-0 left-0 border-t border-gray-500 rounded-t z-40 max-h-[70vh] p-4 md:p-0 md:hidden w-full duration-700 bg-[#f8f8f6]">
+                        <div
+                            class="w-full flex justify-center h-5 static top-0 mb-3">
+                            <button
+                                @click="togglefilter('no')"
+                                class="max-w-6 max-h-6 duration-200 hover:scale-110">
+                                <svg
+                                    height="24px"
+                                    id="Layer_1"
+                                    style="enable-background: new 0 0 512 512"
+                                    version="1.1"
+                                    viewBox="0 0 512 512"
+                                    width="24px"
+                                    xml:space="preserve"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    xmlns:xlink="http://www.w3.org/1999/xlink">
+                                    <path
+                                        fill="#D19C97"
+                                        d="M98.9,184.7l1.8,2.1l136,156.5c4.6,5.3,11.5,8.6,19.2,8.6c7.7,0,14.6-3.4,19.2-8.6L411,187.1l2.3-2.6  c1.7-2.5,2.7-5.5,2.7-8.7c0-8.7-7.4-15.8-16.6-15.8v0H112.6v0c-9.2,0-16.6,7.1-16.6,15.8C96,179.1,97.1,182.2,98.9,184.7z" />
+                                </svg>
                             </button>
                         </div>
-                        <div class=" w-full h-[55vh] overflow-auto">
+                        <div class="w-full h-[55vh] overflow-auto">
                             <div class="border p-4">
-                                <div class="font-medium mb-2">Filter by Price</div>
+                                <div class="font-medium mb-2">
+                                    Filter by Price
+                                </div>
                                 <input
                                     id="medium-range"
                                     type="range"
@@ -736,7 +783,9 @@ const swiperConfig = {
                                     value="0"
                                     class="w-full h-1 bg-gray-400 border-none accent-slate-700 rounded-lg cursor-pointer" />
                                 <div class="mt-2 mb-6">Rp.</div>
-                                <div class="font-medium mb-2">Filter By Rating</div>
+                                <div class="font-medium mb-2">
+                                    Filter By Rating
+                                </div>
                                 <select
                                     name=""
                                     id=""
@@ -750,15 +799,17 @@ const swiperConfig = {
                                 </select>
                             </div>
                             <div class="border border-t-transparent py-4 mb-4">
-                                <div class="font-medium mb-4 px-4">Categories</div>
+                                <div class="font-medium mb-4 px-4">
+                                    Categories
+                                </div>
                                 <div
-                                    v-for="c in categories" :key="c"
-                                    class="w-full"
-                                >
+                                    v-for="c in categories"
+                                    :key="c"
+                                    class="w-full">
                                     <div
                                         @click="toggleClass(c.index)"
                                         class="w-full flex flex-row px-4 py-2 justify-between border-b hover:text-darkbrownshop">
-                                        <div class="">{{c.category}}</div>
+                                        <div class="">{{ c.category }}</div>
                                         <div class="w-4 h-4">
                                             <svg
                                                 class="feather feather-chevron-down"
@@ -771,7 +822,8 @@ const swiperConfig = {
                                                 viewBox="0 0 24 24"
                                                 width="24"
                                                 xmlns="http://www.w3.org/2000/svg">
-                                                <polyline points="6 9 12 15 18 9" />
+                                                <polyline
+                                                    points="6 9 12 15 18 9" />
                                             </svg>
                                         </div>
                                     </div>
@@ -782,7 +834,8 @@ const swiperConfig = {
                                         }"
                                         class="bg-brownshop py-4">
                                         <button
-                                            v-for="sb in c.subcategories" :key="sb"
+                                            v-for="sb in c.subcategories"
+                                            :key="sb"
                                             class="w-full py-1 px-4 text-left hover:bg-white">
                                             {{ sb.subcategory }}
                                         </button>
@@ -834,44 +887,38 @@ const swiperConfig = {
                                 </td>
                                 <td class="w-1/3 p-1 md:p-4">
                                     <div
-                                        class=" w-full md:w-4/6 mx-auto rounded-lg flex justify-center items-center h-32 md:h-52 lg:h-72 bg-gray-600 overflow-hidden">
+                                        class="w-full md:w-4/6 mx-auto rounded-lg flex justify-center items-center h-32 md:h-52 lg:h-72 bg-gray-600 overflow-hidden">
                                         <v-img
                                             :src="'https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/No-Image-Placeholder.svg/1665px-No-Image-Placeholder.svg.png'"
                                             aspect-ratio="1"
-                                            class=" min-w-full min-h-full"
-                                            cover
-                                        >
+                                            class="min-w-full min-h-full"
+                                            cover>
                                             <template v-slot:placeholder>
-                                            <div
-                                                class=" w-full h-full flex justify-center items-center"
-                                            >
-                                                <v-progress-circular
-                                                color=""
-                                                indeterminate
-                                                ></v-progress-circular>
-                                            </div>
+                                                <div
+                                                    class="w-full h-full flex justify-center items-center">
+                                                    <v-progress-circular
+                                                        color=""
+                                                        indeterminate></v-progress-circular>
+                                                </div>
                                             </template>
                                         </v-img>
                                     </div>
                                 </td>
                                 <td class="w-1/3 p-1 md:p-4">
                                     <div
-                                        class=" w-full md:w-4/6 mx-auto rounded-lg flex justify-center items-center h-32 md:h-52 lg:h-72 bg-gray-600 overflow-hidden">
+                                        class="w-full md:w-4/6 mx-auto rounded-lg flex justify-center items-center h-32 md:h-52 lg:h-72 bg-gray-600 overflow-hidden">
                                         <v-img
                                             :src="'https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/No-Image-Placeholder.svg/1665px-No-Image-Placeholder.svg.png'"
                                             aspect-ratio="1"
-                                            class=" min-w-full min-h-full"
-                                            cover
-                                        >
+                                            class="min-w-full min-h-full"
+                                            cover>
                                             <template v-slot:placeholder>
-                                            <div
-                                                class=" w-full h-full flex justify-center items-center"
-                                            >
-                                                <v-progress-circular
-                                                color=""
-                                                indeterminate
-                                                ></v-progress-circular>
-                                            </div>
+                                                <div
+                                                    class="w-full h-full flex justify-center items-center">
+                                                    <v-progress-circular
+                                                        color=""
+                                                        indeterminate></v-progress-circular>
+                                                </div>
                                             </template>
                                         </v-img>
                                     </div>
@@ -915,7 +962,9 @@ const swiperConfig = {
                     <div class="mb-5 text-sm md:text-base text-gray-500">
                         Hurry ip and get 25% discount
                     </div>
-                    <div class="mb-3 text-lg md:text-3xl">Deals of the week</div>
+                    <div class="mb-3 text-lg md:text-3xl">
+                        Deals of the week
+                    </div>
                     <div class="text-gray-500 text-xs md:text-base mb-5">
                         Lorem ipsum dolor sit amet consectetur adipisicing elit.
                         Dignissimos, nesciunt? Unde voluptas doloribus quia et.
@@ -928,22 +977,19 @@ const swiperConfig = {
                         </button>
                     </div>
                 </div>
-                <div class="w-1/3 h-36 md:h-72 flex items-center justify-center">
+                <div
+                    class="w-1/3 h-36 md:h-72 flex items-center justify-center">
                     <v-img
                         :src="skincare6"
                         aspect-ratio="1"
-                        class=" min-w-full min-h-full "
-                        
-                    >
+                        class="min-w-full min-h-full">
                         <template v-slot:placeholder>
-                        <div
-                            class=" w-full h-full flex justify-center items-center"
-                        >
-                            <v-progress-circular
-                            color=""
-                            indeterminate
-                            ></v-progress-circular>
-                        </div>
+                            <div
+                                class="w-full h-full flex justify-center items-center">
+                                <v-progress-circular
+                                    color=""
+                                    indeterminate></v-progress-circular>
+                            </div>
                         </template>
                     </v-img>
                 </div>
