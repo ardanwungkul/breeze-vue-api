@@ -59,7 +59,7 @@ const swiperConfig = {
 <template>
     <AppLayout>
         <div class="hidden flex-col w-full h-[calc(100vh-57px)] sm:flex">
-            <v-card style="border-radius: 0; box-shadow: none">
+            <v-card style="border-radius: 0; box-shadow: none" class=" h-full">
                 <div class="w-full h-[65%] flex">
                     <div
                         class="flex flex-row w-[60%] xl:pl-48 sm:pl-8 min-h-full items-center relative">
@@ -193,7 +193,7 @@ const swiperConfig = {
                         <div
                             style="
                             box-shadow: 0px -1px 10px 20px #ceddce"
-                            class="w-full flex flex-row static z-10 sm:gap-1 lg:gap-5 bg-[#ceddce]">
+                            class="w-full h-full flex flex-row static z-10 sm:gap-1 lg:gap-5 bg-[#ceddce]">
                             <div
                                 class="flex flex-row sm:gap-1 lg:gap-3"
                                 v-for="i in 3"

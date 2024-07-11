@@ -108,251 +108,255 @@ const activeTab = ref('first')
                 class="fixed justify-center items-center bg-black/50 top-0 left-0 w-screen min-h-screen z-30"></div>
             <div
                 :class="{
-                    'opacity-100 -translate-y-1/2': showingpacket,
+                    'opacity-100': showingpacket,
                     'opacity-0 translate-y-full': !showingpacket,
                 }"
-                class="fixed top-1/2 left-1/2 -translate-x-1/2 w-full flex mt-7 duration-1000 flex-col max-w-[1320px] min-h-[90vh] bg-white rounded-lg pt-7 p-5 z-40">
-                <div
-                    class="w-full min-h-[75vh] flex flex-row shadow-md shadow-black/20 bg-white rounded-lg">
-                    <swiper
-                        :modules="swiperModules"
-                        :breakpoints="{
-                            '640': {
-                                slidesPerView: 1,
-                                spaceBetween: 10,
-                            },
-                            '768': {
-                                slidesPerView: 3,
-                                spaceBetween: 10,
-                            },
-                            '1024': {
-                                slidesPerView: 4,
-                                spaceBetween: 10,
-                            },
-                        }"
-                        @swiper="swiperJs"
-                        class="p-5">
-                        <swiper-slide
-                            v-for="i in packet"
-                            :key="i.index"
-                            class="flex justify-center">
-                            <div
-                                class="w-full h-full text-blue-500 text-center flex justify-center flex-col">
+                class="fixed left-1/2 -translate-x-1/2 w-full flex top-[57px] duration-1000 flex-col h-[calc(100vh-57px)] rounded-lg justify-center py-4 px-4 items-center z-40">
+                <div class=" py-2 px-5 rounded-lg flex flex-col w-full max-w-[1320px] bg-white relative z-50">
+                    <div
+                        class="w-full flex flex-row shadow-md shadow-black/20 bg-white rounded-lg">
+                        <swiper
+                            :modules="swiperModules"
+                            :breakpoints="{
+                                '640': {
+                                    slidesPerView: 1,
+                                    spaceBetween: 10,
+                                },
+                                '768': {
+                                    slidesPerView: 3,
+                                    spaceBetween: 10,
+                                },
+                                '1024': {
+                                    slidesPerView: 4,
+                                    spaceBetween: 10,
+                                },
+                            }"
+                            @swiper="swiperJs"
+                            class="p-5">
+                            <swiper-slide
+                                v-for="i in packet"
+                                :key="i.index"
+                                class="flex justify-center">
                                 <div
-                                    class="text-3xl font-semibold text-black/50 mb-4">
-                                    {{ i.name }}
-                                </div>
-                                <div class="text-xl font-medium mb-4">
-                                    Rp. {{ i.harga }}
-                                </div>
-                                <div class="w-full justify-center mb-4">
-                                    <button
-                                        class="p-3 border rounded-xl font-bold duration-300 border-blue-600 focus:bg-blue-600/30 hover:bg-blue-600/30">
-                                        Select Packet
-                                    </button>
-                                </div>
-                                <div class="border-t border-b p-4">
+                                    class="w-full h-full text-blue-500 text-center flex justify-center flex-col">
                                     <div
-                                        v-for="i in 8"
-                                        :key="i"
-                                        class="max-h-full overflow-auto flex flex-row justify-center gap-2 mb-4">
-                                        <div class="w-3 flex items-center">
-                                            <svg
-                                                height="12"
-                                                viewBox="0 0 16 16"
-                                                width="12"
-                                                xmlns="http://www.w3.org/2000/svg">
-                                                <polygon
-                                                    fill-rule="evenodd"
-                                                    points="8 9.414 3.707 13.707 2.293 12.293 6.586 8 2.293 3.707 3.707 2.293 8 6.586 12.293 2.293 13.707 3.707 9.414 8 13.707 12.293 12.293 13.707 8 9.414" />
-                                            </svg>
-                                        </div>
-                                        <div class="font-semibold text-sm">
-                                            plakat
+                                        class="text-3xl font-semibold text-black/50 mb-4">
+                                        {{ i.name }}
+                                    </div>
+                                    <div class="text-xl font-medium mb-4">
+                                        Rp. {{ i.harga }}
+                                    </div>
+                                    <div class="w-full justify-center mb-4">
+                                        <button
+                                            class="p-3 border rounded-xl font-bold duration-300 border-blue-600 focus:bg-blue-600/30 hover:bg-blue-600/30">
+                                            Select Packet
+                                        </button>
+                                    </div>
+                                    <div class="border-t border-b p-4 pb-2 grid md:grid-cols-1 ">
+                                        <div
+                                            v-for="i in 8"
+                                            :key="i"
+                                            class="max-h-full overflow-auto flex flex-row justify-center gap-2 mb-4">
+                                            <div class="w-3 flex items-center">
+                                                <svg
+                                                    height="12"
+                                                    viewBox="0 0 16 16"
+                                                    width="12"
+                                                    xmlns="http://www.w3.org/2000/svg">
+                                                    <polygon
+                                                        fill-rule="evenodd"
+                                                        points="8 9.414 3.707 13.707 2.293 12.293 6.586 8 2.293 3.707 3.707 2.293 8 6.586 12.293 2.293 13.707 3.707 9.414 8 13.707 12.293 12.293 13.707 8 9.414" />
+                                                </svg>
+                                            </div>
+                                            <div class="font-semibold text-sm">
+                                                plakat
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                        </swiper-slide>
-                    </swiper>
-                </div>
-                <div class="w-full flex mt-4 justify-center flex-row gap-4">
-                    <button
-                        @click="showingpacket = !showingpacket"
-                        class="p-2 bg-blue-600 hover:bg-blue-800 duration-300 rounded-lg text-white">
-                        Cancel
-                    </button>
-                    <button
-                        @click="
-                            ;(showingpacket = !showingpacket),
-                                (showingform = !showingform)
-                        "
-                        class="p-2 bg-blue-600 hover:bg-blue-800 duration-300 rounded-lg text-white">
-                        Submit
-                    </button>
+                            </swiper-slide>
+                        </swiper>
+                    </div>
+                    <div class="w-full flex mt-4 justify-center flex-row gap-4">
+                        <button
+                            @click="showingpacket = !showingpacket"
+                            class="p-2 bg-blue-600 hover:bg-blue-800 duration-300 rounded-lg text-white">
+                            Cancel
+                        </button>
+                        <button
+                            @click="
+                                ;(showingpacket = !showingpacket),
+                                    (showingform = !showingform)
+                            "
+                            class="p-2 bg-blue-600 hover:bg-blue-800 duration-300 rounded-lg text-white">
+                            Submit
+                        </button>
+                    </div>
                 </div>
             </div>
             <div
                 :class="{
-                    'opacity-100 -translate-y-1/2': showingform,
+                    'opacity-100': showingform,
                     'opacity-0 translate-y-full': !showingform,
                 }"
-                class="fixed top-1/2 left-1/2 -translate-x-1/2 w-full flex mt-7 duration-1000 flex-col max-w-[900px] min-h-[90vh] bg-white rounded-lg pt-12 p-10 z-40">
-                <div
-                    class="w-full min-h-[65vh] max-h-[65vh] flex flex-col overflow-auto bg-white rounded-lg text-base font-normal px-2">
-                    <div class="text-2xl mb-4">Upgrade your plan</div>
-                    <div class="text-gray-500 mb-7">
-                        Lorem ipsum, dolor sit amet consectetur adipisicing
-                        elit. Cum alias nam error.
-                    </div>
-                    <div class="grid grid-cols-2 gap-8 mb-7">
-                        <div class="flex flex-col">
-                            <label class="text-blue-600 font-medium mb-2" for=""
-                                >Name</label
-                            >
-                            <input
-                                class="border border-gray-300 duration-300 rounded-lg"
-                                type="text" />
-                        </div>
-                        <div class="flex flex-col">
-                            <label class="text-blue-600 font-medium mb-2" for=""
-                                >Address</label
-                            >
-                            <input
-                                class="border border-gray-300 duration-300 rounded-lg"
-                                type="text" />
-                        </div>
-                        <div class="flex flex-col">
-                            <label class="text-blue-600 font-medium mb-2" for=""
-                                >NIK</label
-                            >
-                            <input
-                                class="border border-gray-300 duration-300 rounded-lg"
-                                type="text" />
-                        </div>
-                        <div class="flex flex-col">
-                            <label class="text-blue-600 font-medium mb-2" for=""
-                                >Payment</label
-                            >
-                            <input
-                                class="border border-gray-300 duration-300 rounded-lg"
-                                type="text" />
-                        </div>
-                    </div>
-                    <div class="">
-                        <div class="font-medium my-5">Bank Transfer</div>
-                        <div class="grid grid-cols-2 gap-8">
-                            <div class="flex flex-col">
-                                <label class="font-medium mb-2" for=""
-                                    >Bank Name</label
-                                >
-                                <input
-                                    class="border border-gray-300 duration-300 rounded-lg"
-                                    type="text" />
-                            </div>
-                            <div class="flex flex-col">
-                                <label class="font-medium mb-2" for=""
-                                    >Account Number</label
-                                >
-                                <input
-                                    class="border border-gray-300 duration-300 rounded-lg"
-                                    type="text" />
-                            </div>
-                        </div>
-                    </div>
-                    <div class="font-medium mb-2 col-span-2 mt-5">E-Money</div>
+                class="fixed left-1/2 -translate-x-1/2 w-full flex duration-1000 flex-col max-w-[900px] h-[calc(100vh-57px)] rounded-lg z-40 p-4">
+                <div class=" flex flex-col bg-white pt-12 p-10 max-h-full rounded-lg">
                     <div
-                        v-for="i in 5"
-                        :key="i"
-                        class="border-b flex flex-row items-center">
-                        <div class="w-7 h-7"></div>
-                        <input
-                            type="text"
-                            class="border-none focus:ring-transparent"
-                            placeholder="No Ovo" />
-                    </div>
-                    <div class="font-medium mt-10 mb-5">
-                        Choose your Supplier (max 5)
-                    </div>
-                    <div class="w-full flex flex-row gap-5">
-                        <select
-                            class="rounded-lg focus:ring-0 border focus:border-gray-300 border-gray-300"
-                            name=""
-                            id="">
-                            <option value="">Provinsi</option>
-                        </select>
-                        <select
-                            class="rounded-lg focus:ring-0 border focus:border-gray-300 border-gray-300"
-                            name=""
-                            id="">
-                            <option value="">Kota</option>
-                        </select>
+                        class="w-full h-full flex flex-col overflow-auto bg-white rounded-lg text-base font-normal px-2">
+                        <div class="text-2xl mb-4">Upgrade your plan</div>
+                        <div class="text-gray-500 mb-7">
+                            Lorem ipsum, dolor sit amet consectetur adipisicing
+                            elit. Cum alias nam error.
+                        </div>
+                        <div class="grid grid-cols-2 gap-8 mb-7">
+                            <div class="flex flex-col">
+                                <label class="text-blue-600 font-medium mb-2" for=""
+                                    >Name</label
+                                >
+                                <input
+                                    class="border border-gray-300 duration-300 rounded-lg"
+                                    type="text" />
+                            </div>
+                            <div class="flex flex-col">
+                                <label class="text-blue-600 font-medium mb-2" for=""
+                                    >Address</label
+                                >
+                                <input
+                                    class="border border-gray-300 duration-300 rounded-lg"
+                                    type="text" />
+                            </div>
+                            <div class="flex flex-col">
+                                <label class="text-blue-600 font-medium mb-2" for=""
+                                    >NIK</label
+                                >
+                                <input
+                                    class="border border-gray-300 duration-300 rounded-lg"
+                                    type="text" />
+                            </div>
+                            <div class="flex flex-col">
+                                <label class="text-blue-600 font-medium mb-2" for=""
+                                    >Payment</label
+                                >
+                                <input
+                                    class="border border-gray-300 duration-300 rounded-lg"
+                                    type="text" />
+                            </div>
+                        </div>
+                        <div class="">
+                            <div class="font-medium my-5">Bank Transfer</div>
+                            <div class="grid grid-cols-2 gap-8">
+                                <div class="flex flex-col">
+                                    <label class="font-medium mb-2" for=""
+                                        >Bank Name</label
+                                    >
+                                    <input
+                                        class="border border-gray-300 duration-300 rounded-lg"
+                                        type="text" />
+                                </div>
+                                <div class="flex flex-col">
+                                    <label class="font-medium mb-2" for=""
+                                        >Account Number</label
+                                    >
+                                    <input
+                                        class="border border-gray-300 duration-300 rounded-lg"
+                                        type="text" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="font-medium mb-2 col-span-2 mt-5">E-Money</div>
                         <div
-                            class="rounded-lg flex flex-row border border-gray-300 focus:ring-4 focus:ring-blue-600/50 items-center">
+                            v-for="i in 5"
+                            :key="i"
+                            class="border-b flex flex-row items-center">
+                            <div class="w-7 h-7"></div>
                             <input
                                 type="text"
-                                class="rounded-lg focus:ring-transparent border-0" />
-                            <div class="w-6 h-6 mr-3">
-                                <svg
-                                    enable-background="new 0 0 32 32"
-                                    id="Glyph"
-                                    version="1.1"
-                                    viewBox="0 0 32 32"
-                                    xml:space="preserve"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    xmlns:xlink="http://www.w3.org/1999/xlink">
-                                    <path
-                                        d="M27.414,24.586l-5.077-5.077C23.386,17.928,24,16.035,24,14c0-5.514-4.486-10-10-10S4,8.486,4,14  s4.486,10,10,10c2.035,0,3.928-0.614,5.509-1.663l5.077,5.077c0.78,0.781,2.048,0.781,2.828,0  C28.195,26.633,28.195,25.367,27.414,24.586z M7,14c0-3.86,3.14-7,7-7s7,3.14,7,7s-3.14,7-7,7S7,17.86,7,14z"
-                                        id="XMLID_223_" />
-                                </svg>
-                            </div>
+                                class="border-none focus:ring-transparent"
+                                placeholder="No Ovo" />
                         </div>
-                    </div>
-                    <div class="grid grid-cols-2 gap-8 mt-10">
-                        <div
-                            v-for="i in 4"
-                            :key="i"
-                            class="p-5 border rounded-lg">
-                            <div class="font-semibold mb-2">Cantik shop</div>
-                            <div class="text-sm text-gray-600">
-                                Address : Jl.Apa aja
-                            </div>
+                        <div class="font-medium mt-10 mb-5">
+                            Choose your Supplier (max 5)
+                        </div>
+                        <div class="w-full flex flex-row gap-5">
+                            <select
+                                class="rounded-lg focus:ring-0 border focus:border-gray-300 border-gray-300"
+                                name=""
+                                id="">
+                                <option value="">Provinsi</option>
+                            </select>
+                            <select
+                                class="rounded-lg focus:ring-0 border focus:border-gray-300 border-gray-300"
+                                name=""
+                                id="">
+                                <option value="">Kota</option>
+                            </select>
                             <div
-                                class="text-sm text-gray-600 my-4 flex flex-row gap-1 items-center">
-                                <div class="">Rating :</div>
-                                <i
-                                    v-for="n in 5"
-                                    :key="n"
-                                    class="fa-solid fa-star text-yellow-300 text-xs"></i>
-                            </div>
-                            <div class="w-full flex justify-center">
+                                class="rounded-lg flex flex-row border border-gray-300 focus:ring-4 focus:ring-blue-600/50 items-center">
                                 <input
-                                    class="rounded border-2 w-4 h-4"
-                                    type="checkbox"
-                                    name=""
-                                    id="" />
+                                    type="text"
+                                    class="rounded-lg focus:ring-transparent border-0" />
+                                <div class="w-6 h-6 mr-3">
+                                    <svg
+                                        enable-background="new 0 0 32 32"
+                                        id="Glyph"
+                                        version="1.1"
+                                        viewBox="0 0 32 32"
+                                        xml:space="preserve"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        xmlns:xlink="http://www.w3.org/1999/xlink">
+                                        <path
+                                            d="M27.414,24.586l-5.077-5.077C23.386,17.928,24,16.035,24,14c0-5.514-4.486-10-10-10S4,8.486,4,14  s4.486,10,10,10c2.035,0,3.928-0.614,5.509-1.663l5.077,5.077c0.78,0.781,2.048,0.781,2.828,0  C28.195,26.633,28.195,25.367,27.414,24.586z M7,14c0-3.86,3.14-7,7-7s7,3.14,7,7s-3.14,7-7,7S7,17.86,7,14z"
+                                            id="XMLID_223_" />
+                                    </svg>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-8 mt-10">
+                            <div
+                                v-for="i in 4"
+                                :key="i"
+                                class="p-5 border rounded-lg">
+                                <div class="font-semibold mb-2">Cantik shop</div>
+                                <div class="text-sm text-gray-600">
+                                    Address : Jl.Apa aja
+                                </div>
+                                <div
+                                    class="text-sm text-gray-600 my-4 flex flex-row gap-1 items-center">
+                                    <div class="">Rating :</div>
+                                    <i
+                                        v-for="n in 5"
+                                        :key="n"
+                                        class="fa-solid fa-star text-yellow-300 text-xs"></i>
+                                </div>
+                                <div class="w-full flex justify-center">
+                                    <input
+                                        class="rounded border-2 w-4 h-4"
+                                        type="checkbox"
+                                        name=""
+                                        id="" />
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="pt-2 px-2 flex flex-row items-center gap-2">
-                    <input
-                        class="rounded border-2 w-4 h-4"
-                        type="checkbox"
-                        name=""
-                        id="" />
-                    <div class="">
-                        Term and Condition: Lorem ipsum dolor sit amet
-                        consectetur adipisicing elit. Amet laudantium inventore
-                        ex eos. Quas aliquid dolores quis laudantium impedit
+                    <div class="pt-2 px-2 flex flex-row items-center gap-2">
+                        <input
+                            class="rounded border-2 w-4 h-4"
+                            type="checkbox"
+                            name=""
+                            id="" />
+                        <div class="">
+                            Term and Condition: Lorem ipsum dolor sit amet
+                            consectetur adipisicing elit. Amet laudantium inventore
+                            ex eos. Quas aliquid dolores quis laudantium impedit
+                        </div>
                     </div>
-                </div>
-                <div class="flex pt-2 justify-end">
-                    <button
-                        @click="showingform = !showingform"
-                        class="p-2 bg-blue-600 hover:bg-blue-800 duration-300 rounded-lg text-white">
-                        Submit
-                    </button>
+                    <div class="flex pt-2 justify-end">
+                        <button
+                            @click="showingform = !showingform"
+                            class="p-2 bg-blue-600 hover:bg-blue-800 duration-300 rounded-lg text-white">
+                            Submit
+                        </button>
+                    </div>
                 </div>
             </div>
 

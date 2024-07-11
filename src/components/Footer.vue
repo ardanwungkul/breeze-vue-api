@@ -1,6 +1,6 @@
 <script setup></script>
 <template>
-    <div class="bg-[#e2d9d9] p-12 font-poppins">
+    <div class="bg-[#e2d9d9] p-12 font-poppins relative z-10">
         <div class="max-w-[1140px] mx-auto">
             <div class="grid md:grid-cols-3 grid-cols-1 gap-x-3 gap-y-5 w-full">
                 <div>
