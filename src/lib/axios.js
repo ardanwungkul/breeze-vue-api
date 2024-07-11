@@ -15,7 +15,7 @@ axios.interceptors.response.use(
         if (error.response.status === 419 || error.response.status === 401) {
             localStorage.removeItem('userData')
             localStorage.removeItem('authStatus')
-            window.location.reload()
+            // window.location.reload()
         }
         return Promise.reject(error)
     },

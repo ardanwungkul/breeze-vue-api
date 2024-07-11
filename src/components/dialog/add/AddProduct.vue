@@ -60,7 +60,6 @@ const handleAdd = async () => {
     )
     await props.method(formData, processing)
 
-    console.log()
     product_name.value = ''
     product_price.value = ''
     product_stock.value = ''
@@ -177,13 +176,21 @@ const changePlaceholder = event => {
                                 </div>
                                 <div class="flex flex-col gap-2 text-sm">
                                     <label for="product_tag">Tag</label>
-                                    <input
-                                        class="text-sm rounded-lg bg-gray-100 w-full"
-                                        type="text"
+                                    <select
                                         v-model="product_tag"
+                                        name="product_tag"
                                         id="product_tag"
-                                        placeholder="Enter Product Tag"
-                                        required />
+                                        required
+                                        class="text-sm rounded-lg bg-gray-100 w-full">
+                                        <option value="" disabled selected>
+                                            Select Tag
+                                        </option>
+                                        <option value="new">New</option>
+                                        <option value="onsale">On Sale</option>
+                                        <option value="featured">
+                                            Featured
+                                        </option>
+                                    </select>
                                 </div>
                                 <div class="flex flex-col gap-2 text-sm">
                                     <label for="product_tag">Category</label>
