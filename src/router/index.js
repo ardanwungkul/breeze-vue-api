@@ -183,6 +183,15 @@ const routes = [
             guard: 'auth',
         },
     },
+    // Product Detail
+    {
+        path: '/product/detail',
+        name: 'product.detail',
+        component: () => import('@/pages/guest/product/Show.vue'),
+        meta: {
+            title: 'Product Detail',
+        },
+    },
     // shop
     {
         path: '/shop',
