@@ -2,6 +2,7 @@
 import { ref, computed, watchEffect } from 'vue'
 import ConfirmDelete from '@/components/dialog/ConfirmDelete.vue'
 import AddCategory from '@/components/dialog/add/AddCategory.vue'
+import EditCategory from '@/components/dialog/edit/EditCategory.vue'
 import { useCategoryStore } from '@/stores/category'
 import ValidationErrors from '@/components/ValidationErrors.vue'
 
@@ -48,6 +49,12 @@ const deleteCategory = async id => {
     }, props.categories)
     await props.fetchSubCategories()
 }
+const editCategory = async (updateCategory, id) => {
+    await storeCategory.editCategory(updateCategory, setErrors, processing, id)
+    watchEffect(() => {
+        props.fetchCategories()
+    }, props.categories)
+}
 </script>
 <template>
     <div class="relative">
@@ -74,13 +81,7 @@ const deleteCategory = async id => {
                 class="border shadow-lg">
                 <template v-slot:item.id="{ item }">
                     <div class="flex gap-3 items-center justify-center text-xs">
-                        <router-link :to="{ name: 'dashboard' }">
-                            <div
-                                class="flex gap-2 items-center text-white bg-orange-400 rounded-lg px-3 py-1">
-                                <i class="fa-solid fa-pen"></i>
-                                <p>Edit</p>
-                            </div>
-                        </router-link>
+                        <EditCategory :category="item" :method="editCategory" />
                         <ConfirmDelete
                             :type="'Category'"
                             :id="item.id"

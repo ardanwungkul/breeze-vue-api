@@ -16,8 +16,10 @@ const pageUser = ref(1)
 const itemsPerPageUser = ref(10)
 
 const headersUser = [
-    { key: 'name', title: 'User Name' },
-    { key: 'email', title: 'Email' },
+    { key: 'name', title: 'Product Name' },
+    { key: '', title: 'Product Price' },
+    { key: '', title: 'Discount' },
+    { key: '', title: 'Stock' },
     { key: 'id', title: 'Action', align: 'center' },
 ]
 const pageCount = computed(() => {

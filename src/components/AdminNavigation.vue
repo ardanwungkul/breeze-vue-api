@@ -20,7 +20,6 @@ const sidebarItem = ref([
     },
     {
         icon: 'fa-solid fa-boxes-stacked',
-        to: 'admin.dashboard',
         title: 'Product',
         isHasChild: true,
         child: [
@@ -38,13 +37,24 @@ const sidebarItem = ref([
     },
     {
         icon: 'fa-solid fa-store',
-        to: 'admin.shop.index',
         title: 'Shop',
-        isHasChild: false,
+        isHasChild: true,
+        child: [
+            {
+                title: 'Banner',
+                icon: 'fa-solid fa-rectangle-vertical-history',
+                to: 'admin.shop.index.banner',
+            },
+            {
+                title: 'Flash Sale',
+                icon: 'fa-solid fa-bolt-lightning',
+                to: 'admin.shop.index.flash-sale',
+            },
+        ],
     },
     {
         icon: 'fa-solid fa-newspaper',
-        to: 'admin.dashboard',
+        to: 'admin.article.index',
         title: 'Articles',
         isHasChild: false,
     },
@@ -74,35 +84,15 @@ const sidebarItem = ref([
     },
 ])
 
-onMounted(() => {
-    const accordionElement = document.getElementById('accordion-example')
+const activeAccordion = ref(null)
 
-    const accordionItems = [
-        {
-            id: 'accordion-example-heading-1',
-            triggerEl: document.querySelector('#accordion-example-heading-1'),
-            targetEl: document.querySelector('#accordion-example-body-1'),
-            active: false,
-        },
-    ]
-
-    const options = {
-        alwaysOpen: false,
-        activeClasses: 'bg-gray-100 dark:bg-gray-800 text-gray-900',
-        inactiveClasses: 'text-gray-500 dark:text-gray-400',
+const toggleAccordion = index => {
+    if (activeAccordion.value === index) {
+        activeAccordion.value = null
+    } else {
+        activeAccordion.value = index
     }
-
-    const instanceOptions = {
-        id: 'accordion-example',
-        override: true,
-    }
-    const accordion = new Accordion(
-        accordionElement,
-        accordionItems,
-        options,
-        instanceOptions,
-    )
-})
+}
 const submitLogout = () => {
     store.logout()
 }
@@ -131,13 +121,16 @@ const submitLogout = () => {
         <v-divider></v-divider>
         <ul class="p-2 space-y-1 overflow-hidden">
             <li v-for="(item, index) in sidebarItem" :key="index">
-                <div id="accordion-example" v-if="item.isHasChild == true">
-                    <h2 id="accordion-example-heading-1" class="bg-transparent">
+                <div v-if="item.isHasChild">
+                    <h2
+                        :id="'accordion-heading-' + index"
+                        class="bg-transparent">
                         <button
                             type="button"
-                            class="w-full py-2 px-2 hover:bg-ezzora-200 cursor-pointer rounded-lg flex items-center gap-4 rounded-t-lg"
-                            aria-expanded="true"
-                            aria-controls="accordion-example-body-1">
+                            class="w-full py-2 px-2 hover:bg-ezzora-200 cursor-pointer rounded-lg flex items-center gap-4"
+                            @click="toggleAccordion(index)"
+                            :aria-expanded="activeAccordion === index"
+                            :aria-controls="'accordion-body-' + index">
                             <div class="w-[28px] flex-none flex justify-center">
                                 <i
                                     class="text-ezzora-500"
@@ -150,9 +143,9 @@ const submitLogout = () => {
                         </button>
                     </h2>
                     <div
-                        id="accordion-example-body-1"
-                        class="hidden"
-                        aria-labelledby="accordion-example-heading-1">
+                        :id="'accordion-body-' + index"
+                        :class="activeAccordion === index ? '' : 'hidden'"
+                        :aria-labelledby="'accordion-heading-' + index">
                         <div class="border-y rounded-lg mt-1">
                             <router-link
                                 :to="{ name: child.to }"
@@ -173,9 +166,7 @@ const submitLogout = () => {
                         </div>
                     </div>
                 </div>
-                <router-link
-                    :to="{ name: item.to }"
-                    v-if="item.isHasChild == false">
+                <router-link :to="{ name: item.to }" v-if="!item.isHasChild">
                     <div
                         class="w-full py-2 px-2 hover:bg-ezzora-200 cursor-pointer rounded-lg flex items-center gap-4">
                         <div class="w-[28px] flex-none flex justify-center">

@@ -1,8 +1,8 @@
 <script setup>
 import { ref, computed, watchEffect } from 'vue'
 import ConfirmDelete from '@/components/dialog/ConfirmDelete.vue'
-import AddUser from '@/components/dialog/add/AddUser.vue'
-import EditUser from '@/components/dialog/edit/EditUser.vue'
+import AddArticle from '@/components/dialog/add/AddArticle.vue'
+// import EditProduct from '@/components/dialog/edit/EditProduct.vue'
 import { useUsers } from '@/stores/user'
 import ValidationErrors from '@/components/ValidationErrors.vue'
 
@@ -16,8 +16,10 @@ const pageUser = ref(1)
 const itemsPerPageUser = ref(10)
 
 const headersUser = [
-    { key: 'name', title: 'User Name' },
-    { key: 'email', title: 'Email' },
+    { key: 'name', title: 'Title' },
+    { key: 'email', title: 'Created By' },
+    { key: 'email', title: 'Published' },
+    { key: 'email', title: 'Publish Date' },
     { key: 'id', title: 'Action', align: 'center' },
 ]
 const pageCount = computed(() => {
@@ -58,12 +60,12 @@ const deleteUser = async id => {
         <ValidationErrors class="w-full" :errors="errors" />
         <div class="bg-ezzora-100 p-5 rounded-lg space-y-3 border">
             <div class="flex justify-between items-center">
-                <AddUser :method="addUser"></AddUser>
+                <AddArticle :method="addUser"></AddArticle>
                 <input
                     type="text"
                     v-model="searchUser"
                     class="rounded-lg text-sm min-w-52"
-                    placeholder="Search User" />
+                    placeholder="Search Articles" />
             </div>
             <v-data-table
                 v-model:page="pageUser"
@@ -78,7 +80,9 @@ const deleteUser = async id => {
                 class="border shadow-lg">
                 <template v-slot:item.id="{ item }">
                     <div class="flex gap-3 items-center justify-center text-xs">
-                        <EditUser :user="item" :method="editUser" />
+                        <!-- <EditProduct
+                            :user="item"
+                            :method="editUser"></EditProduct> -->
                         <ConfirmDelete
                             :type="'User'"
                             :id="item.id"
