@@ -972,8 +972,8 @@ const swiperConfig = {
                     </div>
                     <div>
                         <button
-                            class="text-sm py-1 px-2 md:text-base md:py-2 md:px-3 bg-red-600 duration-200 hover:bg-red-700 text-white">
-                            how Collection
+                            class=" text-sm py-1 px-2 md:text-base md:py-2 md:px-3 bg-red-600 duration-200 hover:bg-red-700 text-white">
+                            Show Collection
                         </button>
                     </div>
                 </div>
