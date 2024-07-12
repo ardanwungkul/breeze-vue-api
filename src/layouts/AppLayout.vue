@@ -2,6 +2,12 @@
 import Navigation from '@/components/Navigation.vue'
 import Footer from '@/components/Footer.vue'
 import { RouterView } from 'vue-router'
+import { defineProps } from 'vue'
+
+const props = defineProps({
+    slug: String,
+    id: String,
+})
 </script>
 <template>
     <Navigation></Navigation>

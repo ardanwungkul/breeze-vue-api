@@ -34,6 +34,7 @@ async function fetchProducts() {
         product_price: product.product_price,
         product_stock: product.product_stock,
         product_tag: product.product_tag,
+        product_slug: product.product_slug,
         product_image:
             import.meta.env.VITE_PUBLIC_BACKEND_URL +
             '/storage/images/product/' +
@@ -72,7 +73,7 @@ const modules = swiperModules
         }"
         @swiper="swiperJs"
         :navigation="swiperConfig.navigation">
-        <swiper-slide v-for="product in products" :key="n">
+        <swiper-slide v-for="product in products" :key="product.id">
             <div
                 class="flex flex-col justify-center items-center bg-[#f4f0ed] rounded-md overflow-hidden">
                 <div class="h-[144px] w-full">
@@ -92,9 +93,18 @@ const modules = swiperModules
                 </div>
                 <div class="p-4 w-full">
                     <div class="flex justify-between items-center w-full gap-2">
-                        <p class="font-medium line-clamp-1">
-                            {{ product.product_name }}
-                        </p>
+                        <router-link
+                            :to="{
+                                name: 'product.detail',
+                                params: {
+                                    slug: product.product_slug,
+                                    id: product.id,
+                                },
+                            }">
+                            <p class="font-medium line-clamp-1">
+                                {{ product.product_name }}
+                            </p>
+                        </router-link>
                         <p class="text-xs whitespace-nowrap">
                             Rp. {{ formatPrice(product.product_price) }}
                         </p>

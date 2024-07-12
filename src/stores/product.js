@@ -9,6 +9,7 @@ export const useProductStore = defineStore({
         products: [],
         loading: false,
         error: null,
+        singleProduct: {},
     }),
     getters: {
         allProduct: state => state.products,
@@ -30,6 +31,26 @@ export const useProductStore = defineStore({
                 this.loading = false
             }
         },
+        async productById(slug, id) {
+            this.loading = true
+            try {
+                const response = await axios.get(`/api/product/${slug}/${id}`)
+                if (response.status === 200) {
+                    this.singleProduct = response.data
+                } else {
+                    this.singleProduct = {}
+                }
+            } catch (error) {
+                if (error.response && error.response.status === 404) {
+                    this.singleProduct = {}
+                } else {
+                    this.error = error
+                }
+            } finally {
+                this.loading = false
+            }
+        },
+
         async addProduct(newProduct, setErrors, processing) {
             await csrf()
             processing.value = true

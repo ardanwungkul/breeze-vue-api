@@ -3,10 +3,32 @@ import AppLayout from '@/layouts/AppLayout.vue'
 import { Swiper, SwiperSlide } from 'swiper/vue'
 import { Navigation, Autoplay } from 'swiper/modules'
 import { Tabs } from 'flowbite'
-import { ref, onMounted } from 'vue'
+import { ref, onBeforeMount } from 'vue'
 import 'swiper/css'
+import { useRoute, useRouter } from 'vue-router'
+import { useProductStore } from '@/stores/product'
 
-import cosmetic from '@/assets/images/cosmetic.jpeg'
+const storeProduct = useProductStore()
+const product = ref(null)
+const router = useRouter()
+onBeforeMount(async () => {
+    await fetchProduct()
+})
+async function fetchProduct() {
+    const route = useRoute()
+    const slug = ref(route.params.slug)
+    const productId = ref(route.params.id)
+    await storeProduct.productById(slug.value, productId.value)
+    console.log(storeProduct.singleProduct)
+    if (
+        !storeProduct.singleProduct ||
+        Object.keys(storeProduct.singleProduct).length === 0
+    ) {
+        router.replace('/404')
+    } else {
+        product.value = storeProduct.singleProduct
+    }
+}
 
 const productgallery = ref(1)
 const swiperModules = [Navigation, Autoplay]
@@ -23,12 +45,13 @@ const modules = swiperModules
     <AppLayout>
         <div class="flex flex-row w-[1120px] bg-white mx-auto">
             <div class="flex flex-col gap-2 w-[40%] h-full py-6 p-4">
-                <div 
-                    v-for="i in 6" :key="i"
+                <div
+                    v-for="i in 6"
+                    :key="i"
                     :class="{
                         block: productgallery === i,
                         hidden: productgallery !== i,
-                    }" 
+                    }"
                     class="w-full h-96 rounded-sm">
                     <v-img
                         src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fstatic.vecteezy.com%2Fsystem%2Fresources%2Fpreviews%2F010%2F175%2F452%2Fnon_2x%2Fwhite-cream-jar-bottle-beauty-cosmetic-blank-mockup-3d-illustration-free-png.png&f=1&nofb=1&ipt=fa54a50dcaf23d1ca8ded9f4daed07a9259ee9373c9933b46731843ffd37b128&ipo=images"
@@ -64,11 +87,10 @@ const modules = swiperModules
                         :navigation="swiperConfig.navigation">
                         <swiper-slide v-for="n in 6" :key="n">
                             <button
-                                @click="
-                                productgallery = n"
-                                :class="{ 
-                                ' border-red-600': productgallery === n,
-                                ' border-transparent': productgallery != n,
+                                @click="productgallery = n"
+                                :class="{
+                                    ' border-red-600': productgallery === n,
+                                    ' border-transparent': productgallery != n,
                                 }"
                                 class="w-full h-full border hover:border-red-600 rounded-sm duration-300">
                                 <v-img
@@ -87,23 +109,19 @@ const modules = swiperModules
                         </swiper-slide>
                         <div
                             class="swiper-button-prev bg-black/25 py-3 px-1 flex justify-center items-center cursor-pointer absolute top-1/2 -translate-y-1/2 left-0 z-20">
-                            <i
-                                class="fa-solid fa-chevron-left text-white"></i>
+                            <i class="fa-solid fa-chevron-left text-white"></i>
                         </div>
                         <div
                             class="swiper-button-next bg-black/25 py-3 px-1 flex justify-center items-center cursor-pointer absolute top-1/2 -translate-y-1/2 right-0 z-20">
-                            <i
-                                class="fa-solid fa-chevron-right text-white"></i>
+                            <i class="fa-solid fa-chevron-right text-white"></i>
                         </div>
                     </swiper>
                 </div>
-                <!-- <div class=" px-5 flex flex-row w-full h-6 items-center gap-2">
-                    <p>Share :</p>
-                    <div v-for="i in 4" :key="i" class=" w-6 h-6 bg-black rounded-full overflow-hidden"></div>
-                </div> -->
             </div>
             <div class="w-[60%] h-full py-6 p-4 gap-2 flex flex-col">
-                <p class="text-xl font-medium">Skincar Wajah</p>
+                <p class="text-xl font-medium">
+                    {{ product ? product.product_name : '' }}
+                </p>
                 <div class="flex flex-row items-center gap-2">
                     <p
                         class="text-xs underline underline-offset-4 text-gray-500">
@@ -159,8 +177,10 @@ const modules = swiperModules
                             <p class="w-1/5 flex flex-wrap items-center">
                                 Product Assurance Protection
                             </p>
-                            <p class="w-5/5 flex flex-wrap text-blue-600 items-center">
-                                Protecting you against inconvinience arising from the usage/consumption of the product
+                            <p
+                                class="w-5/5 flex flex-wrap text-blue-600 items-center">
+                                Protecting you against inconvinience arising
+                                from the usage/consumption of the product
                             </p>
                         </div>
                     </div>
@@ -185,8 +205,44 @@ const modules = swiperModules
                 <div class="flex flex-row text-[13px] px-5 gap-2">
                     <button
                         class="py-3 px-4 flex flex-row gap-2 rounded-sm bg-red-100 border border-red-600 text-red-600 hover:bg-red-50 duration-300">
-                        <div class=" w-5 h-5">
-                            <svg viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg"><rect fill="none" height="100%" width="100%"/><path d="M184,184H69.8L41.9,30.6A8,8,0,0,0,34.1,24H16" fill="none" stroke="red" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/><circle cx="80" cy="204" fill="none" r="20" stroke="red" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/><circle cx="184" cy="204" fill="none" r="20" stroke="red" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/><path d="M62.5,144H188.1a15.9,15.9,0,0,0,15.7-13.1L216,64H48" fill="none" stroke="red" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/></svg>
+                        <div class="w-5 h-5">
+                            <svg
+                                viewBox="0 0 256 256"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <rect fill="none" height="100%" width="100%" />
+                                <path
+                                    d="M184,184H69.8L41.9,30.6A8,8,0,0,0,34.1,24H16"
+                                    fill="none"
+                                    stroke="red"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="16" />
+                                <circle
+                                    cx="80"
+                                    cy="204"
+                                    fill="none"
+                                    r="20"
+                                    stroke="red"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="16" />
+                                <circle
+                                    cx="184"
+                                    cy="204"
+                                    fill="none"
+                                    r="20"
+                                    stroke="red"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="16" />
+                                <path
+                                    d="M62.5,144H188.1a15.9,15.9,0,0,0,15.7-13.1L216,64H48"
+                                    fill="none"
+                                    stroke="red"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="16" />
+                            </svg>
                         </div>
                         <p>Add to Cart</p>
                     </button>

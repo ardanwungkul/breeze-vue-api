@@ -157,7 +157,7 @@ const routes = [
             guard: 'auth',
         },
     },
-    // Payment
+    // Agents
     {
         path: '/admin/agents',
         name: 'admin.agent.index',
@@ -185,13 +185,15 @@ const routes = [
     },
     // Product Detail
     {
-        path: '/product/detail',
+        path: '/product/detail/:slug/:id',
         name: 'product.detail',
         component: () => import('@/pages/guest/product/Show.vue'),
+        props: true,
         meta: {
             title: 'Product Detail',
         },
     },
+
     // shop
     {
         path: '/shop',
@@ -201,6 +203,7 @@ const routes = [
             title: 'Shop',
         },
     },
+
     // Article
     {
         path: '/article',

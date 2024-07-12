@@ -127,7 +127,6 @@ export const useUsers = defineStore('users', {
 
         async login(form, setErrors, processing) {
             await csrf()
-            console.log(await csrf())
 
             processing.value = true
 
