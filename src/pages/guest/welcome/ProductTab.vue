@@ -80,7 +80,7 @@ const modules = swiperModules
                     <v-img
                         :src="product.product_image"
                         class="min-h-full w-full object-cover"
-                        cover>
+                        >
                         <template v-slot:placeholder>
                             <div
                                 class="w-full h-full flex justify-center items-center">
