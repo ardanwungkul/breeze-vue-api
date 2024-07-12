@@ -19,7 +19,6 @@ async function fetchProduct() {
     const slug = ref(route.params.slug)
     const productId = ref(route.params.id)
     await storeProduct.productById(slug.value, productId.value)
-    console.log(storeProduct.singleProduct)
     if (
         !storeProduct.singleProduct ||
         Object.keys(storeProduct.singleProduct).length === 0
