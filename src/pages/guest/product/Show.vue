@@ -11,9 +11,15 @@ import { useProductStore } from '@/stores/product'
 const storeProduct = useProductStore()
 const product = ref(null)
 const router = useRouter()
+
+function formatPrice(price) {
+    return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')
+}
+
 onBeforeMount(async () => {
     await fetchProduct()
 })
+const mainImage = ref()
 async function fetchProduct() {
     const route = useRoute()
     const slug = ref(route.params.slug)
@@ -26,10 +32,14 @@ async function fetchProduct() {
         router.replace('/404')
     } else {
         product.value = storeProduct.singleProduct
-    }
+        mainImage.value =
+            import.meta.env.VITE_PUBLIC_BACKEND_URL +
+            '/storage/images/product/' +
+            product.value.product_image
+        }
 }
 
-const productgallery = ref(1)
+const productgallery = ref(product.id + product.product_name)
 const swiperModules = [Navigation, Autoplay]
 const swiperJs = swiper => {}
 const swiperConfig = {
@@ -44,16 +54,13 @@ const modules = swiperModules
     <AppLayout>
         <div class="flex flex-row w-[1120px] bg-white mx-auto">
             <div class="flex flex-col gap-2 w-[40%] h-full py-6 p-4">
-                <div
-                    v-for="i in 6"
-                    :key="i"
-                    :class="{
-                        block: productgallery === i,
-                        hidden: productgallery !== i,
-                    }"
-                    class="w-full h-96 rounded-sm">
-                    <v-img
-                        src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fstatic.vecteezy.com%2Fsystem%2Fresources%2Fpreviews%2F010%2F175%2F452%2Fnon_2x%2Fwhite-cream-jar-bottle-beauty-cosmetic-blank-mockup-3d-illustration-free-png.png&f=1&nofb=1&ipt=fa54a50dcaf23d1ca8ded9f4daed07a9259ee9373c9933b46731843ffd37b128&ipo=images"
+                <div class="w-full h-96 rounded-sm">
+                    <v-img 
+                        :class="{
+                            block: productgallery === product.id + product.product_name,
+                            hidden: productgallery !== product.id + product.product_name,
+                        }"
+                        :src="mainImage" 
                         aspect-ratio="1">
                         <template v-slot:placeholder>
                             <div
@@ -84,16 +91,16 @@ const modules = swiperModules
                         }"
                         @swiper="swiperJs"
                         :navigation="swiperConfig.navigation">
-                        <swiper-slide v-for="n in 6" :key="n">
+                        <swiper-slide>
                             <button
-                                @click="productgallery = n"
+                                @click="productgallery = product.id + product.product_name"
                                 :class="{
-                                    ' border-red-600': productgallery === n,
-                                    ' border-transparent': productgallery != n,
+                                    ' border-red-600': productgallery === product.id + product.product_name,
+                                    ' border-transparent': productgallery != product.id + product.product_name,
                                 }"
                                 class="w-full h-full border hover:border-red-600 rounded-sm duration-300">
                                 <v-img
-                                    src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fstatic.vecteezy.com%2Fsystem%2Fresources%2Fpreviews%2F010%2F175%2F452%2Fnon_2x%2Fwhite-cream-jar-bottle-beauty-cosmetic-blank-mockup-3d-illustration-free-png.png&f=1&nofb=1&ipt=fa54a50dcaf23d1ca8ded9f4daed07a9259ee9373c9933b46731843ffd37b128&ipo=images"
+                                    :src="mainImage"
                                     aspect-ratio="1">
                                     <template v-slot:placeholder>
                                         <div
@@ -134,23 +141,11 @@ const modules = swiperModules
                     </div>
                 </div>
                 <div
-                    class="flex justify-between w-full py-1 px-5 bg-red-600 text-white items-center">
-                    <p class="tracking-wider text-lg font-medium">
-                        <span class="font-semibold">Flash</span>Sale
+                    class="flex w-full bg-[#f4f4f4] flex-row gap-3 py-3 mt-2 px-5">
+                    <p class="text-2xl font-medium">
+                        Rp.
+                        {{ product ? formatPrice(product.product_price) : '' }}
                     </p>
-                    <div class="flex flex-row gap-2">
-                        <p>ENDS IN</p>
-                        <div class="flex flex-row gap-1 font-medium">
-                            <p class="bg-black px-1">00</p>
-                            <p class="bg-black px-1">00</p>
-                            <p class="bg-black px-1">00</p>
-                        </div>
-                    </div>
-                </div>
-                <div
-                    class="flex w-full bg-[#f4f4f4] flex-row gap-3 py-3 -mt-2 px-5">
-                    <p class="line-through text-gray-500">Rp.200.000</p>
-                    <p class="text-2xl font-medium">Rp.50.000</p>
                 </div>
                 <div class="flex flex-col w-full py-7 px-5 gap-6 text-[13px]">
                     <!-- Voucher -->
@@ -194,9 +189,13 @@ const modules = swiperModules
                                 type="number"
                                 name=""
                                 min="0"
+                                :max="product ? product.product_stock : ''"
                                 id="" />
                             <p class="text-gray-600 flex items-center">
-                                tersisa 458 buah
+                                {{
+                                    product ? product.product_stock : ''
+                                }}
+                                pieces available
                             </p>
                         </div>
                     </div>
