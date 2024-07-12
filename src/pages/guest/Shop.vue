@@ -4,9 +4,9 @@ import banner1 from '@/assets/images/banner-flash.jpg'
 import banner2 from '@/assets/images/banner-flash2.jpg'
 import skincare6 from '@/assets/images/skincare6.png'
 import sidebanner from '@/assets/images/banner1.png'
-import vid1 from '@/assets/images/vid1.mp4'
-import vid2 from '@/assets/images/vid2.mp4'
-import vid3 from '@/assets/images/vid3.mp4'
+import vid1 from '@/assets/videos/shop-video-1.mp4'
+import vid2 from '@/assets/videos/shop-video-2.mp4'
+import vid3 from '@/assets/videos/shop-video-3.mp4'
 import { RouterLink } from 'vue-router'
 import { ref, onMounted } from 'vue'
 
@@ -972,7 +972,7 @@ const swiperConfig = {
                     </div>
                     <div>
                         <button
-                            class=" text-sm py-1 px-2 md:text-base md:py-2 md:px-3 bg-red-600 duration-200 hover:bg-red-700 text-white">
+                            class="text-sm py-1 px-2 md:text-base md:py-2 md:px-3 bg-red-600 duration-200 hover:bg-red-700 text-white">
                             Show Collection
                         </button>
                     </div>

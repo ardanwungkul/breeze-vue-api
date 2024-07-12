@@ -87,7 +87,7 @@ const submitLogout = () => {
                                         </div>
                                     </li>
                                     <li v-if="store.authUser == false">
-                                        <router-link to="login">
+                                        <router-link :to="{ name: 'login' }">
                                             <div
                                                 class="tracking-wide font-semibold hover:bg-white px-3 py-2 rounded-lg text-gray-600">
                                                 Log In

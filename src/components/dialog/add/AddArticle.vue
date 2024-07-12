@@ -33,7 +33,7 @@ const handleAdd = async () => {
         <template v-slot:activator="{ props: activatorProps }">
             <div
                 v-bind="activatorProps"
-                class="bg-ezzora-200 hover:bg-ezzora-300 text-ezzora-800 shadow-lg px-4 py-2 rounded-lg gap-1 flex items-center text-sm cursor-pointer">
+                class="bg-secondary-3 text-white hover:bg-opacity-90 px-4 py-2 rounded-lg gap-1 flex items-center text-sm cursor-pointer shadow-lg">
                 <i class="fa-solid fa-plus"></i>
                 <p>Add Article</p>
             </div>

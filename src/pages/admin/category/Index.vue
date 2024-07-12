@@ -3,7 +3,7 @@ import { ref, onMounted, computed } from 'vue'
 import { useCategoryStore } from '@/stores/category'
 import { useSubCategoryStore } from '@/stores/subcategory'
 import AdminLayout from '@/layouts/AdminLayout.vue'
-import 'vuetify/styles'
+import '@/assets/css/vuetify.css'
 import CategoryTable from '@/components/admin/category/CategoryTable.vue'
 import SubCategoryTable from '@/components/admin/category/SubCategoryTable.vue'
 

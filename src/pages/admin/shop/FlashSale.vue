@@ -2,7 +2,7 @@
 import { ref, onMounted, computed } from 'vue'
 import { useUsers } from '@/stores/user'
 import AdminLayout from '@/layouts/AdminLayout.vue'
-import 'vuetify/styles'
+import '@/assets/css/vuetify.css'
 import FlashSaleTable from '@/components/admin/shop/FlashSaleTable.vue'
 
 const storeUser = useUsers()
