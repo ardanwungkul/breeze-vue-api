@@ -21,7 +21,7 @@ async function fetchUsers() {
 }
 </script>
 <template>
-    <AdminLayout title="List User">
+    <AdminLayout title="List Payment Agent">
         <div class="w-full">
             <UserTable :users="users" :fetchUsers="fetchUsers" />
         </div>

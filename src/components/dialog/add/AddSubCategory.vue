@@ -1,6 +1,6 @@
 <script setup>
 import { ref } from 'vue'
-import 'vuetify/styles'
+import '@/assets/css/vuetify.css'
 
 const processing = ref(false)
 const props = defineProps({

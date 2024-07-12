@@ -2,7 +2,7 @@
 import { ref, onMounted, computed } from 'vue'
 import { useProductStore } from '@/stores/product'
 import AdminLayout from '@/layouts/AdminLayout.vue'
-import 'vuetify/styles'
+import '@/assets/css/vuetify.css'
 import ProductTable from '@/components/admin/product/ProductTable.vue'
 
 const storeProduct = useProductStore()
