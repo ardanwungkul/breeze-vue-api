@@ -59,7 +59,7 @@ const swiperConfig = {
 <template>
     <AppLayout>
         <div class="hidden flex-col w-full h-[calc(100vh-57px)] sm:flex">
-            <v-card style="border-radius: 0; box-shadow: none" class=" h-full">
+            <v-card style="border-radius: 0; box-shadow: none" class="h-full">
                 <div class="w-full h-[65%] flex">
                     <div
                         class="flex flex-row w-[60%] xl:pl-48 sm:pl-8 min-h-full items-center relative">
@@ -168,7 +168,8 @@ const swiperConfig = {
                             </div>
                             <div
                                 class="w-8 h-8 flex justify-center items-center">
-                                <i class="fa-solid fa-cart-shopping text-[20px]"></i>
+                                <i
+                                    class="fa-solid fa-cart-shopping text-[20px]"></i>
                             </div>
                             <div
                                 class="w-8 h-8 flex justify-center items-center">
@@ -191,8 +192,7 @@ const swiperConfig = {
                             </button>
                         </div>
                         <div
-                            style="
-                            box-shadow: 0px -1px 10px 20px #ceddce"
+                            style="box-shadow: 0px -1px 10px 20px #ceddce"
                             class="w-full h-full flex flex-row static z-10 sm:gap-1 lg:gap-5 bg-[#ceddce]">
                             <div
                                 class="flex flex-row sm:gap-1 lg:gap-3"
@@ -216,7 +216,7 @@ const swiperConfig = {
                                 </div>
                                 <div
                                     class="flex-col sm:max-w-[100px] lg:max-w-28">
-                                    <div class="">Dimwnsions</div>
+                                    <div class="">Dimensions</div>
                                     <div class="text-[8px]">
                                         Lorem ipsum dolor sit amet consectetur
                                         adipisicing elit. Atque perspiciatis

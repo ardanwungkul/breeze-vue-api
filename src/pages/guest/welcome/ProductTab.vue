@@ -55,6 +55,7 @@ const modules = swiperModules
 </script>
 <template>
     <swiper
+        v-if="products.length > 0"
         :modules="swiperModules"
         :loop="true"
         :breakpoints="{
@@ -79,8 +80,7 @@ const modules = swiperModules
                 <div class="h-[144px] w-full">
                     <v-img
                         :src="product.product_image"
-                        class="min-h-full w-full object-cover"
-                        cover>
+                        class="min-h-full w-full object-contain">
                         <template v-slot:placeholder>
                             <div
                                 class="w-full h-full flex justify-center items-center">
@@ -126,4 +126,11 @@ const modules = swiperModules
             </div>
         </div>
     </swiper>
+    <div
+        v-if="products.length == 0"
+        class="h-[144px] flex items-center justify-center">
+        <p class="capitalize text-center font-bold text-typography-2">
+            no product available
+        </p>
+    </div>
 </template>
