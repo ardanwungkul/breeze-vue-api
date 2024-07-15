@@ -39,7 +39,45 @@ export const useShopPageStore = defineStore({
                 .then(response => {
                     processing.value = false
                     this.mainBanners.push(response.data)
-                    console.log(response)
+                })
+                .catch(error => {
+                    console.log(error)
+                    if (error.response.status !== 422) throw error
+
+                    setErrors.value = Object.values(
+                        error.response.data.errors,
+                    ).flat()
+                    processing.value = false
+                })
+        },
+        async deleteMainBanner(id, setErrors, processing) {
+            await csrf()
+            processing.value = true
+            axios
+                .delete(`/api/main-banner/delete/${id}`)
+                .then(response => {
+                    processing.value = false
+                    this.mainBanners = this.mainBanners.filter(
+                        banner => banner.id !== id,
+                    )
+                })
+                .catch(error => {
+                    console.log(error)
+                    if (error.response.status !== 422) throw error
+
+                    setErrors.value = Object.values(
+                        error.response.data.errors,
+                    ).flat()
+                    processing.value = false
+                })
+        },
+        async updateMainBannerStatus(form, setErrors, processing) {
+            await csrf()
+            processing.value = true
+            axios
+                .post('/api/main-banner/status', form)
+                .then(response => {
+                    processing.value = false
                 })
                 .catch(error => {
                     console.log(error)
