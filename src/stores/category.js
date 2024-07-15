@@ -30,6 +30,20 @@ export const useCategoryStore = defineStore({
                 this.loading = false
             }
         },
+        async categoryWithSubCategory() {
+            this.loading = true
+            try {
+                const response = await axios
+                    .get('/api/category-with-subcategory')
+                    .then(response => {
+                        this.categories = response.data
+                    })
+            } catch (error) {
+                this.error = error
+            } finally {
+                this.loading = false
+            }
+        },
         async addCategory(newCategory, setErrors, processing) {
             await csrf()
             processing.value = true

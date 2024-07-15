@@ -15,6 +15,8 @@ import { Pagination, Navigation, Autoplay } from 'swiper/modules'
 import 'swiper/css'
 import 'swiper/css/pagination'
 
+import FilterCategories from '@/pages/guest/shop/FilterCategories.vue'
+
 const mainbanner = ref([
     {
         index: 1,
@@ -59,54 +61,6 @@ const reseller = ref([
     {
         index: 4,
         shop: 'toko d',
-    },
-])
-const categories = ref([
-    {
-        index: 1,
-        category: 'Skincare',
-        subcategories: [
-            {
-                index: 1,
-                subcategory: 'Brigthening Series',
-            },
-            {
-                index: 1,
-                subcategory: 'Acne Series',
-            },
-        ],
-    },
-    {
-        index: 2,
-        category: 'Cosmetics',
-        subcategories: [
-            {
-                index: 1,
-                subcategory: 'Liptint',
-            },
-            {
-                index: 2,
-                subcategory: 'Lip Cream',
-            },
-            {
-                index: 3,
-                subcategory: 'Lip Glose',
-            },
-        ],
-    },
-    {
-        index: 3,
-        category: 'Body Care',
-        subcategories: [
-            {
-                index: 1,
-                subcategory: 'Body Wash',
-            },
-            {
-                index: 2,
-                subcategory: 'Peaching Body Spray',
-            },
-        ],
     },
 ])
 
@@ -421,62 +375,35 @@ const swiperConfig = {
                                 </div>
                             </div>
                         </div>
-                        <div class="border border-t-transparent py-4 mb-5">
-                            <div class="font-medium mb-4 px-4">Categories</div>
-                            <div
-                                v-for="c in categories"
-                                :key="c"
-                                class="w-full">
-                                <div
-                                    @click="toggleClass(c.index)"
-                                    class="w-full flex flex-row px-4 py-2 justify-between border-b hover:text-darkbrownshop">
-                                    <div class="">{{ c.category }}</div>
-                                    <div class="w-4 h-4">
-                                        <svg
-                                            class="feather feather-chevron-down"
-                                            fill="none"
-                                            height="24"
-                                            stroke="currentColor"
-                                            stroke-linecap="round"
-                                            stroke-linejoin="round"
-                                            stroke-width="2"
-                                            viewBox="0 0 24 24"
-                                            width="24"
-                                            xmlns="http://www.w3.org/2000/svg">
-                                            <polyline points="6 9 12 15 18 9" />
-                                        </svg>
-                                    </div>
-                                </div>
-                                <div
-                                    :class="{
-                                        block: activeDiv === c.index,
-                                        hidden: activeDiv !== c.index,
-                                    }"
-                                    class="bg-brownshop py-4">
-                                    <button
-                                        v-for="sb in c.subcategories"
-                                        :key="sb"
-                                        class="w-full py-1 px-4 text-left hover:bg-white">
-                                        {{ sb.subcategory }}
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
+                        <FilterCategories />
                         <div class="w-full mt-5 md:h-[500px] lg:h-[700px]">
-                            <v-img
-                                :src="sidebanner"
-                                aspect-ratio="1"
-                                class="min-h-full"
-                                cover>
-                                <template v-slot:placeholder>
-                                    <div
-                                        class="w-full h-full flex justify-center items-center">
-                                        <v-progress-circular
-                                            color=""
-                                            indeterminate></v-progress-circular>
-                                    </div>
-                                </template>
-                            </v-img>
+                            <swiper
+                                :modules="modules"
+                                :loop="true"
+                                :speed="1300"
+                                :autoplay="{
+                                    delay: 4000,
+                                }"
+                                :allowTouchMove="false"
+                                @swiper="swiperJs"
+                                class=" w-full h-full">
+                                <swiper-slide v-for="i in 3" :key="i">
+                                    <v-img
+                                        :src="sidebanner"
+                                        aspect-ratio="1"
+                                        class="min-h-full"
+                                        cover>
+                                        <template v-slot:placeholder>
+                                            <div
+                                                class="w-full h-full flex justify-center items-center">
+                                                <v-progress-circular
+                                                    color=""
+                                                    indeterminate></v-progress-circular>
+                                            </div>
+                                        </template>
+                                    </v-img>
+                                </swiper-slide>
+                            </swiper>
                         </div>
                     </div>
                     <!-- Product -->
@@ -999,16 +926,11 @@ const swiperConfig = {
 </template>
 <script>
 export default {
-    components: {
-        Swiper,
-        SwiperSlide,
-    },
     data() {
         return {
             price: 0,
             rating: 5,
             activefilter: 'no',
-            activeDiv: null,
             activeVideo: 1,
         }
     },
@@ -1018,14 +940,6 @@ export default {
         },
         togglefilter(i) {
             this.activefilter = i
-        },
-        toggleClass(i) {
-            if (this.activeDiv === i) {
-                this.activeDiv = null
-            } else {
-                // Jika tidak, aktifkan div yang diklik
-                this.activeDiv = i
-            }
         },
     },
 }
