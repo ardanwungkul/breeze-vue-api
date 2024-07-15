@@ -1,13 +1,12 @@
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, watchEffect } from 'vue'
 import { useShopPageStore } from '@/stores/shop-page/shop.js'
 import AddMainBanner from '@/pages/admin/shop/AddMainBanner.vue'
 
 const shopStore = useShopPageStore()
 const mainBanner = ref([])
 
-onMounted(async () => {
-    await shopStore.getAllMainBanner()
+const getMainBanner = () => {
     mainBanner.value = shopStore.mainBanners.map(banner => ({
         id: banner.id,
         main_banner_media: banner.main_banner_media,
@@ -20,29 +19,39 @@ onMounted(async () => {
             '/storage/media/shop/main-banner/' +
             banner.main_banner_media,
     }))
+}
+onMounted(async () => {
+    await shopStore.getAllMainBanner()
+    getMainBanner()
+})
+watchEffect(() => {
+    getMainBanner()
 })
 </script>
 <template>
     <div class="space-y-3">
         <AddMainBanner />
-        <div class="grid grid-cols-4 gap-4">
+        <div class="grid grid-cols-4 gap-4 py-4">
             <div
                 v-for="(item, index) in mainBanner"
                 :key="index"
-                class="border rounded-lg h-40 overflow-hidden">
+                class="rounded-lg overflow-hidden flex flex-col shadow-lg border">
                 <video
                     v-if="item.main_banner_type == 'video'"
                     poster="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTOwRConBYl2t6L8QMOAQqa5FDmPB_bg7EnGA&s"
                     alt=""
                     controls
-                    class="h-full w-full object-cover lazyload">
+                    class="w-full object-cover lazyload h-40">
                     <source :src="item.src" type="video/mp4" />
                 </video>
                 <img
-                    class="h-full w-full object-cover lazyload"
+                    class="w-full object-cover lazyload h-40"
                     :src="item.src"
                     v-if="item.main_banner_type == 'image'"
                     alt="" />
+                <div class="h-10 w-full flex px-3">
+                    <button class="fa-duotone fa-trash text-red-500"></button>
+                </div>
             </div>
         </div>
     </div>
