@@ -3,6 +3,8 @@ import { ref, onMounted } from 'vue'
 import AdminLayout from '@/layouts/AdminLayout.vue'
 import '@/assets/css/vuetify.css'
 import MainBanner from '@/pages/admin/shop/MainBanner.vue'
+import SecondaryBanner from '@/pages/admin/shop/SecondaryBanner.vue'
+import SideBanner from '@/pages/admin/shop/SideBanner.vue'
 
 const tab = ref(null)
 </script>
@@ -41,11 +43,11 @@ const tab = ref(null)
                             </v-tabs-window-item>
 
                             <v-tabs-window-item value="two">
-                                Two
+                                <SecondaryBanner />
                             </v-tabs-window-item>
 
                             <v-tabs-window-item value="three">
-                                Three
+                                <SideBanner />
                             </v-tabs-window-item>
                         </v-tabs-window>
                     </v-card-text>

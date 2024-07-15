@@ -110,7 +110,7 @@ const activeTab = ref('first')
                 </div>
 
                 <!-- Flash Sale -->
-                <div id="tabFlashSale">
+                <div id="tabFlashSale" class="min-h-[144px]">
                     <div
                         class="hidden rounded-lg bg-gray-50 p-4 dark:bg-gray-800"
                         id="new-product"

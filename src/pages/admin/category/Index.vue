@@ -44,7 +44,7 @@ async function fetchSubCategories() {
 
 <template>
     <AdminLayout title="Product Category">
-        <div class="w-full">
+        <div class="w-full space-y-3">
             <CategoryTable
                 :categories="categories"
                 :fetchCategories="fetchCategories"

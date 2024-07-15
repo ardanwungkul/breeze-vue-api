@@ -1,12 +1,12 @@
 <script setup>
 import AppLayout from '@/layouts/AppLayout.vue'
-import banner1 from '@/assets/images/banner-flash.jpg'
-import banner2 from '@/assets/images/banner-flash2.jpg'
+import banner1 from '@/assets/media/shop/secondary-banner/secondary-banner-1.jpg'
+import banner2 from '@/assets/media/shop/secondary-banner/secondary-banner-2.jpg'
 import skincare6 from '@/assets/images/skincare6.png'
-import sidebanner from '@/assets/images/banner1.png'
-import vid1 from '@/assets/videos/shop-video-1.mp4'
-import vid2 from '@/assets/videos/shop-video-2.mp4'
-import vid3 from '@/assets/videos/shop-video-3.mp4'
+import sidebanner from '@/assets/media/shop/side-banner/side-banner.png'
+import vid1 from '@/assets/media/shop/main-banner/shop-video-1.mp4'
+import vid2 from '@/assets/media/shop/main-banner/shop-video-2.mp4'
+import vid3 from '@/assets/media/shop/main-banner/shop-video-3.mp4'
 import { RouterLink } from 'vue-router'
 import { ref, onMounted } from 'vue'
 
