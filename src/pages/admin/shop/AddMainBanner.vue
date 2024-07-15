@@ -21,13 +21,16 @@ const handleFileChange = event => {
     const selectedFile = event.target.files[0]
     if (selectedFile) {
         file.value = selectedFile
+        addMainBanner()
+        event.target.value = ''
+        file.value = null
     }
-    addMainBanner()
+    console.log(selectedFile)
 }
 </script>
 <template>
     <div>
-        <form @submit.prevent="addMainBanner">
+        <form>
             <label for="main_banner">
                 <div
                     class="bg-secondary-3 text-white hover:bg-opacity-90 px-4 py-2 rounded-lg gap-1 flex items-center text-sm cursor-pointer shadow-lg w-min whitespace-nowrap">
