@@ -35,7 +35,6 @@ const setErrors = ref([])
 const errors = computed(() => setErrors.value)
 const props = defineProps({
     flashSale: Object,
-    method: Function,
 })
 
 const addProduct = async () => {
@@ -51,10 +50,6 @@ const addProduct = async () => {
         processing,
     )
     selectedProducts.value = []
-
-    watchEffect(() => {
-        props.method(props.flashSale.id)
-    }, props.flashSales)
 }
 const handleAdd = async () => {}
 </script>

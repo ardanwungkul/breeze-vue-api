@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onBeforeMount } from 'vue'
+import { ref, onBeforeMount, watchEffect } from 'vue'
 import { useFlashSaleStore } from '@/stores/shop-page/flash-sale'
 import AdminLayout from '@/layouts/AdminLayout.vue'
 import '@/assets/css/vuetify.css'
@@ -28,13 +28,14 @@ const getFlashSale = async id => {
         title.value = flashSale.value.flash_sale_title
     }
 }
+watchEffect(() => {
+    getFlashSale(flashSaleId.value)
+})
 </script>
 <template>
     <AdminLayout :title="title">
         <div class="w-full">
-            <FlashSaleProductTable
-                :flashSale="flashSale"
-                :fetchFlashSale="getFlashSale" />
+            <FlashSaleProductTable :flashSale="flashSale" />
         </div>
     </AdminLayout>
 </template>

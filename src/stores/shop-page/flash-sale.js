@@ -77,6 +77,9 @@ export const useFlashSaleStore = defineStore({
                 .post(`/api/flash-sale/${id}/product`, form)
                 .then(response => {
                     processing.value = false
+                    response.data.added_products.forEach(product => {
+                        this.singleFlashSale.flash_sale_product.push(product)
+                    })
                 })
                 .catch(error => {
                     console.log(error)
@@ -116,6 +119,10 @@ export const useFlashSaleStore = defineStore({
                 .delete(`api/flash-sale-product/${id}/`)
                 .then(response => {
                     processing.value = false
+                    this.singleFlashSale.flash_sale_product =
+                        this.singleFlashSale.flash_sale_product.filter(
+                            product => product.id !== id,
+                        )
                 })
                 .catch(error => {
                     console.log(error)

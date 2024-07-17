@@ -17,7 +17,6 @@ const optionsMoney = {
 const storeFlashSale = useFlashSaleStore()
 const props = defineProps({
     flashSale: Object,
-    fetchFlashSale: Function,
 })
 const searchProduct = ref('')
 const pageFlashsale = ref(1)
@@ -61,7 +60,6 @@ const errors = computed(() => setErrors.value)
 const deleteFlashSaleProduct = async id => {
     processing.value = true
     await storeFlashSale.deleteFlashSaleProduct(id, setErrors, processing)
-    // await props.fetchFlashSale(props.flashSale.id)
     processing.value = false
 }
 </script>
@@ -71,9 +69,7 @@ const deleteFlashSaleProduct = async id => {
         <div
             class="bg-light-primary-1 dark:bg-dark-primary-2 p-5 rounded-lg space-y-3 shadow-lg">
             <div class="flex justify-between items-center">
-                <AddFlashSaleProduct
-                    :flashSale="flashSale"
-                    :method="props.fetchFlashSale" />
+                <AddFlashSaleProduct :flashSale="flashSale" />
                 <input
                     type="text"
                     v-model="searchProduct"
