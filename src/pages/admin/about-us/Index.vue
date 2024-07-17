@@ -1,29 +1,29 @@
 <script setup>
 import { ref, onMounted, computed } from 'vue'
-import { useUsers } from '@/stores/user'
+import { useAboutUsStore } from '@/stores/aboutus'
 import AdminLayout from '@/layouts/AdminLayout.vue'
 import '@/assets/css/vuetify.css'
 import AboutUsTable from '@/components/admin/about-us/AboutUsTable.vue'
 
-const storeUser = useUsers()
+const storeAboutUs = useAboutUsStore()
 
-const users = ref([])
+const aboutus = ref([])
 onMounted(async () => {
-    await fetchUsers()
+    await fetchAboutUs()
 })
-async function fetchUsers() {
-    await storeUser.userAll()
-    users.value = storeUser.allUser.map(user => ({
-        id: user.id,
-        name: user.name,
-        email: user.email,
+async function fetchAboutUs() {
+    await storeAboutUs.aboutUsAll()
+    aboutus.value = storeAboutUs.allAboutUs.map(aboutus => ({
+        id: aboutus.id,
+        title: aboutus.about_us_title,
+        description: aboutus.about_us_description,
     }))
 }
 </script>
 <template>
     <AdminLayout title="About Us List">
         <div class="w-full">
-            <AboutUsTable :users="users" :fetchUsers="fetchUsers" />
+            <AboutUsTable :aboutus="aboutus" :fetchAboutUs="fetchAboutUs" />
         </div>
     </AdminLayout>
 </template>
