@@ -1,34 +1,40 @@
 <script setup>
 import { ref, computed, watchEffect } from 'vue'
 import ConfirmDelete from '@/components/dialog/ConfirmDelete.vue'
-import AddUser from '@/components/dialog/add/AddUser.vue'
+import AddFlashSale from '@/components/dialog/add/AddFlashSale.vue'
 // import EditProduct from '@/components/dialog/edit/EditProduct.vue'
-import { useUsers } from '@/stores/user'
+import { useFlashSaleStore } from '@/stores/shop-page/flash-sale'
 import ValidationErrors from '@/components/ValidationErrors.vue'
+import { RouterLink } from 'vue-router'
 
-const storeUser = useUsers()
+const storeFlashSale = useFlashSaleStore()
 const props = defineProps({
-    users: Array,
-    fetchUsers: Function,
+    flashSales: Array,
+    fetchFlashSale: Function,
 })
-const searchUser = ref('')
-const pageUser = ref(1)
-const itemsPerPageUser = ref(10)
+const searchFlashSale = ref('')
+const pageFlashsale = ref(1)
+const itemsPerPageFlashsale = ref(10)
 
-const headersUser = [
-    { key: 'name', title: 'Product Name' },
-    { key: '', title: 'Product Price' },
-    { key: '', title: 'Discount' },
-    { key: '', title: 'Stock' },
+const headersFlashSale = [
+    { key: 'flash_sale_title', title: 'Campaign Title', align: 'center' },
+    { key: 'flash_sale_from', title: 'Flash Sale Start', align: 'center' },
+    {
+        key: 'flash_sale_until',
+        title: 'Flash Sale End',
+        align: 'center',
+    },
     { key: 'id', title: 'Action', align: 'center' },
 ]
 const pageCount = computed(() => {
-    return Math.ceil(filteredUsers.value.length / itemsPerPageUser.value)
+    return Math.ceil(
+        filteredFlashSales.value.length / itemsPerPageFlashsale.value,
+    )
 })
 
-const filteredUsers = computed(() => {
-    return props.users.filter(user => {
-        return user.name.toLowerCase().includes(searchUser.value)
+const filteredFlashSales = computed(() => {
+    return props.flashSales.filter(fs => {
+        return fs.flash_sale_from.toLowerCase().includes(searchFlashSale.value)
     })
 })
 
@@ -36,23 +42,29 @@ const processing = ref(false)
 
 const setErrors = ref([])
 const errors = computed(() => setErrors.value)
-const addUser = async newUser => {
-    await storeUser.addUser(newUser, setErrors, processing)
+const addFlashSale = async newFlashSale => {
+    await storeFlashSale.addFlashSale(newFlashSale, setErrors, processing)
     watchEffect(() => {
-        props.fetchUsers()
-    }, props.users)
+        props.fetchFlashSale()
+    }, props.flashSales)
 }
-const editUser = async (updateUser, id) => {
-    await storeUser.editUser(updateUser, setErrors, processing, id)
+const editFlashSale = async (updateFlashSale, id) => {
+    await storeFlashSale.editFlashSale(
+        updateFlashSale,
+        setErrors,
+        processing,
+        id,
+    )
     watchEffect(() => {
-        props.fetchUsers()
-    }, props.users)
+        props.fetchFlashSale()
+    }, props.flashSales)
 }
-const deleteUser = async id => {
-    await storeUser.deleteUser(id, processing)
+const deleteFlashSale = async id => {
+    processing.value = true
+    await storeFlashSale.deleteFlashSale(id, setErrors, processing)
     watchEffect(() => {
-        props.fetchUsers()
-    }, props.users)
+        props.fetchFlashSale()
+    }, props.flashSales)
 }
 </script>
 <template>
@@ -61,18 +73,18 @@ const deleteUser = async id => {
         <div
             class="bg-light-primary-1 dark:bg-dark-primary-2 p-5 rounded-lg space-y-3 shadow-lg">
             <div class="flex justify-between items-center">
-                <AddUser :method="addUser"></AddUser>
+                <AddFlashSale :method="addFlashSale" />
                 <input
                     type="text"
-                    v-model="searchUser"
+                    v-model="searchFlashSale"
                     class="rounded-lg text-sm min-w-52 dark:!border-gray-500 border !border-typography-2/20 shadow-lg bg-light-primary-1 dark:bg-dark-primary-1 text-typography-3 dark:text-white"
-                    placeholder="Search Products" />
+                    placeholder="Search Flash Sales" />
             </div>
             <v-data-table
-                v-model:page="pageUser"
-                :search="searchUser"
-                :headers="headersUser"
-                :items="users"
+                v-model:page="pageFlashsale"
+                :search="searchFlashSale"
+                :headers="headersFlashSale"
+                :items="flashSales"
                 hide-default-footer
                 :header-props="{
                     class: 'dark:bg-dark-primary-1 bg-light-primary-2 dark:!text-white border-b dark:!border-white/30',
@@ -81,18 +93,42 @@ const deleteUser = async id => {
                 class="border dark:!border-typography-2/20 shadow-lg dark:!bg-dark-primary-1 !bg-light-primary-2 dark:!text-typography-1">
                 <template v-slot:item.id="{ item }">
                     <div class="flex gap-3 items-center justify-center text-xs">
-                        <!-- <EditProduct
-                            :user="item"
-                            :method="editUser"></EditProduct> -->
+                        <RouterLink
+                            :to="{
+                                name: 'admin.shop.show.flash-sale',
+                                params: {
+                                    id: item.id,
+                                },
+                            }">
+                            <div
+                                class="flex gap-2 items-center text-white bg-secondary-3 hover:bg-opacity-90 rounded-lg px-3 py-1">
+                                <i class="fa-solid fa-eye"></i>
+                                <p>Show</p>
+                            </div>
+                        </RouterLink>
                         <ConfirmDelete
-                            :type="'User'"
+                            :type="'Flash Sale'"
                             :id="item.id"
-                            :method="deleteUser"></ConfirmDelete>
+                            :method="deleteFlashSale"></ConfirmDelete>
+                    </div>
+                </template>
+                <template v-slot:item.flash_sale_date_from="{ item }">
+                    <div class="flex gap-3 items-center justify-center text-xs">
+                        <p>
+                            {{ item.flash_sale_date_from }} -
+                            {{ item.flash_sale_time_from }}
+                        </p>
+                    </div>
+                </template>
+                <template v-slot:item.flash_sale_date_until="{ item }">
+                    <div class="flex gap-3 items-center justify-center text-xs">
+                        {{ item.flash_sale_date_until }} -
+                        {{ item.flash_sale_time_until }}
                     </div>
                 </template>
             </v-data-table>
             <v-pagination
-                v-model="pageUser"
+                v-model="pageFlashsale"
                 :length="pageCount"
                 class="bg-light-primary-2 border !border-typography-2/20 shadow-lg rounded-lg dark:bg-dark-primary-1 dark:text-white"
                 :total-visible="5">

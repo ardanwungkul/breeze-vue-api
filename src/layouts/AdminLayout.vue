@@ -30,7 +30,7 @@ provide('rail', rail)
         :class="isDark ? 'dark' : ''">
         <Navigation />
         <v-main>
-            <v-container class="!py-0">
+            <v-container class="!py-0 !max-w-none">
                 <div class="py-5 px-10">
                     <div class="w-full flex justify-between items-center mb-5">
                         <p
