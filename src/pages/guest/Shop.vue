@@ -1,14 +1,13 @@
 <script setup>
 import AppLayout from '@/layouts/AppLayout.vue'
-import banner1 from '@/assets/media/shop/secondary-banner/secondary-banner-1.jpg'
-import banner2 from '@/assets/media/shop/secondary-banner/secondary-banner-2.jpg'
 import skincare6 from '@/assets/images/skincare6.png'
-import sidebanner from '@/assets/media/shop/side-banner/side-banner.png'
-import vid1 from '@/assets/media/shop/main-banner/shop-video-1.mp4'
-import vid2 from '@/assets/media/shop/main-banner/shop-video-2.mp4'
-import vid3 from '@/assets/media/shop/main-banner/shop-video-3.mp4'
+
 import { RouterLink } from 'vue-router'
 import { ref, onMounted } from 'vue'
+
+import MainBanner from '@/pages/guest/shop/MainBanner.vue'
+import SecondaryBanner from '@/pages/guest/shop/SecondaryBanner.vue'
+import SideBanner from '@/pages/guest/shop/SideBanner.vue'
 
 import { Swiper, SwiperSlide } from 'swiper/vue'
 import { Pagination, Navigation, Autoplay } from 'swiper/modules'
@@ -17,34 +16,6 @@ import 'swiper/css/pagination'
 
 import FilterCategories from '@/pages/guest/shop/FilterCategories.vue'
 
-const mainbanner = ref([
-    {
-        index: 1,
-        video: vid1,
-    },
-    {
-        index: 2,
-        video: vid2,
-    },
-    {
-        index: 3,
-        video: vid3,
-    },
-    {
-        index: 4,
-        video: vid2,
-    },
-])
-const secondbanner = ref([
-    {
-        index: 1,
-        banner: banner1,
-    },
-    {
-        index: 2,
-        banner: banner2,
-    },
-])
 const reseller = ref([
     {
         index: 1,
@@ -75,170 +46,12 @@ const swiperConfig = {
 </script>
 <template>
     <AppLayout>
-        <!-- Videos -->
-        <div
-            class="w-full min-h-52 md:min-h-96 relative overflow-hidden bg-black">
-            <div
-                v-for="i in mainbanner"
-                :key="i.index"
-                :class="{
-                    active: activeVideo === i.index,
-                    'z-0': activeVideo !== i.index,
-                }"
-                class="absolute top-0 left-0 curved-c w-full min-h-full overflow-hidden flex justify-center items-center">
-                <video
-                    class="mt-0 md:mt-auto object-cover w-full h-full"
-                    :src="i.video"
-                    autoplay
-                    muted
-                    loop></video>
-            </div>
-            <div
-                class="w-full min-h-96 bg-black/50 absolute top-0 left-0 z-20"></div>
-            <div
-                class="absolute top-0 right-8 md:right-14 flex flex-col min-h-full gap-5 justify-center z-30">
-                <RouterLink
-                    to="#"
-                    class="ml-0.5 w-5 min-h-5 duration-200 hover:scale-125">
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 1200 1227"
-                        fill="none">
-                        <g clip-path="url(#a)">
-                            <path
-                                d="M714.163 519.284 1160.89 0h-105.86L667.137 450.887 357.328 0H0l468.492 681.821L0 1226.37h105.866l409.625-476.152 327.181 476.152H1200L714.137 519.284h.026ZM569.165 687.828l-47.468-67.894-377.686-540.24h162.604l304.797 435.991 47.468 67.894 396.2 566.721H892.476L569.165 687.854v-.026Z"
-                                fill="#ffffff"
-                                class="fill-000000"></path>
-                        </g>
-                        <defs>
-                            <clipPath id="a">
-                                <path
-                                    fill="#ffffff"
-                                    d="M0 0h1200v1227H0z"
-                                    class="fill-ffffff"></path>
-                            </clipPath>
-                        </defs>
-                    </svg>
-                </RouterLink>
-                <RouterLink
-                    to="#"
-                    class="w-6 min-h-6 duration-200 hover:scale-125">
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 56.7 56.7"
-                        xml:space="preserve">
-                        <path
-                            d="M28.2 16.7c-7 0-12.8 5.7-12.8 12.8s5.7 12.8 12.8 12.8S41 36.5 41 29.5s-5.8-12.8-12.8-12.8zm0 21c-4.5 0-8.2-3.7-8.2-8.2s3.7-8.2 8.2-8.2 8.2 3.7 8.2 8.2-3.7 8.2-8.2 8.2z"
-                            fill="#ffffff"
-                            class="fill-000000"></path>
-                        <circle
-                            cx="41.5"
-                            cy="16.4"
-                            r="2.9"
-                            fill="#ffffff"
-                            class="fill-000000"></circle>
-                        <path
-                            d="M49 8.9c-2.6-2.7-6.3-4.1-10.5-4.1H17.9c-8.7 0-14.5 5.8-14.5 14.5v20.5c0 4.3 1.4 8 4.2 10.7 2.7 2.6 6.3 3.9 10.4 3.9h20.4c4.3 0 7.9-1.4 10.5-3.9 2.7-2.6 4.1-6.3 4.1-10.6V19.3c0-4.2-1.4-7.8-4-10.4zm-.4 31c0 3.1-1.1 5.6-2.9 7.3s-4.3 2.6-7.3 2.6H18c-3 0-5.5-.9-7.3-2.6C8.9 45.4 8 42.9 8 39.8V19.3c0-3 .9-5.5 2.7-7.3 1.7-1.7 4.3-2.6 7.3-2.6h20.6c3 0 5.5.9 7.3 2.7 1.7 1.8 2.7 4.3 2.7 7.2v20.6z"
-                            fill="#ffffff"
-                            class="fill-000000"></path>
-                    </svg>
-                </RouterLink>
-                <RouterLink
-                    to="#"
-                    class="w-6 min-h-6 duration-200 hover:scale-125">
-                    <svg
-                        viewBox="0 0 56.693 56.693"
-                        xml:space="preserve"
-                        xmlns="http://www.w3.org/2000/svg">
-                        <path
-                            d="M40.43 21.739h-7.645v-5.014c0-1.883 1.248-2.322 2.127-2.322h5.395V6.125l-7.43-.029c-8.248 0-10.125 6.174-10.125 10.125v5.518h-4.77v8.53h4.77v24.137h10.033V30.269h6.77l.875-8.53z"
-                            fill="#ffffff"
-                            class="fill-000000"></path>
-                    </svg>
-                </RouterLink>
-            </div>
-            <div
-                class="absolute bottom-4 md:bottom-9 flex flow-row w-full gap-5 justify-center z-30">
-                <button
-                    v-for="i in mainbanner"
-                    :key="i.index"
-                    @click="toggleVideo(i.index)"
-                    :class="{
-                        'w-8': activeVideo === i.index,
-                        'w-4': activeVideo !== i.index,
-                    }"
-                    class="min-h-4 rounded-[8px] duration-300 bg-white"></button>
-            </div>
-        </div>
+        <MainBanner />
         <!-- Banner -->
         <div class="w-full py-8 px-4 md:px-8 lg:px-0 md:py-16">
             <div
                 class="flex flex-col mx-auto w-full max-w-[100vw] md:max-w-[1320px] relative">
-                <swiper
-                    class="w-full max-w-full min-h-full mb-2"
-                    :navigation="swiperConfig.navigation"
-                    :modules="swiperModules"
-                    :loop="true"
-                    :speed="1300"
-                    :allowTouchMove="false"
-                    :autoplay="{
-                        delay: 3000,
-                    }"
-                    @swiper="swiperJs">
-                    <swiper-slide v-for="i in secondbanner" :key="i.index">
-                        <div
-                            class="w-full max-h-32 md:min-h-52 md:max-h-52 bg-black flex items-center relative">
-                            <v-img
-                                :src="i.banner"
-                                aspect-ratio="1"
-                                class="min-w-full max-w-full min-h-full">
-                                <template v-slot:placeholder>
-                                    <div
-                                        class="w-full h-full flex justify-center items-center">
-                                        <v-progress-circular
-                                            color=""
-                                            indeterminate></v-progress-circular>
-                                    </div>
-                                </template>
-                            </v-img>
-                            <div
-                                class="absolute w-full h-full bg-black/50"></div>
-                        </div>
-                    </swiper-slide>
-                    <div
-                        class="absolute z-30 flex flex-row w-full min-h-full top-0 justify-between">
-                        <div
-                            class="swiper-button-prev opacity-50 duration-200 hover:opacity-100 min-h-full flex justify-center items-center cursor-pointer pl-10 md:pl-20">
-                            <div class="w-12 h-12 bg-black">
-                                <svg
-                                    height="48"
-                                    viewBox="0 0 48 48"
-                                    width="48"
-                                    xmlns="http://www.w3.org/2000/svg">
-                                    <path
-                                        fill="white"
-                                        d="M30.83 32.67l-9.17-9.17 9.17-9.17-2.83-2.83-12 12 12 12z" />
-                                    <path d="M0-.5h48v48h-48z" fill="none" />
-                                </svg>
-                            </div>
-                        </div>
-                        <div
-                            class="swiper-button-next opacity-50 duration-200 hover:opacity-100 min-h-full flex justify-center items-center cursor-pointer pr-10 md:pr-20">
-                            <div class="w-12 h-12 bg-black">
-                                <svg
-                                    height="48"
-                                    viewBox="0 0 48 48"
-                                    width="48"
-                                    xmlns="http://www.w3.org/2000/svg">
-                                    <path
-                                        fill="white"
-                                        d="M17.17 32.92l9.17-9.17-9.17-9.17 2.83-2.83 12 12-12 12z" />
-                                    <path d="M0-.25h48v48h-48z" fill="none" />
-                                </svg>
-                            </div>
-                        </div>
-                    </div>
-                </swiper>
+                <SecondaryBanner />
                 <div class="justify-center max-w-[60%] md:max-w-[25%] px-4">
                     <div
                         class="flex justify-center mb-2 text-2xl font-semibold text-red-600">
@@ -377,33 +190,7 @@ const swiperConfig = {
                         </div>
                         <FilterCategories />
                         <div class="w-full mt-5 md:h-[500px] lg:h-[700px]">
-                            <swiper
-                                :modules="modules"
-                                :loop="true"
-                                :speed="1300"
-                                :autoplay="{
-                                    delay: 4000,
-                                }"
-                                :allowTouchMove="false"
-                                @swiper="swiperJs"
-                                class=" w-full h-full">
-                                <swiper-slide v-for="i in 3" :key="i">
-                                    <v-img
-                                        :src="sidebanner"
-                                        aspect-ratio="1"
-                                        class="min-h-full"
-                                        cover>
-                                        <template v-slot:placeholder>
-                                            <div
-                                                class="w-full h-full flex justify-center items-center">
-                                                <v-progress-circular
-                                                    color=""
-                                                    indeterminate></v-progress-circular>
-                                            </div>
-                                        </template>
-                                    </v-img>
-                                </swiper-slide>
-                            </swiper>
+                            <SideBanner />
                         </div>
                     </div>
                     <!-- Product -->
@@ -646,24 +433,6 @@ const swiperConfig = {
                             </div>
                         </div>
                     </div>
-                    <!-- filter mobile -->
-                    <div
-                        class="flex pt-5 px-4 justify-center md:hidden w-full h-[1000px]">
-                        <v-img
-                            :src="sidebanner"
-                            aspect-ratio="1"
-                            class="min-h-full"
-                            cover>
-                            <template v-slot:placeholder>
-                                <div
-                                    class="w-full h-full flex justify-center items-center">
-                                    <v-progress-circular
-                                        color=""
-                                        indeterminate></v-progress-circular>
-                                </div>
-                            </template>
-                        </v-img>
-                    </div>
                     <div
                         :class="{
                             block: activefilter === 'yes',
@@ -729,7 +498,7 @@ const swiperConfig = {
                                 <div class="font-medium mb-4 px-4">
                                     Categories
                                 </div>
-                                <div
+                                <!-- <div
                                     v-for="c in categories"
                                     :key="c"
                                     class="w-full">
@@ -767,7 +536,7 @@ const swiperConfig = {
                                             {{ sb.subcategory }}
                                         </button>
                                     </div>
-                                </div>
+                                </div> -->
                             </div>
                         </div>
                     </div>
@@ -931,13 +700,9 @@ export default {
             price: 0,
             rating: 5,
             activefilter: 'no',
-            activeVideo: 1,
         }
     },
     methods: {
-        toggleVideo(i) {
-            this.activeVideo = i
-        },
         togglefilter(i) {
             this.activefilter = i
         },

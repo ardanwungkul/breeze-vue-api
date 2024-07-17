@@ -1,6 +1,6 @@
 <script setup>
 import { ref, onMounted, watchEffect, computed } from 'vue'
-import { useShopPageStore } from '@/stores/shop-page/shop.js'
+import { useShopPageStore } from '@/stores/shop-page/banner.js'
 import AddMainBanner from '@/pages/admin/shop/AddMainBanner.vue'
 import ValidationErrors from '@/components/ValidationErrors.vue'
 

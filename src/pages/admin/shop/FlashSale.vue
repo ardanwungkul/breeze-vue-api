@@ -1,31 +1,34 @@
 <script setup>
 import { ref, onMounted, computed } from 'vue'
-import { useUsers } from '@/stores/user'
+import { useFlashSaleStore } from '@/stores/shop-page/flash-sale'
 import AdminLayout from '@/layouts/AdminLayout.vue'
 import '@/assets/css/vuetify.css'
 import FlashSaleTable from '@/components/admin/shop/FlashSaleTable.vue'
+import { format } from 'date-fns'
 
-const storeUser = useUsers()
-const users = ref([])
-const tab = ref(null)
+const storeFlashSale = useFlashSaleStore()
+const flashSales = ref([])
 
 onMounted(async () => {
-    await fetchUsers()
+    await fetchFlashSale()
 })
-
-async function fetchUsers() {
-    await storeUser.userAll()
-    users.value = storeUser.allUser.map(user => ({
-        id: user.id,
-        name: user.name,
-        email: user.email,
+async function fetchFlashSale() {
+    await storeFlashSale.flashSaleAll()
+    flashSales.value = storeFlashSale.allFlashSales.map(fs => ({
+        id: fs.id,
+        flash_sale_title: fs.flash_sale_title,
+        flash_sale_from: format(fs.flash_sale_from, 'dd MMMM yyyy HH:mm'),
+        flash_sale_until: format(fs.flash_sale_until, 'dd MMMM yyyy HH:mm'),
+        product: fs.product,
     }))
 }
 </script>
 <template>
     <AdminLayout title="Flash Sale">
         <div class="w-full">
-            <FlashSaleTable :users="users" :fetchUsers="fetchUsers" />
+            <FlashSaleTable
+                :flashSales="flashSales"
+                :fetchFlashSale="fetchFlashSale" />
         </div>
     </AdminLayout>
 </template>

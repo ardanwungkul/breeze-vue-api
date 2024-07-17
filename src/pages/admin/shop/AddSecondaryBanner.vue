@@ -10,18 +10,18 @@ const errors = computed(() => setErrors.value)
 const shopStore = useShopPageStore()
 const file = ref(null)
 
-const addMainBanner = async () => {
+const addSecondaryBanner = async () => {
     processing.value = true
     const formData = new FormData()
     formData.append('file', file.value)
-    await shopStore.addMainBanner(formData, setErrors, processing)
+    await shopStore.addSecondaryBanner(formData, setErrors, processing)
     file.value = null
 }
 const handleFileChange = event => {
     const selectedFile = event.target.files[0]
     if (selectedFile) {
         file.value = selectedFile
-        addMainBanner()
+        addSecondaryBanner()
         event.target.value = ''
         file.value = null
     }
@@ -30,11 +30,11 @@ const handleFileChange = event => {
 <template>
     <div>
         <form>
-            <label for="main_banner">
+            <label for="secondary_banner">
                 <div
                     class="bg-secondary-3 text-white hover:bg-opacity-90 px-4 py-2 rounded-lg gap-1 flex items-center text-sm cursor-pointer shadow-lg w-min whitespace-nowrap">
                     <i class="fa-solid fa-plus"></i>
-                    <p>Add Main Banner</p>
+                    <p>Add Secondary Banner</p>
                     <svg
                         v-if="processing"
                         role="status"
@@ -55,8 +55,8 @@ const handleFileChange = event => {
             <input
                 type="file"
                 @change="handleFileChange"
-                accept="image/*,video/*"
-                id="main_banner"
+                accept="image/*"
+                id="secondary_banner"
                 class="hidden" />
         </form>
     </div>

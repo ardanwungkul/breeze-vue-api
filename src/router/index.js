@@ -107,6 +107,18 @@ const routes = [
             guard: 'auth',
         },
     },
+    {
+        path: '/admin/shop/flash-sale/:id',
+        name: 'admin.shop.show.flash-sale',
+        component: () => import('@/pages/admin/shop/ShowFlashSale.vue'),
+        query: {
+            verified: 'verified',
+        },
+        meta: {
+            guard: 'auth',
+        },
+        props: true,
+    },
 
     // About Us
     {
