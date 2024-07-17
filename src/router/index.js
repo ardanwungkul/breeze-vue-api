@@ -120,6 +120,30 @@ const routes = [
             guard: 'auth',
         },
     },
+    // About Us Create
+    {
+        path: '/admin/about-us/create',
+        name: 'admin.about-us.create',
+        component: () => import('@/pages/admin/about-us/Create.vue'),
+        query: {
+            verified: 'verified',
+        },
+        meta: {
+            guard: 'auth',
+        },
+    },
+    // About Us Edit
+    {
+        path: '/admin/about-us/edit/:id',
+        name: 'admin.about-us.edit',
+        component: () => import('@/pages/admin/about-us/Edit.vue'),
+        query: {
+            verified: 'verified',
+        },
+        meta: {
+            guard: 'auth',
+        },
+    },
     // Voucher
     {
         path: '/admin/voucher',

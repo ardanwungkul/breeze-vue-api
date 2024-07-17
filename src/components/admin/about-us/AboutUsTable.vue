@@ -1,32 +1,32 @@
 <script setup>
 import { ref, computed, watchEffect } from 'vue'
 import ConfirmDelete from '@/components/dialog/ConfirmDelete.vue'
-// import EditProduct from '@/components/dialog/edit/EditProduct.vue'
-import { useUsers } from '@/stores/user'
+import EditAboutUs from '@/components/dialog/edit/EditAboutUs.vue'
+import { useAboutUsStore } from '@/stores/aboutus'
 import ValidationErrors from '@/components/ValidationErrors.vue'
 import AddAboutUs from '@/components/dialog/add/AddAboutUs.vue'
 
-const storeUser = useUsers()
+const storeAboutUs = useAboutUsStore()
 const props = defineProps({
-    users: Array,
-    fetchUsers: Function,
+    aboutus: Array,
+    fetchAboutUs: Function,
 })
-const searchUser = ref('')
-const pageUser = ref(1)
-const itemsPerPageUser = ref(10)
+const searchAboutUs = ref('')
+const pageAboutUs = ref(1)
+const itemsPerPageAboutUs = ref(10)
 
-const headersUser = [
-    { key: 'name', title: 'Title' },
-    { key: 'email', title: 'Content' },
+const headersAboutUs = [
+    { key: 'title', title: 'Title' },
+    { key: 'description', title: 'Description' },
     { key: 'id', title: 'Action', align: 'center' },
 ]
 const pageCount = computed(() => {
-    return Math.ceil(filteredUsers.value.length / itemsPerPageUser.value)
+    return Math.ceil(filteredAboutUs.value.length / itemsPerPageAboutUs.value)
 })
 
-const filteredUsers = computed(() => {
-    return props.users.filter(user => {
-        return user.name.toLowerCase().includes(searchUser.value)
+const filteredAboutUs = computed(() => {
+    return props.aboutus.filter(aboutus => {
+        return aboutus.title.toLowerCase().includes(searchAboutUs.value)
     })
 })
 
@@ -34,23 +34,12 @@ const processing = ref(false)
 
 const setErrors = ref([])
 const errors = computed(() => setErrors.value)
-const addUser = async newUser => {
-    await storeUser.addUser(newUser, setErrors, processing)
+
+const deleteAboutUs = async id => {
+    await storeAboutUs.deleteAboutUs(id, processing)
     watchEffect(() => {
-        props.fetchUsers()
-    }, props.users)
-}
-const editUser = async (updateUser, id) => {
-    await storeUser.editUser(updateUser, setErrors, processing, id)
-    watchEffect(() => {
-        props.fetchUsers()
-    }, props.users)
-}
-const deleteUser = async id => {
-    await storeUser.deleteUser(id, processing)
-    watchEffect(() => {
-        props.fetchUsers()
-    }, props.users)
+        props.fetchAboutUs()
+    }, props.aboutus)
 }
 </script>
 <template>
@@ -59,18 +48,18 @@ const deleteUser = async id => {
         <div
             class="bg-light-primary-1 dark:bg-dark-primary-2 p-5 rounded-lg space-y-3 shadow-lg">
             <div class="flex justify-between items-center">
-                <AddAboutUs :method="addUser"></AddAboutUs>
+                <AddAboutUs></AddAboutUs>
                 <input
                     type="text"
-                    v-model="searchUser"
+                    v-model="searchAboutUs"
                     class="rounded-lg text-sm min-w-52 dark:!border-gray-500 border !border-typography-2/20 shadow-lg bg-light-primary-1 dark:bg-dark-primary-1 text-typography-3 dark:text-white"
-                    placeholder="Search About Us" />
+                    placeholder="Search Content" />
             </div>
             <v-data-table
-                v-model:page="pageUser"
-                :search="searchUser"
-                :headers="headersUser"
-                :items="users"
+                v-model:page="pageAboutUs"
+                :search="searchAboutUs"
+                :headers="headersAboutUs"
+                :items="aboutus"
                 hide-default-footer
                 :header-props="{
                     class: 'dark:bg-dark-primary-1 bg-light-primary-2 dark:!text-white border-b dark:!border-white/30',
@@ -79,18 +68,17 @@ const deleteUser = async id => {
                 class="border dark:!border-typography-2/20 shadow-lg dark:!bg-dark-primary-1 !bg-light-primary-2 dark:!text-typography-1">
                 <template v-slot:item.id="{ item }">
                     <div class="flex gap-3 items-center justify-center text-xs">
-                        <!-- <EditProduct
-                            :user="item"
-                            :method="editUser"></EditProduct> -->
+                        <EditAboutUs
+                            :aboutus="item"></EditAboutUs>
                         <ConfirmDelete
-                            :type="'User'"
+                            :type="'About Us'"
                             :id="item.id"
-                            :method="deleteUser"></ConfirmDelete>
+                            :method="deleteAboutUs"></ConfirmDelete>
                     </div>
                 </template>
             </v-data-table>
             <v-pagination
-                v-model="pageUser"
+                v-model="pageAboutUs"
                 :length="pageCount"
                 class="bg-light-primary-2 border !border-typography-2/20 shadow-lg rounded-lg dark:bg-dark-primary-1 dark:text-white"
                 :total-visible="5">
