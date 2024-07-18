@@ -1,72 +1,59 @@
 <script setup>
 import AppLayout from '@/layouts/AppLayout.vue'
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import { RouterLink } from 'vue-router'
 
-import gedung from '@/assets/images/gedung.jpg'
-import award from '@/assets/images/award.png'
-import production from '@/assets/images/laboratorium.png'
-import achievement from '@/assets/images/achievement.png'
-import company from '@/assets/images/company.png'
+import { useAboutUsStore } from '@/stores/aboutus'
+
 import aboutbg from '@/assets/images/aboutbg.png'
 import lamp from '@/assets/images/lamp.png'
 
-import { Swiper, SwiperSlide } from 'swiper/vue'
-import { Navigation, Autoplay } from 'swiper/modules'
-import 'swiper/css'
-import 'swiper/css/pagination'
+const tab = ref()
+const storeAboutUs = useAboutUsStore()
+const aboutUs = ref([])
+const props = defineProps({
+    type: {
+        type: String,
+    },
+})
 
-const tab = ref(null)
-const about = ref([
-    {
-        index: 1,
-        title: 'Company Profile',
-        Desc: 'Compo',
-        img: company,
-        sideimg: gedung,
-    },
-    {
-        index: 2,
-        title: 'Award',
-        Desc: 'Award',
-        img: award,
-        sideimg: gedung,
-    },
-    {
-        index: 3,
-        title: 'Production',
-        Desc: 'Production',
-        img: production,
-        sideimg: gedung,
-    },
-    {
-        index: 4,
-        title: 'Achievement',
-        Desc: 'Achievement',
-        img: achievement,
-        sideimg: gedung,
-    },
-])
-const swiperModules = [Navigation, Autoplay]
-const swiperJs = swiper => {}
-const swiperConfig = {
-    navigation: {
-        nextEl: '.swiper-button-next',
-        prevEl: '.swiper-button-prev',
-    },
+onMounted(async () => {
+    await fetchAboutUs()
+    tab.value = aboutUs.value.length > 0 ? aboutUs.value[0].id : '';
+})
+
+async function fetchAboutUs() {
+    await storeAboutUs.aboutUsAll()
+    const allAboutUs = storeAboutUs.allAboutUs
+
+    aboutUs.value = allAboutUs.map(aboutus => ({
+        about_us_title: aboutus.about_us_title,
+        id: aboutus.id,
+        about_us_description: aboutus.about_us_description,
+        about_us_main_image_alt: aboutus.about_us_main_image_alt,
+        about_us_second_image_alt: aboutus.about_us_second_image_alt,
+        about_us_main_image:
+            import.meta.env.VITE_PUBLIC_BACKEND_URL +
+            '/storage/images/aboutus/' +
+            aboutus.about_us_main_image,
+        about_us_second_image:
+            import.meta.env.VITE_PUBLIC_BACKEND_URL +
+            '/storage/images/aboutus/' +
+            aboutus.about_us_second_image,
+    }))
+    console.log(aboutUs.value);
 }
 </script>
 <template>
     <AppLayout>
-        <div class="hidden flex-col w-full h-[calc(100vh-57px)] sm:flex">
+        <div class="flex-col w-full h-[calc(100vh-57px)] flex">
             <v-card style="border-radius: 0; box-shadow: none" class="h-full">
-                <div class="w-full h-[65%] flex">
+                <div class="w-full h-[60%] sm:h-[65%] flex">
                     <div
-                        class="flex flex-row w-[60%] xl:pl-48 sm:pl-8 min-h-full items-center relative">
+                        class="flex flex-row w-full sm:w-[60%] xl:pl-48 sm:pl-8 min-h-full items-center relative">
                         <div
                             class="w-full h-full absolute top-0 -left-10 opacity-20">
                             <v-img
-                                :key="n"
                                 :src="aboutbg"
                                 aspect-ratio="1"
                                 class="h-full"
@@ -81,43 +68,37 @@ const swiperConfig = {
                                 </template>
                             </v-img>
                         </div>
-                        <div class="flex flex-col sm:w-3/4 lg:w-1/2 relative">
+                        <div class="flex flex-col w-10/12 sm:w-3/4 lg:w-1/2 relative z-10">
                             <v-card-text>
                                 <v-tabs-window v-model="tab">
                                     <v-tabs-window-item
-                                        v-for="i in about"
-                                        :key="i.index"
-                                        :value="i.index">
+                                        v-for="item in aboutUs"
+                                        :key="item.id"
+                                        :value="item.id">
                                         <div
                                             class="text-4xl text-[#284723]/80 font-semibold mb-5">
-                                            {{ i.title }}
+                                            {{ item.about_us_title }}
                                         </div>
                                         <div class="">
-                                            Lorem ipsum dolor sit amet
-                                            consectetur adipisicing elit.
-                                            Deserunt recusandae quaerat error
-                                            dignissimos fuga ipsam illum amet
-                                            unde modi? Odio.lorem lorem lorem
-                                            Lorem ipsum dolor sit amet
-                                            consectetur adipisicin
+                                            {{  item.about_us_description }}
                                         </div>
                                     </v-tabs-window-item>
                                 </v-tabs-window>
                             </v-card-text>
                         </div>
                         <div
-                            class="sm:w-2/5 lg:w-1/3 min-h-full absolute sm:top-[20%] lg:top-[20%] left-[65%] overflow-hidden">
-                            <v-card-text>
+                            class=" w-40 sm:w-2/5 lg:w-1/3 sm:h-full absolute top-52 sm:top-[20%] lg:top-[20%] -right-5 sm:right-0 sm:left-[65%] overflow-hidden">
+                            <v-card-text class=" !p-0">
                                 <v-tabs-window v-model="tab">
                                     <v-tabs-window-item
-                                        v-for="i in about"
-                                        :key="i.index"
-                                        :value="i.index">
+                                        v-for="item in aboutUs"
+                                        :key="item.id"
+                                        :value="item.id">
                                         <v-img
-                                            :key="n"
-                                            :src="i.img"
+                                            
+                                            :src="item.about_us_main_image"
                                             aspect-ratio="1"
-                                            class="sm:min-h-[360px] lg:min-h-[480px] relative justify-center">
+                                            class=" min-h-[180px] sm:min-h-[360px] lg:min-h-[480px] relative justify-center">
                                             <template v-slot:placeholder>
                                                 <div
                                                     class="w-full h-full flex justify-center items-center">
@@ -133,17 +114,17 @@ const swiperConfig = {
                         </div>
                     </div>
                     <div
-                        class="w-[40%] flex flex-row min-h-full bg-[#f8f8f6] xl:pr-48 sm:pr-8 md:pr-8">
+                        class="w-[40%] hidden sm:flex flex-row min-h-full bg-[#f8f8f6] xl:pr-48 sm:pr-8 md:pr-8">
                         <div class="w-5/6 min-h-full">
                             <v-card-text class="!p-0">
                                 <v-tabs-window v-model="tab">
                                     <v-tabs-window-item
-                                        v-for="i in about"
-                                        :key="i.index"
-                                        :value="i.index">
+                                        v-for="item in aboutUs"
+                                        :key="item.id"
+                                        :value="item.id">
                                         <v-img
-                                            :key="n"
-                                            :src="i.sideimg"
+                                            
+                                            :src="item.about_us_second_image"
                                             aspect-ratio="1"
                                             class="w-full min-h-[65vh]"
                                             cover>
@@ -178,12 +159,12 @@ const swiperConfig = {
                         </div>
                     </div>
                 </div>
-                <div class="w-full h-[35%] flex">
+                <div class="w-full h-[40%] sm:h-[35%] flex flex-col sm:flex-row">
                     <div
-                        class="w-[60%] h-full xl:pl-48 sm:pl-8 bg-[#ceddce] flex flex-col">
-                        <div class="flex flex-row sm:gap-5 lg:gap-20 p-5">
+                        class=" w-full sm:w-[60%] sm:h-full xl:pl-48 sm:pl-8 bg-[#ceddce] flex flex-col">
+                        <div class="flex flex-col sm:flex-row gap-5 sm:gap-5 lg:gap-20 p-5">
                             <button
-                                class="py-3 px-10 border border-white text-white font-semibold bg-gradient-to-r from-lime-600 to-lime-950 duration-200 hover:opacity-70 rounded-xl">
+                                class="py-3 px-10 border border-white text-white font-semibold bg-gradient-to-r from-lime-600 to-lime-950 duration-200 hover:opacity-70 rounded-xl relative z-10">
                                 Check Shop
                             </button>
                             <button
@@ -193,7 +174,7 @@ const swiperConfig = {
                         </div>
                         <div
                             style="box-shadow: 0px -1px 10px 20px #ceddce"
-                            class="w-full h-full flex flex-row static z-10 sm:gap-1 lg:gap-5 bg-[#ceddce]">
+                            class=" w-full h-full hidden sm:flex flex-row static z-10 sm:gap-1 lg:gap-5 bg-[#ceddce]">
                             <div
                                 class="flex flex-row sm:gap-1 lg:gap-3"
                                 v-for="i in 3"
@@ -227,25 +208,24 @@ const swiperConfig = {
                         </div>
                     </div>
                     <div
-                        class="w-[40%] h-full xl:pr-48 sm:pr-8 md:pr-8 bg-[#f8f8f6] static z-10">
+                        class=" w-full sm:w-[40%] h-full xl:pr-48 sm:pr-8 md:pr-8 bg-[#ceddce] sm:bg-[#f8f8f6] static z-10">
                         <v-tabs
-                            style="background-color: #f8f8f6 !important"
+                            style="background-color: transparent !important"
                             v-model="tab"
                             center-active
                             bg-color="primary"
                             class="min-h-full w-full flex">
                             <v-tab
-                                v-for="i in about"
-                                :key="i.about"
-                                :value="i.index"
-                                class="hoverea min-h-full w-1/3 max-w-1/3 duration-300 hover:opacity-100 opacity-70">
+                                v-for="item in aboutUs"
+                                :key="item.id"
+                                :value="item.id"
+                                class=" min-h-full !p-0 w-1/4 sm:w-1/3 max-w-1/3 duration-300 hover:opacity-100 opacity-70 overflow-hidden">
                                 <div
                                     class="w-full min-h-full flex flex-col justify-center items-center gap-5 relative">
                                     <v-img
-                                        :src="i.img"
+                                        :src="item.about_us_main_image"
                                         aspect-ratio="1"
-                                        class="min-w-[80px] max-w-[140px] min-h-[130px] top-0 left-0"
-                                        cover>
+                                        class="min-w-[80px] max-w-[140px] min-h-[130px] top-0 left-0">
                                         <template v-slot:placeholder>
                                             <div
                                                 class="w-full h-full flex justify-center items-center">
@@ -258,160 +238,6 @@ const swiperConfig = {
                                 </div>
                             </v-tab>
                         </v-tabs>
-                    </div>
-                </div>
-            </v-card>
-        </div>
-        <div class="flex flex-col sm:hidden w-full min-h-full">
-            <v-card class="!rounded-none !shadow-none">
-                <div class="flex flex-col w-full h-screen relative">
-                    <div
-                        class="absolute h-[25%] w-[40%] right-2 top-[27%] z-10">
-                        <v-card-text class="h-full">
-                            <v-tabs-window v-model="tab" class="h-full">
-                                <v-tabs-window-item
-                                    class="h-full"
-                                    v-for="i in about"
-                                    :key="i.index"
-                                    :value="i.index">
-                                    <v-img
-                                        :key="n"
-                                        :src="i.img"
-                                        aspect-ratio="1"
-                                        class="h-full"
-                                        cover>
-                                        <template v-slot:placeholder>
-                                            <div
-                                                class="w-full h-full flex justify-center items-center">
-                                                <v-progress-circular
-                                                    color=""
-                                                    indeterminate></v-progress-circular>
-                                            </div>
-                                        </template>
-                                    </v-img>
-                                </v-tabs-window-item>
-                            </v-tabs-window>
-                        </v-card-text>
-                    </div>
-                    <!-- hidden -->
-                    <div
-                        class="hidden absolute h-[35%] w-[50%] left-0 top-[35%] z-10 overflow-hidden rounded-r-sm">
-                        <v-card-text class="p-0 h-full">
-                            <v-tabs-window v-model="tab" class="h-full">
-                                <v-tabs-window-item
-                                    class="h-full"
-                                    v-for="i in about"
-                                    :key="i.index"
-                                    :value="i.index">
-                                    <v-img
-                                        :key="n"
-                                        :src="i.sideimg"
-                                        aspect-ratio="1"
-                                        class="min-h-full"
-                                        cover>
-                                        <template v-slot:placeholder>
-                                            <div
-                                                class="w-full h-full flex justify-center items-center">
-                                                <v-progress-circular
-                                                    color=""
-                                                    indeterminate></v-progress-circular>
-                                            </div>
-                                        </template>
-                                    </v-img>
-                                </v-tabs-window-item>
-                            </v-tabs-window>
-                        </v-card-text>
-                    </div>
-                    <div
-                        class="flex flex-col gap-2 w-full pt-24 h-[55%] p-4 relative">
-                        <div
-                            class="absolute top-0 left-0 w-full h-full opacity-40">
-                            <v-img
-                                :key="n"
-                                :src="aboutbg"
-                                aspect-ratio="1"
-                                class="min-h-full"
-                                cover>
-                                <template v-slot:placeholder>
-                                    <div
-                                        class="w-full h-full flex justify-center items-center">
-                                        <v-progress-circular
-                                            color=""
-                                            indeterminate></v-progress-circular>
-                                    </div>
-                                </template>
-                            </v-img>
-                        </div>
-                        <div class="w-[80%] static z-20">
-                            <v-card-text>
-                                <v-tabs-window v-model="tab">
-                                    <v-tabs-window-item
-                                        v-for="i in about"
-                                        :key="i.index"
-                                        :value="i.index">
-                                        <div
-                                            class="text-3xl text-[#284723]/80 font-bold">
-                                            {{ i.title }}
-                                        </div>
-                                        <div class="">
-                                            Lorem ipsum dolor sit amet
-                                            consectetur, adipisicing elit. Odit
-                                            esse fugiat sapiente necessitatibus
-                                            mollitia ea. Quasi impedit libero
-                                            est. Eius quis minima esse
-                                            repellendus ad cumque perferendis
-                                            adipisci numquam aut.
-                                        </div>
-                                    </v-tabs-window-item>
-                                </v-tabs-window>
-                            </v-card-text>
-                        </div>
-                    </div>
-                    <div
-                        class="flex flex-col w-full h-[45%] bg-[#ceddce] relative">
-                        <div
-                            class="flex flex-col w-full gap-5 sm:gap-5 lg:gap-20 pt-10 py-4 px-5 right-0">
-                            <button
-                                class="py-3 px-10 border border-white text-white font-semibold bg-gradient-to-r from-lime-600 to-lime-950 duration-200 hover:opacity-70 rounded-xl text-sm">
-                                Check Shop
-                            </button>
-                            <button
-                                class="text-sm font-semibold duration-200 hover:text-gray-500">
-                                Learn more ->
-                            </button>
-                        </div>
-                        <div class="w-full h-1/2">
-                            <v-tabs
-                                style="background-color: #ceddce !important"
-                                v-model="tab"
-                                center-active
-                                bg-color="primary"
-                                class="min-h-full w-full flex !bg-[#ceddce]">
-                                <v-tab
-                                    v-for="i in about"
-                                    :key="i.about"
-                                    :value="i.index"
-                                    class="!bg-[#ceddce] !rounded-xl min-h-full w-1/3 max-w-1/3 duration-300 hover:opacity-100 opacity-50 overflow-hidden">
-                                    <div
-                                        class="!w-full !min-h-full flex flex-col justify-center items-center gap-5 hover:bg-[#ceddce] absolute p-12">
-                                        <v-img
-                                            :src="i.img"
-                                            aspect-ratio="1"
-                                            class="min-w-[80px] max-w-[140px] min-h-[130px] top-0 left-0"
-                                            cover>
-                                            <template v-slot:placeholder>
-                                                <div
-                                                    class="w-full h-full flex justify-center items-center">
-                                                    <v-progress-circular
-                                                        color=""
-                                                        indeterminate></v-progress-circular>
-                                                </div>
-                                            </template>
-                                        </v-img>
-                                    </div>
-                                </v-tab>
-                            </v-tabs>
-                        </div>
                     </div>
                 </div>
             </v-card>

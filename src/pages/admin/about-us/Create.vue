@@ -89,7 +89,7 @@ const changePlaceholder2 = event => {
                     <form @submit.prevent="handleAdd">
                         <div class="grid grid-cols-2 gap-3 mb-3">
                             <div class="flex flex-col justify-center items-center gap-3 text-sm">
-                                <p>Main Image</p>
+                                <p>Main Image ( png )</p>
                                 <div class="flex justify-center w-40 flex-none">
                                     <div class="relative">
                                         <img
