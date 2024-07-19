@@ -18,8 +18,8 @@ const form_title = ref('')
 const id = ref('')
 const about_us_title = ref('')
 const about_us_description = ref('')
-const about_us_main_image = ref('')
-const about_us_second_image = ref('')
+const about_us_main_image = ref(null)
+const about_us_second_image = ref(null)
 const about_us_main_image_alt = ref('')
 const about_us_second_image_alt = ref('')
 
@@ -46,18 +46,16 @@ async function fetchAboutUs() {
         id.value = storeAboutUs.singleAboutUs.id
         about_us_title.value = storeAboutUs.singleAboutUs.about_us_title
         about_us_description.value = storeAboutUs.singleAboutUs.about_us_description
-        about_us_main_image.value = storeAboutUs.singleAboutUs.about_us_main_image
-        about_us_second_image.value = storeAboutUs.singleAboutUs.about_us_second_image
         about_us_main_image_alt.value = storeAboutUs.singleAboutUs.about_us_main_image_alt
         about_us_second_image_alt.value = storeAboutUs.singleAboutUs.about_us_second_image_alt
         imageSrc.value =
             import.meta.env.VITE_PUBLIC_BACKEND_URL +
             '/storage/images/aboutus/' +
-            about_us_main_image.value
+            storeAboutUs.singleAboutUs.about_us_main_image
         imageSrc2.value =
             import.meta.env.VITE_PUBLIC_BACKEND_URL +
             '/storage/images/aboutus/' +
-            about_us_second_image.value
+            storeAboutUs.singleAboutUs.about_us_second_image
         form_title.value = about_us_title.value
     }
 }
@@ -115,7 +113,7 @@ const handleEdit = async () => {
                     <div>
                         <div class="grid grid-cols-2 gap-3 mb-3">
                             <div class="flex flex-col justify-center items-center gap-3 text-sm">
-                                <p>Main Image</p>
+                                <p>Main Image ( png )</p>
                                 <div class="flex justify-center w-40 flex-none">
                                     <div class="relative">
                                         <img
