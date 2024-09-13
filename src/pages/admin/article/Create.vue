@@ -29,6 +29,7 @@ const form = ref({
     article_title: null,
     article_slug: null,
     article_content: null,
+    article_blockquote: null,
     article_image: null,
     article_image_featured_1: null,
     article_image_featured_1_src: placeholderImage,
@@ -77,6 +78,12 @@ const addArticle = async status => {
         form.value.article_content !== ''
     ) {
         formData.append('article_content', form.value.article_content)
+    }
+    if (
+        form.value.article_blockquote !== null &&
+        form.value.article_blockquote !== ''
+    ) {
+        formData.append('article_blockquote', form.value.article_blockquote)
     }
 
     if (form.value.article_type !== null && form.value.article_type !== '') {
@@ -247,6 +254,20 @@ const changePlaceholderFeaturedImage2 = event => {
                                             v-model="form.article_title"
                                             id="article_title"
                                             placeholder="Enter Title" />
+                                    </div>
+                                    <div
+                                        class="flex flex-col gap-2 text-sm col-span-2">
+                                        <label
+                                            class="dark:text-light-primary-1"
+                                            for="article_blockquote"
+                                            >Blockquote</label
+                                        >
+                                        <input
+                                            class="text-sm rounded-lg bg-light-primary-1 w-full dark:bg-dark-primary-1 dark:text-light-primary-1 border !border-gray-500 dark:!border-typography-3"
+                                            type="text"
+                                            v-model="form.article_blockquote"
+                                            id="article_blockquote"
+                                            placeholder="Enter Blockquote" />
                                     </div>
                                     <div
                                         class="flex flex-col gap-2 text-sm col-span-2">

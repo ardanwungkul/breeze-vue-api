@@ -34,6 +34,7 @@ const form = ref({
     article_title: null,
     article_slug: null,
     article_content: null,
+    article_blockquote: null,
     article_image: null,
     article_image_featured_1: null,
     article_image_featured_1_src: placeholderImage,
@@ -67,6 +68,7 @@ onBeforeMount(async () => {
         form.value.id = data.value.article.id
         form.value.article_title = data.value.article.article_title
         form.value.article_content = data.value.article.article_content
+        form.value.article_blockquote = data.value.article.article_blockquote
         if (data.value.article.article_image) {
             form.value.article_image_src =
                 pathImage + data.value.article.article_image
@@ -170,6 +172,12 @@ const updateArticle = async status => {
         form.value.article_content !== ''
     ) {
         formData.append('article_content', form.value.article_content)
+    }
+    if (
+        form.value.article_blockquote !== null &&
+        form.value.article_blockquote !== ''
+    ) {
+        formData.append('article_blockquote', form.value.article_blockquote)
     }
 
     if (form.value.article_type !== null && form.value.article_type !== '') {
@@ -290,6 +298,20 @@ const updateArticle = async status => {
                                             class="text-sm rounded-lg bg-light-primary-1 w-full dark:bg-dark-primary-1 dark:text-light-primary-1 border !border-gray-500 dark:!border-typography-3"
                                             type="text"
                                             v-model="form.article_title"
+                                            id="article_title"
+                                            placeholder="Enter Title" />
+                                    </div>
+                                    <div
+                                        class="flex flex-col gap-2 text-sm col-span-2">
+                                        <label
+                                            class="dark:text-light-primary-1"
+                                            for="article_title"
+                                            >Blockquote</label
+                                        >
+                                        <input
+                                            class="text-sm rounded-lg bg-light-primary-1 w-full dark:bg-dark-primary-1 dark:text-light-primary-1 border !border-gray-500 dark:!border-typography-3"
+                                            type="text"
+                                            v-model="form.article_blockquote"
                                             id="article_title"
                                             placeholder="Enter Title" />
                                     </div>
