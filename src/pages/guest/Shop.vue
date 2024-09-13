@@ -3,18 +3,51 @@ import AppLayout from '@/layouts/AppLayout.vue'
 import skincare6 from '@/assets/images/skincare6.png'
 
 import { RouterLink } from 'vue-router'
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, onBeforeMount } from 'vue'
+import { useShopStore } from '@/stores/shop-page/shop'
 
 import MainBanner from '@/pages/guest/shop/MainBanner.vue'
 import SecondaryBanner from '@/pages/guest/shop/SecondaryBanner.vue'
 import SideBanner from '@/pages/guest/shop/SideBanner.vue'
-
-import { Swiper, SwiperSlide } from 'swiper/vue'
-import { Pagination, Navigation, Autoplay } from 'swiper/modules'
-import 'swiper/css'
-import 'swiper/css/pagination'
-
+import FlashSale from '@/pages/guest/shop/FlashSale.vue'
 import FilterCategories from '@/pages/guest/shop/FilterCategories.vue'
+import CompareProduct from '@/pages/guest/shop/CompareProduct.vue'
+import Loading from '@/components/Loading.vue'
+import { computed } from 'vue'
+
+const isLoading = ref(true)
+const shopStore = useShopStore()
+const backendUrl = import.meta.env.VITE_PUBLIC_BACKEND_URL
+const data = ref([])
+const filter = ref({
+    search: '',
+    price: 0,
+})
+const products = computed(() => {
+    const productList = data.value.product || []
+
+    return productList.filter(item => {
+        const filterSearch =
+            filter.value.search === '' ||
+            item.product_name
+                .toLowerCase()
+                .includes(filter.value.search.toLowerCase())
+
+        const filterPrice =
+            filter.value.price === 0 || item.product_price <= filter.value.price
+
+        return filterSearch && filterPrice
+    })
+})
+
+onMounted(async () => {
+    await shopStore.getData()
+    data.value = shopStore.data
+    isLoading.value = shopStore.loading
+})
+function formatPrice(price) {
+    return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')
+}
 
 const reseller = ref([
     {
@@ -34,103 +67,21 @@ const reseller = ref([
         shop: 'toko d',
     },
 ])
-
-const swiperModules = [Navigation, Autoplay]
-const swiperJs = swiper => {}
-const swiperConfig = {
-    navigation: {
-        nextEl: '.swiper-button-next',
-        prevEl: '.swiper-button-prev',
-    },
-}
 </script>
 <template>
     <AppLayout>
-        <MainBanner />
+        <Loading :isLoading="isLoading" />
+        <MainBanner :main_banner="data.main_banner" v-if="!isLoading" />
         <!-- Banner -->
         <div class="w-full py-8 px-4 md:px-8 lg:px-0 md:py-16">
             <div
                 class="flex flex-col mx-auto w-full max-w-[100vw] md:max-w-[1320px] relative">
-                <SecondaryBanner />
-                <div class="justify-center max-w-[60%] md:max-w-[25%] px-4">
-                    <div
-                        class="flex justify-center mb-2 text-2xl font-semibold text-red-600">
-                        FLASH SALE
-                    </div>
-                    <div
-                        class="flex justify-center mb-2 text-xl font-light text-gray-500 flex-row gap-10">
-                        <div>12</div>
-                        <div>12</div>
-                        <div>12</div>
-                    </div>
-                </div>
+                <SecondaryBanner
+                    :secondary_banner="data.secondary_banner"
+                    v-if="!isLoading" />
             </div>
         </div>
-        <!-- New Product -->
-        <div class="w-full pb-16">
-            <div
-                class="flex flex-col justify-center mx-auto w-full max-w-[1140px] px-4 md:px-16 relative">
-                <swiper
-                    class="max-w-full mb-2"
-                    :breakpoints="{
-                        '640': {
-                            slidesPerView: 1,
-                            spaceBetween: 10,
-                        },
-                        '768': {
-                            slidesPerView: 2,
-                            spaceBetween: 10,
-                        },
-                        '1024': {
-                            slidesPerView: 3,
-                            spaceBetween: 10,
-                        },
-                    }"
-                    :loop="true"
-                    :modules="swiperModules"
-                    @swiper="swiperJs">
-                    <swiper-slide v-for="i in 5" :key="i">
-                        <div
-                            style="background-color: rgb(237, 241, 255)"
-                            class="w-full flex flex-row py-4">
-                            <div
-                                class="w-1/3 text-center flex flex-col justify-center items-center ml-9">
-                                <div
-                                    class="flex justify-center items-center mb-2">
-                                    New Product Upto 50% off
-                                </div>
-                                <div
-                                    class="flex overflow-hidden text-sm rounded-full w-full bg-gray-400 relative">
-                                    <div
-                                        style="width: 30%"
-                                        class="bg-semupink absolute h-10 top-0 left-0"></div>
-                                    <div
-                                        class="text-white w-full text-center py-1 relative">
-                                        300 Terjual
-                                    </div>
-                                </div>
-                            </div>
-                            <div
-                                class="w-1/2 max-h-32 py-2 flex justify-center">
-                                <v-img
-                                    :src="skincare6"
-                                    aspect-ratio="1"
-                                    class="min-w-full min-h-full">
-                                    <template v-slot:placeholder>
-                                        <div
-                                            class="w-full h-full flex justify-center items-center">
-                                            <v-progress-circular
-                                                color=""
-                                                indeterminate></v-progress-circular>
-                                        </div>
-                                    </template>
-                                </v-img>
-                            </div>
-                        </div>
-                    </swiper-slide>
-                </swiper>
-            </div>
-        </div>
+        <FlashSale :flash_sale="data.flash_sale" v-if="data.flash_sale" />
         <!-- Search Item -->
         <div class="w-full px-0 md:px-8 lg:px-0 pb-16">
             <div
@@ -141,14 +92,16 @@ const swiperConfig = {
                         <div class="border p-4">
                             <div class="font-medium mb-2">Filter by Price</div>
                             <input
-                                v-model="price"
+                                v-model="filter.price"
                                 id="medium-range"
                                 type="range"
                                 min="0"
                                 max="300000"
                                 value="0"
                                 class="w-full h-1 bg-gray-400 border-none accent-slate-700 rounded-lg cursor-pointer" />
-                            <div class="mt-2 mb-6">Rp. {{ price }}</div>
+                            <div class="mt-2 mb-6">
+                                Rp. {{ formatPrice(filter.price) }}
+                            </div>
                             <div class="font-medium mb-2">Filter By Rating</div>
                             <select
                                 v-model.number="rating"
@@ -190,30 +143,35 @@ const swiperConfig = {
                         </div>
                         <FilterCategories />
                         <div class="w-full mt-5 md:h-[500px] lg:h-[700px]">
-                            <SideBanner />
+                            <SideBanner
+                                :side_banner="data.side_banner"
+                                v-if="data.side_banner" />
                         </div>
                     </div>
                     <!-- Product -->
                     <div class="w-full md:w-3/4 flex flex-col">
                         <div
                             class="sticky top-14 bg-[#f8f8f6] flex p-4 md:px-5 md:py-2 flex-col md:flex-row md:gap-5 justify-between md:items-center mb-5 z-30">
-                            <div class="mb-2 md:mb-0 flex flex-row max-h-10">
-                                <input
-                                    type="text"
-                                    class="text-gray-600 border bg-transparent border-gray-200 focus:ring-transparent focus:border-gray-200"
-                                    placeholder="Search by name" />
-                                <button
-                                    class="min-w-10 border flex justify-center items-center border-gray-200">
-                                    <svg
-                                        height="20"
-                                        viewBox="0 0 24 24"
-                                        width="20"
-                                        xmlns="http://www.w3.org/2000/svg">
-                                        <path
-                                            fill="#D19C97"
-                                            d="M10 18a7.952 7.952 0 0 0 4.897-1.688l4.396 4.396 1.414-1.414-4.396-4.396A7.952 7.952 0 0 0 18 10c0-4.411-3.589-8-8-8s-8 3.589-8 8 3.589 8 8 8zm0-14c3.309 0 6 2.691 6 6s-2.691 6-6 6-6-2.691-6-6 2.691-6 6-6z" />
-                                    </svg>
-                                </button>
+                            <div class="mb-2 md:mb-0 flex max-h-10">
+                                <div class="flex">
+                                    <input
+                                        v-model="filter.search"
+                                        type="text"
+                                        class="text-gray-600 border bg-transparent border-gray-200 focus:ring-transparent focus:border-gray-200"
+                                        placeholder="Search by name" />
+                                    <div
+                                        class="min-w-10 border flex justify-center items-center border-gray-200">
+                                        <svg
+                                            height="20"
+                                            viewBox="0 0 24 24"
+                                            width="20"
+                                            xmlns="http://www.w3.org/2000/svg">
+                                            <path
+                                                fill="#D19C97"
+                                                d="M10 18a7.952 7.952 0 0 0 4.897-1.688l4.396 4.396 1.414-1.414-4.396-4.396A7.952 7.952 0 0 0 18 10c0-4.411-3.589-8-8-8s-8 3.589-8 8 3.589 8 8 8zm0-14c3.309 0 6 2.691 6 6s-2.691 6-6 6-6-2.691-6-6 2.691-6 6-6z" />
+                                        </svg>
+                                    </div>
+                                </div>
                                 <div class="flex w-full justify-end md:hidden">
                                     <button
                                         @click="togglefilter('yes')"
@@ -245,193 +203,110 @@ const swiperConfig = {
                                 </li>
                             </ul>
                         </div>
-                        <div
-                            class="grid duration-300 px-4 md:px-5 grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-8 lg:mb-10">
+                        <div>
                             <div
-                                class="flex flex-col min-w-[32.2%] rounded-3xl overflow-hidden w-full shadow-lg shadow-black/20"
-                                v-for="i in 8"
-                                :key="i">
+                                v-if="products.length > 0 && products"
+                                class="grid duration-300 px-4 md:px-5 grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-8 lg:mb-10">
                                 <div
-                                    class="w-full flex justify-center p-5 items-center bg-brownshop h-40">
-                                    <v-img
-                                        :src="skincare6"
-                                        aspect-ratio="1"
-                                        class="min-w-full min-h-full">
-                                        <template v-slot:placeholder>
-                                            <div
-                                                class="w-full h-full flex justify-center items-center">
-                                                <v-progress-circular
-                                                    color=""
-                                                    indeterminate></v-progress-circular>
-                                            </div>
-                                        </template>
-                                    </v-img>
-                                </div>
-                                <div class="p-4">
-                                    <div class="text-normal font-medium mb-2">
-                                        Face Wash
+                                    class="flex flex-col min-w-[32.2%] rounded-3xl overflow-hidden w-full shadow-lg shadow-black/20"
+                                    v-for="(item, index) in products"
+                                    :key="index">
+                                    <div class="w-full">
+                                        <v-img
+                                            :src="
+                                                backendUrl +
+                                                '/storage/images/product/' +
+                                                item.product_image
+                                            "
+                                            aspect-ratio="1"
+                                            cover
+                                            class="!w-full">
+                                            <template v-slot:placeholder>
+                                                <div
+                                                    class="w-full h-full flex justify-center items-center">
+                                                    <v-progress-circular
+                                                        color=""
+                                                        indeterminate></v-progress-circular>
+                                                </div>
+                                            </template>
+                                        </v-img>
                                     </div>
-                                    <div class="flex flex-row justify-between">
-                                        <div class="mt-3">
-                                            <RouterLink
-                                                to="#"
-                                                class="text-base bg-semupink text-white p-2 px-3 duration-300 hover:border-transparent rounded-xl hover:text-gray-500">
-                                                Buy
-                                            </RouterLink>
+                                    <div class="p-4">
+                                        <div
+                                            class="text-sm font-medium mb-2 line-clamp-2">
+                                            {{ item.product_name }}
                                         </div>
                                         <div
-                                            class="text-slate-500 text-xs md:text-normal flex flex-col">
-                                            <div
-                                                class="mb-2 flex flex-row justify-between">
-                                                <div
-                                                    class="w-4 h-4"
-                                                    v-for="i in 5"
-                                                    :key="i">
-                                                    <svg
-                                                        baseProfile="tiny"
-                                                        height="24px"
-                                                        id="Layer_1"
-                                                        version="1.2"
-                                                        viewBox="0 0 24 24"
-                                                        width="24px"
-                                                        xml:space="preserve"
-                                                        xmlns="http://www.w3.org/2000/svg"
-                                                        xmlns:xlink="http://www.w3.org/1999/xlink">
-                                                        <g>
-                                                            <g>
-                                                                <path
-                                                                    fill="yellow"
-                                                                    d="M9.362,9.158c0,0-3.16,0.35-5.268,0.584c-0.19,0.023-0.358,0.15-0.421,0.343s0,0.394,0.14,0.521    c1.566,1.429,3.919,3.569,3.919,3.569c-0.002,0-0.646,3.113-1.074,5.19c-0.036,0.188,0.032,0.387,0.196,0.506    c0.163,0.119,0.373,0.121,0.538,0.028c1.844-1.048,4.606-2.624,4.606-2.624s2.763,1.576,4.604,2.625    c0.168,0.092,0.378,0.09,0.541-0.029c0.164-0.119,0.232-0.318,0.195-0.505c-0.428-2.078-1.071-5.191-1.071-5.191    s2.353-2.14,3.919-3.566c0.14-0.131,0.202-0.332,0.14-0.524s-0.23-0.319-0.42-0.341c-2.108-0.236-5.269-0.586-5.269-0.586    s-1.31-2.898-2.183-4.83c-0.082-0.173-0.254-0.294-0.456-0.294s-0.375,0.122-0.453,0.294C10.671,6.26,9.362,9.158,9.362,9.158z" />
-                                                            </g>
-                                                        </g>
-                                                    </svg>
-                                                </div>
+                                            class="flex flex-row justify-between">
+                                            <div class="mt-3">
+                                                <RouterLink
+                                                    :to="{
+                                                        name: 'product.detail',
+                                                        params: {
+                                                            slug: item.product_slug,
+                                                            id: item.id,
+                                                        },
+                                                    }"
+                                                    class="text-base bg-semupink text-white p-2 px-3 duration-300 hover:border-transparent rounded-xl hover:text-gray-500">
+                                                    Buy
+                                                </RouterLink>
                                             </div>
-                                            <div class="text-right lg:text-sm">
-                                                Rp. 200.000
+                                            <div
+                                                class="text-slate-500 text-xs md:text-normal flex flex-col">
+                                                <div
+                                                    class="mb-2 flex flex-row justify-between">
+                                                    <div
+                                                        class="w-4 h-4"
+                                                        v-for="i in 5"
+                                                        :key="i">
+                                                        <svg
+                                                            baseProfile="tiny"
+                                                            height="24px"
+                                                            id="Layer_1"
+                                                            version="1.2"
+                                                            viewBox="0 0 24 24"
+                                                            width="24px"
+                                                            xml:space="preserve"
+                                                            xmlns="http://www.w3.org/2000/svg"
+                                                            xmlns:xlink="http://www.w3.org/1999/xlink">
+                                                            <g>
+                                                                <g>
+                                                                    <path
+                                                                        fill="yellow"
+                                                                        d="M9.362,9.158c0,0-3.16,0.35-5.268,0.584c-0.19,0.023-0.358,0.15-0.421,0.343s0,0.394,0.14,0.521    c1.566,1.429,3.919,3.569,3.919,3.569c-0.002,0-0.646,3.113-1.074,5.19c-0.036,0.188,0.032,0.387,0.196,0.506    c0.163,0.119,0.373,0.121,0.538,0.028c1.844-1.048,4.606-2.624,4.606-2.624s2.763,1.576,4.604,2.625    c0.168,0.092,0.378,0.09,0.541-0.029c0.164-0.119,0.232-0.318,0.195-0.505c-0.428-2.078-1.071-5.191-1.071-5.191    s2.353-2.14,3.919-3.566c0.14-0.131,0.202-0.332,0.14-0.524s-0.23-0.319-0.42-0.341c-2.108-0.236-5.269-0.586-5.269-0.586    s-1.31-2.898-2.183-4.83c-0.082-0.173-0.254-0.294-0.456-0.294s-0.375,0.122-0.453,0.294C10.671,6.26,9.362,9.158,9.362,9.158z" />
+                                                                </g>
+                                                            </g>
+                                                        </svg>
+                                                    </div>
+                                                </div>
+                                                <div
+                                                    class="text-right lg:text-sm">
+                                                    Rp.
+                                                    {{
+                                                        formatPrice(
+                                                            item.product_price,
+                                                        )
+                                                    }}
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <div
-                            class="hidden lg:flex flex-col justify-center mx-auto w-full px-4 lg:px-5 md:max-w-[1320px] relative">
-                            <div class="w-full flex flex-row gap-5">
-                                <div class="w-full">
-                                    <table class="w-full">
-                                        <tr class="border-t">
-                                            <td
-                                                class="font-bold text-lg w-1/3 text-gray-500">
-                                                Select Product
-                                            </td>
-                                            <td class="w-1/3 p-1 md:p-4">
-                                                <select
-                                                    class="w-full bg-transparent border border-gray-300 py-1"
-                                                    name=""
-                                                    id="">
-                                                    <option value="">
-                                                        Select Anyone/option
-                                                    </option>
-                                                </select>
-                                            </td>
-                                            <td class="w-1/3 p-1 md:p-4">
-                                                <select
-                                                    class="w-full bg-transparent border border-gray-300 py-1"
-                                                    name=""
-                                                    id="">
-                                                    <option value="">
-                                                        Select Anyone/option
-                                                    </option>
-                                                </select>
-                                            </td>
-                                        </tr>
-                                        <tr class="border-t">
-                                            <td
-                                                class="font-bold text-lg w-full py-4 flex text-gray-500">
-                                                Product Image
-                                            </td>
-                                            <td class="w-1/3 p-1 md:p-4">
-                                                <div
-                                                    class="w-full md:w-4/6 mx-auto rounded-lg flex justify-center items-center h-40 md:h-52 bg-gray-600 overflow-hidden">
-                                                    <v-img
-                                                        src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/No-Image-Placeholder.svg/1665px-No-Image-Placeholder.svg.png"
-                                                        aspect-ratio="1"
-                                                        class="min-h-full"
-                                                        cover>
-                                                        <template
-                                                            v-slot:placeholder>
-                                                            <div
-                                                                class="w-full h-full flex justify-center items-center">
-                                                                <v-progress-circular
-                                                                    color=""
-                                                                    indeterminate></v-progress-circular>
-                                                            </div>
-                                                        </template>
-                                                    </v-img>
-                                                </div>
-                                            </td>
-                                            <td class="w-1/3 p-1 md:p-4">
-                                                <div
-                                                    class="w-full md:w-4/6 mx-auto rounded-lg flex justify-center items-center h-40 md:h-52 bg-gray-600 overflow-hidden">
-                                                    <v-img
-                                                        src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/No-Image-Placeholder.svg/1665px-No-Image-Placeholder.svg.png"
-                                                        aspect-ratio="1"
-                                                        class="min-h-full"
-                                                        cover>
-                                                        <template
-                                                            v-slot:placeholder>
-                                                            <div
-                                                                class="w-full h-full flex justify-center items-center">
-                                                                <v-progress-circular
-                                                                    color=""
-                                                                    indeterminate></v-progress-circular>
-                                                            </div>
-                                                        </template>
-                                                    </v-img>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                        <tr class="border-t">
-                                            <td
-                                                class="font-bold text-lg w-1/3 text-gray-500">
-                                                Product Price
-                                            </td>
-                                            <td class="w-1/3 text-gray-500 p-4">
-                                                N/A
-                                            </td>
-                                            <td class="w-1/3 text-gray-500 p-4">
-                                                N/A
-                                            </td>
-                                        </tr>
-                                        <tr class="border-t">
-                                            <td
-                                                class="font-bold text-lg w-1/3 text-gray-500">
-                                                Product Description
-                                            </td>
-                                            <td class="w-1/3 text-gray-500 p-4">
-                                                N/A
-                                            </td>
-                                            <td class="w-1/3 text-gray-500 p-4">
-                                                N/A
-                                            </td>
-                                        </tr>
-                                        <tr class="border-t">
-                                            <td
-                                                class="font-bold text-lg w-1/3 text-gray-500">
-                                                Product Brand
-                                            </td>
-                                            <td class="w-1/3 text-gray-500 p-4">
-                                                N/A
-                                            </td>
-                                            <td class="w-1/3 text-gray-500 p-4">
-                                                N/A
-                                            </td>
-                                        </tr>
-                                    </table>
+                            <div v-else class="p-5">
+                                <div
+                                    class="w-full bg-ezzora-100 rounded-lg p-5">
+                                    <p
+                                        class="text-center font-bold text-typography-2">
+                                        No Products Found
+                                    </p>
                                 </div>
                             </div>
                         </div>
+                        <!-- Compare -->
+                        <CompareProduct
+                            :products="data?.product"
+                            v-if="data.product" />
                     </div>
                     <div
                         :class="{
@@ -498,157 +373,13 @@ const swiperConfig = {
                                 <div class="font-medium mb-4 px-4">
                                     Categories
                                 </div>
-                                <!-- <div
-                                    v-for="c in categories"
-                                    :key="c"
-                                    class="w-full">
-                                    <div
-                                        @click="toggleClass(c.index)"
-                                        class="w-full flex flex-row px-4 py-2 justify-between border-b hover:text-darkbrownshop">
-                                        <div class="">{{ c.category }}</div>
-                                        <div class="w-4 h-4">
-                                            <svg
-                                                class="feather feather-chevron-down"
-                                                fill="none"
-                                                height="24"
-                                                stroke="currentColor"
-                                                stroke-linecap="round"
-                                                stroke-linejoin="round"
-                                                stroke-width="2"
-                                                viewBox="0 0 24 24"
-                                                width="24"
-                                                xmlns="http://www.w3.org/2000/svg">
-                                                <polyline
-                                                    points="6 9 12 15 18 9" />
-                                            </svg>
-                                        </div>
-                                    </div>
-                                    <div
-                                        :class="{
-                                            block: activeDiv === c.index,
-                                            hidden: activeDiv !== c.index,
-                                        }"
-                                        class="bg-brownshop py-4">
-                                        <button
-                                            v-for="sb in c.subcategories"
-                                            :key="sb"
-                                            class="w-full py-1 px-4 text-left hover:bg-white">
-                                            {{ sb.subcategory }}
-                                        </button>
-                                    </div>
-                                </div> -->
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <!-- Select Product -->
-        <div class="w-full lg:hidden px-4 md:px-8 lg:px-0 pb-16">
-            <div
-                class="flex flex-col justify-center mx-auto w-full px-4 md:max-w-[1320px] relative">
-                <div class="w-full flex flex-row gap-5">
-                    <div class="w-full">
-                        <table class="w-full">
-                            <tr class="border-t">
-                                <td
-                                    class="font-bold text-lg w-1/3 text-gray-500">
-                                    Select Product
-                                </td>
-                                <td class="w-1/3 p-1 md:p-4">
-                                    <select
-                                        class="w-full bg-transparent border border-gray-300 py-1"
-                                        name=""
-                                        id="">
-                                        <option value="">
-                                            Select Anyone/option
-                                        </option>
-                                    </select>
-                                </td>
-                                <td class="w-1/3 p-1 md:p-4">
-                                    <select
-                                        class="w-full bg-transparent border border-gray-300 py-1"
-                                        name=""
-                                        id="">
-                                        <option value="">
-                                            Select Anyone/option
-                                        </option>
-                                    </select>
-                                </td>
-                            </tr>
-                            <tr class="border-t">
-                                <td
-                                    class="font-bold text-lg w-full py-4 flex text-gray-500">
-                                    Product Image
-                                </td>
-                                <td class="w-1/3 p-1 md:p-4">
-                                    <div
-                                        class="w-full md:w-4/6 mx-auto rounded-lg flex justify-center items-center h-32 md:h-52 lg:h-72 bg-gray-600 overflow-hidden">
-                                        <v-img
-                                            :src="'https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/No-Image-Placeholder.svg/1665px-No-Image-Placeholder.svg.png'"
-                                            aspect-ratio="1"
-                                            class="min-w-full min-h-full"
-                                            cover>
-                                            <template v-slot:placeholder>
-                                                <div
-                                                    class="w-full h-full flex justify-center items-center">
-                                                    <v-progress-circular
-                                                        color=""
-                                                        indeterminate></v-progress-circular>
-                                                </div>
-                                            </template>
-                                        </v-img>
-                                    </div>
-                                </td>
-                                <td class="w-1/3 p-1 md:p-4">
-                                    <div
-                                        class="w-full md:w-4/6 mx-auto rounded-lg flex justify-center items-center h-32 md:h-52 lg:h-72 bg-gray-600 overflow-hidden">
-                                        <v-img
-                                            :src="'https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/No-Image-Placeholder.svg/1665px-No-Image-Placeholder.svg.png'"
-                                            aspect-ratio="1"
-                                            class="min-w-full min-h-full"
-                                            cover>
-                                            <template v-slot:placeholder>
-                                                <div
-                                                    class="w-full h-full flex justify-center items-center">
-                                                    <v-progress-circular
-                                                        color=""
-                                                        indeterminate></v-progress-circular>
-                                                </div>
-                                            </template>
-                                        </v-img>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr class="border-t">
-                                <td
-                                    class="font-bold text-lg w-1/3 text-gray-500">
-                                    Product Price
-                                </td>
-                                <td class="w-1/3 text-gray-500 p-4">N/A</td>
-                                <td class="w-1/3 text-gray-500 p-4">N/A</td>
-                            </tr>
-                            <tr class="border-t">
-                                <td
-                                    class="font-bold text-lg w-1/3 text-gray-500">
-                                    Product Description
-                                </td>
-                                <td class="w-1/3 text-gray-500 p-4">N/A</td>
-                                <td class="w-1/3 text-gray-500 p-4">N/A</td>
-                            </tr>
-                            <tr class="border-t">
-                                <td
-                                    class="font-bold text-lg w-1/3 text-gray-500">
-                                    Product Brand
-                                </td>
-                                <td class="w-1/3 text-gray-500 p-4">N/A</td>
-                                <td class="w-1/3 text-gray-500 p-4">N/A</td>
-                            </tr>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
+
         <!-- Discount -->
         <div class="w-full pb-16">
             <div
@@ -697,7 +428,6 @@ const swiperConfig = {
 export default {
     data() {
         return {
-            price: 0,
             rating: 5,
             activefilter: 'no',
         }

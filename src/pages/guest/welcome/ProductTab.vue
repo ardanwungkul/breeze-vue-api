@@ -6,11 +6,6 @@ import { ref, onMounted } from 'vue'
 
 const storeProduct = useProductStore()
 const products = ref([])
-const props = defineProps({
-    type: {
-        type: String,
-    },
-})
 
 onMounted(async () => {
     await fetchProducts()
@@ -24,17 +19,13 @@ async function fetchProducts() {
     await storeProduct.productAll()
     const allProducts = storeProduct.allProduct
 
-    const newProducts = allProducts.filter(
-        product => product.product_tag === props.type,
-    )
-    products.value = newProducts.map(product => ({
+    products.value = allProducts.map(product => ({
         product_name: product.product_name,
         id: product.id,
         subcategory: product.subcategory,
         product_price: product.product_price,
-        product_stock: product.product_stock,
-        product_tag: product.product_tag,
         product_slug: product.product_slug,
+        product_type: product.product_type,
         product_image:
             import.meta.env.VITE_PUBLIC_BACKEND_URL +
             '/storage/images/product/' +
@@ -51,36 +42,44 @@ const swiperConfig = {
         prevEl: '.swiper-button-prev',
     },
 }
-const modules = swiperModules
 </script>
 <template>
     <swiper
         v-if="products.length > 0"
         :modules="swiperModules"
-        :loop="true"
+        :loop="false"
         :breakpoints="{
-            '640': {
-                slidesPerView: 1,
-                spaceBetween: 10,
-            },
-            '768': {
+            '0': {
                 slidesPerView: 2,
                 spaceBetween: 10,
             },
-            '1024': {
+            '640': {
+                slidesPerView: 2,
+                spaceBetween: 10,
+            },
+            '768': {
                 slidesPerView: 4,
+                spaceBetween: 10,
+            },
+            '1024': {
+                slidesPerView: 6,
                 spaceBetween: 10,
             },
         }"
         @swiper="swiperJs"
         :navigation="swiperConfig.navigation">
-        <swiper-slide v-for="product in products" :key="product.id">
+        <swiper-slide
+            v-for="(item, index) in products"
+            :key="index"
+            class="h-auto">
             <div
-                class="flex flex-col justify-center items-center bg-[#f4f0ed] rounded-md overflow-hidden">
-                <div class="h-[144px] w-full">
+                class="flex flex-col items-center bg-[#f4f0ed] rounded-lg overflow-hidden shadow-lg h-full">
+                <div class="w-full">
                     <v-img
-                        :src="product.product_image"
-                        class="min-h-full w-full object-contain">
+                        :src="item.product_image"
+                        class="!w-full"
+                        cover
+                        aspect-ratio="1">
                         <template v-slot:placeholder>
                             <div
                                 class="w-full h-full flex justify-center items-center">
@@ -91,26 +90,29 @@ const modules = swiperModules
                         </template>
                     </v-img>
                 </div>
-                <div class="p-4 w-full">
+                <div class="p-3 w-full space-y-1">
                     <div class="flex justify-between items-center w-full gap-2">
                         <router-link
                             :to="{
                                 name: 'product.detail',
                                 params: {
-                                    slug: product.product_slug,
-                                    id: product.id,
+                                    slug: item.product_slug,
+                                    id: item.id,
                                 },
                             }">
-                            <p class="font-medium line-clamp-1">
-                                {{ product.product_name }}
+                            <p
+                                class="font-normal line-clamp-2 leading-4 text-sm">
+                                {{ item.product_name }}
                             </p>
                         </router-link>
-                        <p class="text-xs whitespace-nowrap">
-                            Rp. {{ formatPrice(product.product_price) }}
-                        </p>
                     </div>
+                    <p class="text-base font-semibold whitespace-nowrap">
+                        Rp. {{ formatPrice(item.product_price) }}
+                    </p>
                     <p class="text-xs text-start w-full text-gray-600 mt-2">
-                        for {{ product.subcategory.sub_category_name }}
+                        for
+                        {{ item.product_type == 'day' ? 'daily' : 'night' }}
+                        skin
                     </p>
                 </div>
             </div>
@@ -130,7 +132,7 @@ const modules = swiperModules
         v-if="products.length == 0"
         class="h-[144px] flex items-center justify-center">
         <p class="capitalize text-center font-bold text-typography-2">
-            no product available
+            No product available
         </p>
     </div>
 </template>

@@ -58,6 +58,18 @@ const routes = [
             guard: 'auth',
         },
     },
+    // Stock
+    {
+        path: '/admin/stock',
+        name: 'admin.stock.index',
+        component: () => import('@/pages/admin/stock/Index.vue'),
+        query: {
+            verified: 'verified',
+        },
+        meta: {
+            guard: 'auth',
+        },
+    },
     // Product
     {
         path: '/admin/product',
@@ -67,6 +79,29 @@ const routes = [
             verified: 'verified',
         },
         meta: {
+            guard: 'auth',
+        },
+    },
+    // Product Create
+    {
+        path: '/admin/product/create',
+        name: 'admin.product.create',
+        component: () => import('@/pages/admin/product/Create.vue'),
+        query: {
+            verified: 'verified',
+        },
+        meta: {
+            guard: 'auth',
+        },
+    },
+    // Product Edit
+    {
+        path: '/admin/product/:id/edit',
+        name: 'admin.product.edit',
+        component: () => import('@/pages/admin/product/Edit.vue'),
+        props: true,
+        meta: {
+            title: 'Edit Product',
             guard: 'auth',
         },
     },
@@ -168,12 +203,68 @@ const routes = [
             guard: 'auth',
         },
     },
+    {
+        path: '/admin/voucher/create',
+        name: 'admin.voucher.create',
+        component: () => import('@/pages/admin/voucher/Create.vue'),
+        query: {
+            verified: 'verified',
+        },
+        meta: {
+            guard: 'auth',
+        },
+    },
+    {
+        path: '/admin/voucher/:id/edit',
+        name: 'admin.voucher.edit',
+        component: () => import('@/pages/admin/voucher/Edit.vue'),
+        query: {
+            verified: 'verified',
+        },
+        meta: {
+            guard: 'auth',
+        },
+        props: true,
+    },
 
     // Articles
     {
         path: '/admin/articles',
         name: 'admin.article.index',
         component: () => import('@/pages/admin/article/Index.vue'),
+        query: {
+            verified: 'verified',
+        },
+        meta: {
+            guard: 'auth',
+        },
+    },
+    {
+        path: '/admin/articles/create',
+        name: 'admin.article.create',
+        component: () => import('@/pages/admin/article/Create.vue'),
+        query: {
+            verified: 'verified',
+        },
+        meta: {
+            guard: 'auth',
+        },
+    },
+    {
+        path: '/admin/articles/:id/edit',
+        name: 'admin.article.edit',
+        component: () => import('@/pages/admin/article/Edit.vue'),
+        query: {
+            verified: 'verified',
+        },
+        meta: {
+            guard: 'auth',
+        },
+    },
+    {
+        path: '/article/:slug',
+        name: 'user.article.show',
+        component: () => import('@/pages/guest/article/Show.vue'),
         query: {
             verified: 'verified',
         },
@@ -192,6 +283,41 @@ const routes = [
         meta: {
             guard: 'auth',
         },
+    },
+    // Cash Flow
+    {
+        path: '/admin/cash-flow',
+        name: 'admin.cashflow.index',
+        component: () => import('@/pages/admin/cashflow/Index.vue'),
+        query: {
+            verified: 'verified',
+        },
+        meta: {
+            guard: 'auth',
+        },
+    },
+    {
+        path: '/admin/expense/create',
+        name: 'admin.expense.create',
+        component: () => import('@/pages/admin/cashflow/expense/Create.vue'),
+        query: {
+            verified: 'verified',
+        },
+        meta: {
+            guard: 'auth',
+        },
+    },
+    {
+        path: '/admin/expense/:id/edit',
+        name: 'admin.expense.edit',
+        component: () => import('@/pages/admin/cashflow/expense/Edit.vue'),
+        query: {
+            verified: 'verified',
+        },
+        meta: {
+            guard: 'auth',
+        },
+        props: true,
     },
     // Agents
     {
@@ -347,7 +473,11 @@ const routes = [
     },
     {
         path: '/:pathMatch(.*)*',
-        redirect: '/page-not-found',
+        // redirect: '/page-not-found',
+        component: PageNotFound,
+        meta: {
+            title: 'Page Not Found',
+        },
     },
 ]
 

@@ -250,6 +250,7 @@ async function updateProduct(item) {
                             <p>Save</p>
                         </div>
                         <ConfirmDelete
+                            :label="'Delete'"
                             :type="'Product'"
                             :id="item.id"
                             :method="deleteFlashSaleProduct"></ConfirmDelete>

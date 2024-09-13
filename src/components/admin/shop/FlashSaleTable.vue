@@ -107,6 +107,7 @@ const deleteFlashSale = async id => {
                             </div>
                         </RouterLink>
                         <ConfirmDelete
+                            :label="'Delete'"
                             :type="'Flash Sale'"
                             :id="item.id"
                             :method="deleteFlashSale"></ConfirmDelete>

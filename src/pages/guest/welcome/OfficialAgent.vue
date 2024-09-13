@@ -3,6 +3,7 @@ import { ref } from 'vue'
 import { Swiper, SwiperSlide } from 'swiper/vue'
 import { Navigation, Autoplay } from 'swiper/modules'
 import OfficialAgentForm from '@/pages/guest/welcome/OfficialAgentForm.vue'
+import placeholderImage from '@/assets/images/placeholder-image.jpg'
 
 const swiperModules = [Navigation, Autoplay]
 const swiperJs = swiper => {}
@@ -72,7 +73,7 @@ const packet = ref([
                         <div
                             class="w-20 h-20 object-cover rounded-full overflow-hidden">
                             <v-img
-                                src="https://ralfvanveen.com/wp-content/uploads/2021/06/Placeholder-_-Glossary.svg"
+                                :src="placeholderImage"
                                 aspect-ratio="1"
                                 class="min-h-full"
                                 cover>

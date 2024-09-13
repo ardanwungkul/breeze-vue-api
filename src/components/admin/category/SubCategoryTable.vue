@@ -91,6 +91,7 @@ const editSubCategory = async (updateSubCategory, id) => {
                             :categories_option="categories_option"
                             :method="editSubCategory" />
                         <ConfirmDelete
+                            :label="'Delete'"
                             :type="'Sub Category'"
                             :id="item.id"
                             :method="deleteSubCategory"></ConfirmDelete>

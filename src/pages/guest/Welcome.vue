@@ -1,5 +1,6 @@
 <script setup>
 import AppLayout from '@/layouts/AppLayout.vue'
+import { useWelcome } from '@/stores/welcome-page/welcome'
 import { RouterLink } from 'vue-router'
 import { ref, onMounted } from 'vue'
 
@@ -15,8 +16,12 @@ import ProductTab from '@/pages/guest/welcome/ProductTab.vue'
 import BestSeller from '@/pages/guest/welcome/BestSeller.vue'
 import ThreeD from '@/pages/guest/welcome/ThreeD.vue'
 import OfficialAgent from '@/pages/guest/welcome/OfficialAgent.vue'
+const data = ref([])
+const store = useWelcome()
+onMounted(async () => {
+    await store.getData()
+    data.value = store.data
 
-onMounted(() => {
     const tabsElement = document.getElementById('tabs-flash-sale')
     const tabElements = [
         {
@@ -63,7 +68,7 @@ const activeTab = ref('first')
         <div class="pb-12">
             <!-- Title -->
             <Hero />
-            <div class="max-w-[1120px] mx-auto px-3 sm:px-3 xl:px-0">
+            <div class="max-w-[1120px] mx-auto px-3 sm:!px-3 xl:px-0">
                 <!-- Best Seller -->
                 <BestSeller />
 
@@ -116,26 +121,27 @@ const activeTab = ref('first')
                         id="new-product"
                         role="tabpanel"
                         aria-labelledby="new-product-tab">
-                        <ProductTab type="new" />
+                        <ProductTab />
                     </div>
                     <div
                         class="hidden rounded-lg bg-gray-50 p-4 dark:bg-gray-800"
                         id="on-sale"
                         role="tabpanel"
                         aria-labelledby="on-sale-tab">
-                        <ProductTab type="onsale" />
+                        <ProductTab />
                     </div>
                     <div
                         class="hidden rounded-lg bg-gray-50 p-4 dark:bg-gray-800"
                         id="feature-product"
                         role="tabpanel"
                         aria-labelledby="feature-product-tab">
-                        <ProductTab type="featured" />
+                        <ProductTab />
                     </div>
                 </div>
 
                 <!-- 3D Products -->
-                <ThreeD />
+                <!-- {{ data?.flash_sale }} -->
+                <ThreeD v-if="data?.flash_sale" :flash_sale="data.flash_sale" />
             </div>
 
             <!-- Discount -->
@@ -158,21 +164,21 @@ const activeTab = ref('first')
 
             <!-- Individual Care -->
             <div class="max-w-[1120px] mx-auto">
-                <div class="py-10 lg:flex">
+                <div class="py-10 lg:!flex">
                     <div
-                        class="bg-[#f1f0ec] lg:h-[500px] lg:w-1/2 flex-col flex justify-center py-28 lg:px-24 px-3 relative">
+                        class="bg-[#f1f0ec] lg:!h-[500px] lg:!w-1/2 flex-col flex justify-center py-28 lg:!px-24 px-3 relative">
                         <p
-                            class="text-[28px] font-extralight mb-3 text-center lg:text-start">
+                            class="text-[28px] font-extralight mb-3 text-center lg:!text-start">
                             Individual care
                         </p>
-                        <p class="mb-10 text-center lg:text-start">
+                        <p class="mb-10 text-center lg:!text-start">
                             Lorem ipsum, dolor sit amet consectetur adipisicing
                             elit. Fuga, recusandae in quasi possimus eum
                             excepturi expedita autem, totam aliquam
                             reprehenderit molestias tenetur. Omnis modi ea
                             exercitationem natus suscipit vero et.
                         </p>
-                        <div class="flex justify-center lg:justify-start">
+                        <div class="flex justify-center lg:!justify-start">
                             <RouterLink
                                 to="#"
                                 class="py-[6px] px-3 border text-base duration-300 border-gray-300 hover:border-transparent w-min whitespace-nowrap">
@@ -181,7 +187,7 @@ const activeTab = ref('first')
                         </div>
                     </div>
                     <div
-                        class="top-0 w-1/2 h-[500px] relative lg:flex items-center hidden">
+                        class="top-0 w-1/2 h-[500px] relative lg:!flex items-center hidden">
                         <div
                             class="h-80 w-full object-cover z-10 -translate-x-20">
                             <v-img

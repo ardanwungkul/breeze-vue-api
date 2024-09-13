@@ -13,18 +13,18 @@ const swiperConfig = {
 const modules = swiperModules
 </script>
 <template>
-    <div class="w-full py-9 md:grid md:grid-cols-3 md:gap-5">
-        <div class="mb-4 md:mb-0">
+    <div class="w-full py-9 md:!grid md:!grid-cols-3 md:!gap-5">
+        <div class="mb-4 md:!mb-0">
             <div
-                class="text-[28px] font-extralight mb-4 text-center md:text-start">
+                class="text-[28px] font-extralight mb-4 text-center md:!text-start">
                 BestSellers
             </div>
-            <div class="text-base mb-10 font-normal text-center md:text-start">
+            <div class="text-base mb-10 font-normal text-center md:!text-start">
                 A Wide range of face wash body care cosmetics that will not
                 Lorem ipsum dolor sit amet consectetur adipisicing elit. Odit
                 molestiae repudiandae voluptate.
             </div>
-            <div class="flex justify-center md:justify-start">
+            <div class="flex justify-center md:!justify-start">
                 <RouterLink
                     to="#"
                     class="py-[6px] px-3 border text-base duration-300 border-gray-300 hover:border-transparent">
@@ -32,7 +32,7 @@ const modules = swiperModules
                 </RouterLink>
             </div>
         </div>
-        <div class="sm:col-span-2">
+        <div class="sm:!col-span-2">
             <swiper
                 :modules="swiperModules"
                 :loop="true"
@@ -60,7 +60,7 @@ const modules = swiperModules
                         class="flex flex-col justify-center items-center bg-[#f4f0ed] rounded-md p-4">
                         <div class="h-[144px] w-5/6">
                             <v-img
-                                src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fstatic.vecteezy.com%2Fsystem%2Fresources%2Fpreviews%2F010%2F175%2F452%2Fnon_2x%2Fwhite-cream-jar-bottle-beauty-cosmetic-blank-mockup-3d-illustration-free-png.png&f=1&nofb=1&ipt=fa54a50dcaf23d1ca8ded9f4daed07a9259ee9373c9933b46731843ffd37b128&ipo=images"
+                                src="https://png.pngtree.com/png-vector/20210602/ourmid/pngtree-3d-beauty-cosmetics-product-design-png-image_3350323.jpg"
                                 aspect-ratio="1"
                                 class="min-h-full"
                                 cover>

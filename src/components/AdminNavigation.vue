@@ -40,35 +40,22 @@ const sidebarItem = ref([
                 icon: 'fa-regular fa-box',
                 to: 'admin.product.index',
             },
-        ],
-    },
-    {
-        icon: 'fa-regular fa-store',
-        title: 'Shops',
-        isHasChild: true,
-        child: [
             {
-                title: 'Banner',
-                icon: 'fa-regular fa-rectangle-vertical-history',
-                to: 'admin.shop.index.banner',
+                title: 'Product Stock',
+                icon: 'fa-regular fa-cubes-stacked',
+                to: 'admin.stock.index',
             },
             {
-                title: 'Flash Sale',
-                icon: 'fa-regular fa-bolt-lightning',
-                to: 'admin.shop.index.flash-sale',
+                icon: 'fa-regular fa-tags',
+                title: 'Vouchers',
+                to: 'admin.voucher.index',
             },
         ],
     },
     {
-        icon: 'fa-regular fa-newspaper',
-        to: 'admin.article.index',
-        title: 'Articles',
-        isHasChild: false,
-    },
-    {
-        icon: 'fa-regular fa-building',
-        to: 'admin.about-us.index',
-        title: 'About Us',
+        title: 'Flash Sale',
+        icon: 'fa-regular fa-bolt-lightning',
+        to: 'admin.shop.index.flash-sale',
         isHasChild: false,
     },
     {
@@ -78,16 +65,38 @@ const sidebarItem = ref([
         isHasChild: false,
     },
     {
+        icon: 'fa-regular fa-money-bill-transfer',
+        to: 'admin.cashflow.index',
+        title: 'Cash Flow',
+        isHasChild: false,
+    },
+    {
         icon: 'fa-regular fa-user-check',
         to: 'admin.agent.index',
         title: 'Agents',
         isHasChild: false,
     },
     {
-        icon: 'fa-regular fa-tags',
-        to: 'admin.voucher.index',
-        title: 'Vouchers',
-        isHasChild: false,
+        icon: 'fa-regular fa-browser',
+        title: 'Pages',
+        isHasChild: true,
+        child: [
+            {
+                title: 'Shop Banner',
+                icon: 'fa-regular fa-rectangle-vertical-history',
+                to: 'admin.shop.index.banner',
+            },
+            {
+                icon: 'fa-regular fa-building',
+                to: 'admin.about-us.index',
+                title: 'About Us',
+            },
+            {
+                icon: 'fa-regular fa-newspaper',
+                to: 'admin.article.index',
+                title: 'Articles',
+            },
+        ],
     },
 ])
 

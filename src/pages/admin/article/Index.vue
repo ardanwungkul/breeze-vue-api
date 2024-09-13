@@ -1,29 +1,28 @@
 <script setup>
-import { ref, onMounted, computed } from 'vue'
-import { useUsers } from '@/stores/user'
+import { ref, onMounted, watchEffect } from 'vue'
 import AdminLayout from '@/layouts/AdminLayout.vue'
 import '@/assets/css/vuetify.css'
 import ArticleTable from '@/components/admin/article/ArticleTable.vue'
+import { useArticleStore } from '@/stores/article'
 
-const storeUser = useUsers()
+const store = useArticleStore()
 
-const users = ref([])
+const articles = ref([])
 onMounted(async () => {
-    await fetchUsers()
+    await store.articleAll()
+    await fetchArticles()
 })
-async function fetchUsers() {
-    await storeUser.userAll()
-    users.value = storeUser.allUser.map(user => ({
-        id: user.id,
-        name: user.name,
-        email: user.email,
-    }))
+async function fetchArticles() {
+    articles.value = store.articles
 }
+watchEffect(async () => {
+    await fetchArticles()
+})
 </script>
 <template>
     <AdminLayout title="List Articles">
         <div class="w-full">
-            <ArticleTable :users="users" :fetchUsers="fetchUsers" />
+            <ArticleTable :articles="articles" :fetchArticles="fetchArticles" />
         </div>
     </AdminLayout>
 </template>

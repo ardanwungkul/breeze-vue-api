@@ -84,6 +84,7 @@ const editCategory = async (updateCategory, id) => {
                     <div class="flex gap-3 items-center justify-center text-xs">
                         <EditCategory :category="item" :method="editCategory" />
                         <ConfirmDelete
+                            :label="'Delete'"
                             :type="'Category'"
                             :id="item.id"
                             :method="deleteCategory"></ConfirmDelete>

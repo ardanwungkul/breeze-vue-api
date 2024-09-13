@@ -24,17 +24,22 @@ export const useUsers = defineStore('users', {
     },
 
     actions: {
-        getData() {
-            axios
-                .get('/api/user')
-                .then(response => {
-                    this.userData = response.data
-                })
-                .catch(error => {
-                    if (error.response.status !== 409) throw error
-
+        async getData() {
+            try {
+                await csrf()
+                const response = await axios.get('/user')
+                this.userData = response.data
+            } catch (error) {
+                if (error.response && error.response.status === 401) {
+                    this.userData = {}
+                    this.router.push('/login')
+                } else if (error.response && error.response.status === 409) {
+                    // Jika status 409, arahkan ke halaman verifikasi email
                     this.router.push('/verify-email')
-                })
+                } else {
+                    console.error('Error fetching user data:', error)
+                }
+            }
         },
         async userAll() {
             this.loading = true

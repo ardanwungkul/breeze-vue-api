@@ -1,6 +1,5 @@
 import axios from '@/lib/axios'
 import { defineStore, acceptHMRUpdate } from 'pinia'
-import AddProduct from '../../components/dialog/add/AddProduct.vue'
 
 const csrf = () => axios.get('/sanctum/csrf-cookie')
 
@@ -11,6 +10,7 @@ export const useFlashSaleStore = defineStore({
         loading: false,
         error: null,
         singleFlashSale: {},
+        flashSaleSoon: [],
     }),
     getters: {
         allFlashSales: state => state.flashSales,
@@ -152,6 +152,20 @@ export const useFlashSaleStore = defineStore({
                     ).flat()
                     processing.value = false
                 })
+        },
+        async getFlashSaleSoon() {
+            this.loading = true
+            try {
+                const response = await axios
+                    .get(`/api/flash-sale-today/`)
+                    .then(response => {
+                        this.flashSaleSoon = response.data
+                    })
+            } catch (error) {
+                this.error = error
+            } finally {
+                this.loading = false
+            }
         },
     },
 })

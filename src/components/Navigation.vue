@@ -96,6 +96,15 @@ const submitLogout = () => {
                                     </li>
                                     <li></li>
                                     <li v-if="store.authUser">
+                                        <router-link
+                                            :to="{ name: 'admin.dashboard' }">
+                                            <div
+                                                class="tracking-wide font-semibold hover:bg-white px-3 py-2 rounded-lg text-gray-600">
+                                                Dashboard
+                                            </div>
+                                        </router-link>
+                                    </li>
+                                    <li v-if="store.authUser">
                                         <div
                                             @click="submitLogout"
                                             class="tracking-wide font-semibold hover:bg-white px-3 py-2 rounded-lg text-gray-600 cursor-pointer">

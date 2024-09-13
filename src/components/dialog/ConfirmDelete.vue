@@ -14,6 +14,9 @@ const props = defineProps({
         type: Function,
         required: true,
     },
+    label: {
+        type: String,
+    },
 })
 const processing = ref(false)
 const handleDelete = async () => {
@@ -29,7 +32,7 @@ const handleDelete = async () => {
                 <div
                     class="flex gap-2 items-center text-white bg-red-500 hover:bg-opacity-90 rounded-lg px-3 py-1">
                     <i class="fa-solid fa-trash"></i>
-                    <p>Delete</p>
+                    <p v-if="label">{{ label }}</p>
                 </div>
             </button>
         </template>

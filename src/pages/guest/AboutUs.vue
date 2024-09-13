@@ -1,11 +1,10 @@
 <script setup>
 import AppLayout from '@/layouts/AppLayout.vue'
 import { ref, onMounted } from 'vue'
-import { RouterLink } from 'vue-router'
 
 import { useAboutUsStore } from '@/stores/aboutus'
 
-import aboutbg from '@/assets/images/aboutbg.png'
+import aboutbg from '@/assets/images/about-us-background.png'
 import lamp from '@/assets/images/lamp.png'
 
 const tab = ref()
@@ -19,7 +18,7 @@ const props = defineProps({
 
 onMounted(async () => {
     await fetchAboutUs()
-    tab.value = aboutUs.value.length > 0 ? aboutUs.value[0].id : '';
+    tab.value = aboutUs.value.length > 0 ? aboutUs.value[0].id : ''
 })
 
 async function fetchAboutUs() {
@@ -41,7 +40,7 @@ async function fetchAboutUs() {
             '/storage/images/aboutus/' +
             aboutus.about_us_second_image,
     }))
-    console.log(aboutUs.value);
+    console.log(aboutUs.value)
 }
 </script>
 <template>
@@ -68,7 +67,8 @@ async function fetchAboutUs() {
                                 </template>
                             </v-img>
                         </div>
-                        <div class="flex flex-col w-10/12 sm:w-3/4 lg:w-1/2 relative z-10">
+                        <div
+                            class="flex flex-col w-10/12 sm:w-3/4 lg:w-1/2 relative z-10">
                             <v-card-text>
                                 <v-tabs-window v-model="tab">
                                     <v-tabs-window-item
@@ -80,25 +80,24 @@ async function fetchAboutUs() {
                                             {{ item.about_us_title }}
                                         </div>
                                         <div class="">
-                                            {{  item.about_us_description }}
+                                            {{ item.about_us_description }}
                                         </div>
                                     </v-tabs-window-item>
                                 </v-tabs-window>
                             </v-card-text>
                         </div>
                         <div
-                            class=" w-40 sm:w-2/5 lg:w-1/3 sm:h-full absolute top-52 sm:top-[20%] lg:top-[20%] -right-5 sm:right-0 sm:left-[65%] overflow-hidden">
-                            <v-card-text class=" !p-0">
+                            class="w-40 sm:w-2/5 lg:w-1/3 sm:h-full absolute top-52 sm:top-[20%] lg:top-[20%] -right-5 sm:right-0 sm:left-[65%] overflow-hidden">
+                            <v-card-text class="!p-0">
                                 <v-tabs-window v-model="tab">
                                     <v-tabs-window-item
                                         v-for="item in aboutUs"
                                         :key="item.id"
                                         :value="item.id">
                                         <v-img
-                                            
                                             :src="item.about_us_main_image"
                                             aspect-ratio="1"
-                                            class=" min-h-[180px] sm:min-h-[360px] lg:min-h-[480px] relative justify-center">
+                                            class="min-h-[180px] sm:min-h-[360px] lg:min-h-[480px] relative justify-center">
                                             <template v-slot:placeholder>
                                                 <div
                                                     class="w-full h-full flex justify-center items-center">
@@ -123,7 +122,6 @@ async function fetchAboutUs() {
                                         :key="item.id"
                                         :value="item.id">
                                         <v-img
-                                            
                                             :src="item.about_us_second_image"
                                             aspect-ratio="1"
                                             class="w-full min-h-[65vh]"
@@ -159,10 +157,12 @@ async function fetchAboutUs() {
                         </div>
                     </div>
                 </div>
-                <div class="w-full h-[40%] sm:h-[35%] flex flex-col sm:flex-row">
+                <div
+                    class="w-full h-[40%] sm:h-[35%] flex flex-col sm:flex-row">
                     <div
-                        class=" w-full sm:w-[60%] sm:h-full xl:pl-48 sm:pl-8 bg-[#ceddce] flex flex-col">
-                        <div class="flex flex-col sm:flex-row gap-5 sm:gap-5 lg:gap-20 p-5">
+                        class="w-full sm:w-[60%] sm:h-full xl:pl-48 sm:pl-8 bg-[#ceddce] flex flex-col">
+                        <div
+                            class="flex flex-col sm:flex-row gap-5 sm:gap-5 lg:gap-20 p-5">
                             <button
                                 class="py-3 px-10 border border-white text-white font-semibold bg-gradient-to-r from-lime-600 to-lime-950 duration-200 hover:opacity-70 rounded-xl relative z-10">
                                 Check Shop
@@ -174,7 +174,7 @@ async function fetchAboutUs() {
                         </div>
                         <div
                             style="box-shadow: 0px -1px 10px 20px #ceddce"
-                            class=" w-full h-full hidden sm:flex flex-row static z-10 sm:gap-1 lg:gap-5 bg-[#ceddce]">
+                            class="w-full h-full hidden sm:flex flex-row static z-10 sm:gap-1 lg:gap-5 bg-[#ceddce]">
                             <div
                                 class="flex flex-row sm:gap-1 lg:gap-3"
                                 v-for="i in 3"
@@ -208,7 +208,7 @@ async function fetchAboutUs() {
                         </div>
                     </div>
                     <div
-                        class=" w-full sm:w-[40%] h-full xl:pr-48 sm:pr-8 md:pr-8 bg-[#ceddce] sm:bg-[#f8f8f6] static z-10">
+                        class="w-full sm:w-[40%] h-full xl:pr-48 sm:pr-8 md:pr-8 bg-[#ceddce] sm:bg-[#f8f8f6] static z-10">
                         <v-tabs
                             style="background-color: transparent !important"
                             v-model="tab"
@@ -219,7 +219,7 @@ async function fetchAboutUs() {
                                 v-for="item in aboutUs"
                                 :key="item.id"
                                 :value="item.id"
-                                class=" min-h-full !p-0 w-1/4 sm:w-1/3 max-w-1/3 duration-300 hover:opacity-100 opacity-70 overflow-hidden">
+                                class="min-h-full !p-0 w-1/4 sm:w-1/3 max-w-1/3 duration-300 hover:opacity-100 opacity-70 overflow-hidden">
                                 <div
                                     class="w-full min-h-full flex flex-col justify-center items-center gap-5 relative">
                                     <v-img

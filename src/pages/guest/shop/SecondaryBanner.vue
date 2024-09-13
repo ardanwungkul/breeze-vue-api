@@ -1,31 +1,10 @@
 <script setup>
-import { useShopPageStore } from '@/stores/shop-page/banner.js'
-import { ref, onMounted } from 'vue'
+import { ref } from 'vue'
 import { Swiper, SwiperSlide } from 'swiper/vue'
 import { Navigation, Autoplay } from 'swiper/modules'
 import 'swiper/css'
 import 'swiper/css/pagination'
 
-const shopStore = useShopPageStore()
-const secondaryBanner = ref([])
-
-const getSecondaryBanner = () => {
-    secondaryBanner.value = shopStore.secondaryBanners.map(banner => ({
-        id: banner.id,
-        secondary_banner_media: banner.second_banner_media,
-        secondary_banner_alt: banner.second_banner_alt,
-        secondary_banner_status: banner.second_banner_status,
-        isDefault: banner.isDefault,
-        src:
-            import.meta.env.VITE_PUBLIC_BACKEND_URL +
-            '/storage/media/shop/secondary-banner/' +
-            banner.second_banner_media,
-    }))
-}
-onMounted(async () => {
-    await shopStore.getAllSecondaryBanner()
-    getSecondaryBanner()
-})
 const swiperModules = [Navigation, Autoplay]
 const swiperJs = swiper => {}
 const swiperConfig = {
@@ -41,6 +20,12 @@ const swiperConfig = {
         delay: 3000,
     },
 }
+
+const props = defineProps({
+    secondary_banner: Object,
+})
+
+const backendURl = ref(import.meta.env.VITE_PUBLIC_BACKEND_URL)
 </script>
 <template>
     <swiper
@@ -49,11 +34,15 @@ const swiperConfig = {
         :modules="swiperModules"
         v-bind="swiperConfig"
         @swiper="swiperJs">
-        <swiper-slide v-for="(item, index) in secondaryBanner" :key="index">
+        <swiper-slide v-for="(item, index) in secondary_banner" :key="index">
             <div
                 class="w-full max-h-32 md:min-h-52 md:max-h-52 bg-black flex items-center relative">
                 <v-img
-                    :src="item.src"
+                    :src="
+                        backendURl +
+                        '/storage/media/shop/secondary-banner/' +
+                        item.second_banner_media
+                    "
                     aspect-ratio="1"
                     class="min-w-full max-w-full min-h-full">
                     <template v-slot:placeholder>

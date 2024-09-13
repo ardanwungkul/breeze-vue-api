@@ -13,16 +13,7 @@ onMounted(async () => {
 })
 async function fetchProducts() {
     await storeProduct.productAll()
-    products.value = storeProduct.allProduct.map(product => ({
-        name: product.product_name,
-        id: product.id,
-        subcategory: product.subcategory,
-        product_price: product.product_price,
-        product_stock: product.product_stock,
-        product_tag: product.product_tag,
-        product_image: product.product_image,
-        subcategory_id: product.subcategory_id,
-    }))
+    products.value = storeProduct.products
 }
 </script>
 <template>

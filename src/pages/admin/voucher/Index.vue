@@ -1,30 +1,28 @@
 <script setup>
-import { ref, onMounted, computed } from 'vue'
-import { useUsers } from '@/stores/user'
+import { ref, onMounted, computed, watchEffect } from 'vue'
 import AdminLayout from '@/layouts/AdminLayout.vue'
 import '@/assets/css/vuetify.css'
-import AboutUsTable from '@/components/admin/about-us/AboutUsTable.vue'
 import VoucherTable from '@/components/admin/voucher/VoucherTable.vue'
+import { useVoucherStore } from '@/stores/voucher'
 
-const storeUser = useUsers()
+const store = useVoucherStore()
 
-const users = ref([])
+const vouchers = ref([])
 onMounted(async () => {
-    await fetchUsers()
+    await store.voucherAll()
+    await fetchVouchers()
 })
-async function fetchUsers() {
-    await storeUser.userAll()
-    users.value = storeUser.allUser.map(user => ({
-        id: user.id,
-        name: user.name,
-        email: user.email,
-    }))
+async function fetchVouchers() {
+    vouchers.value = store.vouchers
 }
+watchEffect(() => {
+    fetchVouchers()
+})
 </script>
 <template>
     <AdminLayout title="Voucher">
         <div class="w-full">
-            <VoucherTable :users="users" :fetchUsers="fetchUsers" />
+            <VoucherTable :vouchers="vouchers" :fetchVouchers="fetchVouchers" />
         </div>
     </AdminLayout>
 </template>

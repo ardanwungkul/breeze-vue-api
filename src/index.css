@@ -122,3 +122,6 @@
 .dark .v-table .v-table__wrapper > table > tbody > tr:not(:last-child) > th {
     border-bottom: thin solid rgb(255, 255, 255, 0.2) !important;
 }
+.dark input[type='date']::-webkit-calendar-picker-indicator {
+    filter: invert(0.8);
+}

@@ -81,6 +81,7 @@ const deleteUser = async id => {
                     <div class="flex gap-3 items-center justify-center text-xs">
                         <EditUser :user="item" :method="editUser" />
                         <ConfirmDelete
+                            :label="'Delete'"
                             :type="'User'"
                             :id="item.id"
                             :method="deleteUser"></ConfirmDelete>

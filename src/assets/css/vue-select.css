@@ -5,7 +5,7 @@
     --vs-colors--darkest: rgba(0, 0, 0, 0.15);
     --vs-search-input-color: inherit;
     --vs-search-input-placeholder-color: inherit;
-    --vs-font-size: 1rem;
+    --vs-font-size: 12px;
     --vs-line-height: 1.4;
     --vs-state-disabled-bg: rgb(248, 248, 248);
     --vs-state-disabled-color: var(--vs-colors--light);
@@ -105,14 +105,19 @@
 .v-select[dir='rtl'] .vs__dropdown-menu {
     text-align: right;
 }
+.dark .vs__dropdown-toggle {
+    background-color: #11121e !important;
+    border: 1px solid #7b7b7b !important;
+}
 .vs__dropdown-toggle {
+    background-color: white !important;
     -webkit-appearance: none;
     -moz-appearance: none;
     appearance: none;
     display: flex;
     padding: 0 0 4px;
     background: none;
-    border: var(--vs-border-width) var(--vs-border-style) var(--vs-border-color);
+    border: 1px solid !important;
     border-radius: var(--vs-border-radius);
     white-space: normal;
 }
@@ -161,11 +166,16 @@
     cursor: pointer;
     margin-right: 8px;
 }
+.vs__dropdown-menu::-webkit-scrollbar {
+    display: none;
+}
 .vs__dropdown-menu {
+    border-radius: 8px !important;
+    margin-top: 5px !important;
     display: block;
     box-sizing: border-box;
-    position: absolute;
-    top: calc(100% - var(--vs-border-width));
+    position: relative;
+    /* top: calc(100% - var(--vs-border-width)); */
     left: 0;
     z-index: var(--vs-dropdown-z-index);
     padding: 5px 0;
@@ -187,6 +197,7 @@
     text-align: center;
 }
 .vs__dropdown-option {
+    font-size: 14px;
     line-height: 1.42857143;
     display: block;
     padding: var(--vs-dropdown-option-padding);
@@ -194,6 +205,9 @@
     color: var(--vs-dropdown-option-color);
     white-space: nowrap;
     cursor: pointer;
+}
+.dark .vs__dropdown-option {
+    color: black;
 }
 .vs__dropdown-option--highlight {
     background: var(--vs-dropdown-option--active-bg);
@@ -207,6 +221,9 @@
     background: var(--vs-state-disabled-bg);
     color: var(--vs-state-disabled-color);
     cursor: var(--vs-state-disabled-cursor);
+}
+.dark .vs__selected {
+    color: white !important;
 }
 .vs__selected {
     display: flex;
@@ -315,4 +332,8 @@
 }
 .vs--loading .vs__spinner {
     opacity: 1;
+}
+.vs__dropdown-toggle {
+    min-height: 36px !important;
+    height: auto !important;
 }

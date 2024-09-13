@@ -31,10 +31,33 @@ export const useProductStore = defineStore({
                 this.loading = false
             }
         },
-        async productById(slug, id) {
+        async productBySlugId(slug, id) {
             this.loading = true
             try {
-                const response = await axios.get(`/api/product/${slug}/${id}`)
+                const response = await axios.get(
+                    `/api/product/product-slug/${slug}/${id}`,
+                )
+                if (response.status === 200) {
+                    this.singleProduct = response.data
+                } else {
+                    this.singleProduct = {}
+                }
+            } catch (error) {
+                if (error.response && error.response.status === 404) {
+                    this.singleProduct = {}
+                } else {
+                    this.error = error
+                }
+            } finally {
+                this.loading = false
+            }
+        },
+        async productById(id) {
+            this.loading = true
+            try {
+                const response = await axios.get(
+                    `/api/product/product-id/${id}`,
+                )
                 if (response.status === 200) {
                     this.singleProduct = response.data
                 } else {
@@ -59,6 +82,7 @@ export const useProductStore = defineStore({
                 .then(response => {
                     processing.value = false
                     this.products.push(response.data)
+                    this.router.push({ name: 'admin.product.index' })
                     console.log(response)
                 })
                 .catch(error => {
@@ -78,6 +102,7 @@ export const useProductStore = defineStore({
                 .post(`/api/product/${id}`, updateProduct)
                 .then(response => {
                     processing.value = false
+                    this.router.push({ name: 'admin.product.index' })
                     console.log(response)
                 })
                 .catch(error => {
@@ -99,6 +124,7 @@ export const useProductStore = defineStore({
                 processing.value = false
             } catch (error) {
                 this.error = error
+                console.log(this.error)
                 processing.value = false
             } finally {
                 processing.value = false

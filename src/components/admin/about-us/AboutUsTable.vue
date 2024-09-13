@@ -1,7 +1,6 @@
 <script setup>
 import { ref, computed, watchEffect } from 'vue'
 import ConfirmDelete from '@/components/dialog/ConfirmDelete.vue'
-import EditAboutUs from '@/components/dialog/edit/EditAboutUs.vue'
 import { useAboutUsStore } from '@/stores/aboutus'
 import ValidationErrors from '@/components/ValidationErrors.vue'
 import AddAboutUs from '@/components/dialog/add/AddAboutUs.vue'
@@ -68,9 +67,19 @@ const deleteAboutUs = async id => {
                 class="border dark:!border-typography-2/20 shadow-lg dark:!bg-dark-primary-1 !bg-light-primary-2 dark:!text-typography-1">
                 <template v-slot:item.id="{ item }">
                     <div class="flex gap-3 items-center justify-center text-xs">
-                        <EditAboutUs
-                            :aboutus="item"></EditAboutUs>
+                        <router-link
+                            :to="{
+                                name: 'admin.about-us.edit',
+                                params: {
+                                    id: item.id,
+                                },
+                            }"
+                            class="flex gap-2 items-center text-white bg-secondary-2 hover:bg-opacity-90 rounded-lg px-3 py-1 cursor-pointer">
+                            <i class="fa-solid fa-pen"></i>
+                            <p>Edit</p>
+                        </router-link>
                         <ConfirmDelete
+                            :label="'Delete'"
                             :type="'About Us'"
                             :id="item.id"
                             :method="deleteAboutUs"></ConfirmDelete>

@@ -9,7 +9,7 @@ export const useAboutUsStore = defineStore({
         aboutus: [],
         loading: false,
         error: null,
-        singleAboutUs: {}
+        singleAboutUs: {},
     }),
     getters: {
         allAboutUs: state => state.aboutus,
@@ -39,6 +39,7 @@ export const useAboutUsStore = defineStore({
                 .then(response => {
                     processing.value = false
                     this.aboutus.push(response.data)
+                    this.router.push({ name: 'admin.about-us.index' })
                 })
                 .catch(error => {
                     console.log(error)
@@ -76,6 +77,7 @@ export const useAboutUsStore = defineStore({
                 .post(`/api/about-us/${id}`, updateAboutUs)
                 .then(response => {
                     processing.value = false
+                    this.router.push({ name: 'admin.about-us.index' })
                     console.log(response)
                 })
                 .catch(error => {
@@ -94,7 +96,7 @@ export const useAboutUsStore = defineStore({
             try {
                 const response = await axios.delete(`/api/about-us/${id}`)
                 processing.value = false
-                console.log(response);
+                console.log(response)
             } catch (error) {
                 this.error = error
                 processing.value = false
@@ -106,7 +108,5 @@ export const useAboutUsStore = defineStore({
 })
 
 if (import.meta.hot) {
-    import.meta.hot.accept(
-        acceptHMRUpdate(useAboutUsStore, import.meta.hot),
-    )
+    import.meta.hot.accept(acceptHMRUpdate(useAboutUsStore, import.meta.hot))
 }

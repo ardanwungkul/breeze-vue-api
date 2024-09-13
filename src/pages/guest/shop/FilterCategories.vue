@@ -21,31 +21,25 @@ async function fetchCategories() {
     categories.value = storeCategory.allCategories.map(category => ({
         name: category.category_name,
         id: category.id,
-        subcategories: category.sub_category
+        subcategories: category.sub_category,
     }))
-    console.log(categories);
 }
-const activeDiv = ref();
+const activeDiv = ref()
 </script>
 <template>
     <div class="border border-t-transparent py-4 mb-5">
         <div class="font-medium mb-4 px-4">Categories</div>
-        <div
-            v-for="item in categories"
-            :key="item.id"
-            class="w-full">
+        <div v-for="item in categories" :key="item.id" class="w-full">
             <div
-                @click="
-                activeDiv = (activeDiv === item.id) ? 0 : item.id
-                "
+                @click="activeDiv = activeDiv === item.id ? 0 : item.id"
                 class="w-full flex flex-row px-4 py-2 justify-between border-b hover:text-darkbrownshop">
                 <div class="">{{ item.name }}</div>
-                <div 
+                <div
                     :class="{
                         'rotate-180': activeDiv === item.id,
                         '': activeDiv !== item.id,
                     }"
-                    class=" duration-300">
+                    class="duration-300">
                     <svg
                         class="feather feather-chevron-down"
                         fill="none"

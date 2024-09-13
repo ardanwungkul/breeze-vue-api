@@ -1,41 +1,23 @@
 <script setup>
-import { useShopPageStore } from '@/stores/shop-page/banner.js'
 import { RouterLink } from 'vue-router'
-import { ref, onMounted } from 'vue'
+import { ref } from 'vue'
 
-const shopStore = useShopPageStore()
-const mainBanner = ref([])
-
-const getMainBanner = () => {
-    mainBanner.value = shopStore.mainBanners.map(banner => ({
-        id: banner.id,
-        main_banner_media: banner.main_banner_media,
-        main_banner_alt: banner.main_banner_alt,
-        main_banner_type: banner.main_banner_type,
-        main_banner_status: banner.main_banner_status,
-        isDefault: banner.isDefault,
-        src:
-            import.meta.env.VITE_PUBLIC_BACKEND_URL +
-            '/storage/media/shop/main-banner/' +
-            banner.main_banner_media,
-    }))
-}
-const activeVideo = ref(0)
-
-onMounted(async () => {
-    await shopStore.getAllMainBanner()
-    getMainBanner()
+const props = defineProps({
+    main_banner: Object,
 })
+
+const backendURl = ref(import.meta.env.VITE_PUBLIC_BACKEND_URL)
+
+const activeVideo = ref(0)
 
 const toggleVideo = async i => {
     activeVideo.value = i
 }
 </script>
 <template>
-    <!-- Videos -->
     <div class="w-full min-h-52 md:min-h-96 relative overflow-hidden bg-black">
         <div
-            v-for="(item, index) in mainBanner"
+            v-for="(item, index) in main_banner"
             :key="index"
             :class="{
                 active: activeVideo === index,
@@ -45,14 +27,22 @@ const toggleVideo = async i => {
             <video
                 v-if="item.main_banner_type == 'video'"
                 class="mt-0 md:mt-auto object-cover w-full h-full"
-                :src="item.src"
+                :src="
+                    backendURl +
+                    '/storage/media/shop/main-banner/' +
+                    item.main_banner_media
+                "
                 :alt="item.main_banner_alt"
                 autoplay
                 muted
                 loop></video>
             <img
                 v-if="item.main_banner_type == 'image'"
-                :src="item.src"
+                :src="
+                    backendURl +
+                    '/storage/media/shop/main-banner/' +
+                    item.main_banner_media
+                "
                 class="mt-0 md:mt-auto object-cover w-full h-full"
                 :alt="item.main_banner_alt" />
         </div>
@@ -119,7 +109,7 @@ const toggleVideo = async i => {
         <div
             class="absolute bottom-4 md:bottom-9 flex flow-row w-full gap-5 justify-center z-30">
             <button
-                v-for="(item, index) in mainBanner"
+                v-for="(item, index) in main_banner"
                 :key="index"
                 @click="toggleVideo(index)"
                 :class="{
