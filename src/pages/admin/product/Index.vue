@@ -9,11 +9,14 @@ const storeProduct = useProductStore()
 
 const products = ref([])
 onMounted(async () => {
+    await storeProduct.productAll()
     await fetchProducts()
 })
 async function fetchProducts() {
-    await storeProduct.productAll()
     products.value = storeProduct.products
+    products.value.forEach(product => {
+        product.product_stock = 0
+    })
 }
 </script>
 <template>

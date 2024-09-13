@@ -102,6 +102,31 @@ export const useStockStore = defineStore({
                     processing.value = false
                 })
         },
+        async generateStock(form, setErrors, processing, setSuccess) {
+            await csrf()
+            processing.value = true
+            axios
+                .post('/api/generate-stock', form)
+                .then(response => {
+                    console.log(response)
+
+                    processing.value = false
+                    if (response.data.status == 200) {
+                        setSuccess.value = Object.values(
+                            response.data.message,
+                        ).flat()
+                    }
+                })
+                .catch(error => {
+                    processing.value = false
+                    console.log(error)
+                    if (error.response.status !== 422) throw error
+
+                    setErrors.value = Object.values(
+                        error.response.data.errors,
+                    ).flat()
+                })
+        },
         async editStock(form, setErrors, processing, id) {
             await csrf()
             processing.value = true

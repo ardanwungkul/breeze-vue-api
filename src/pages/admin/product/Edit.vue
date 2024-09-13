@@ -33,6 +33,7 @@ const product_name = ref('')
 const product_price = ref('')
 const product_image = ref('')
 const product_code = ref('')
+const product_code_type = ref('')
 const selectedCategory = ref([])
 const product_image_3d = ref('')
 const imageSrc = ref()
@@ -52,6 +53,7 @@ onBeforeMount(async () => {
         product.value = storeProduct.singleProduct
         product_name.value = product.value.product_name
         product_price.value = product.value.product_price
+        product_code_type.value = product.value.product_code_type
         product_code.value = product.value.product_code
         img3D.value = product.value.product_image_3d
             ? import.meta.env.VITE_PUBLIC_BACKEND_URL +
@@ -118,6 +120,7 @@ const editProduct = async () => {
         formData.append('product_code', product_code.value)
     }
     formData.append('product_name', product_name.value)
+    formData.append('product_code_type', product_code_type.value)
     formData.append('product_price', product_price.value)
     formData.append('product_image', product_image.value)
     formData.append('_method', 'PUT')
@@ -242,7 +245,8 @@ function removeGallery(index) {
                                         placeholder="Enter Product Name"
                                         required />
                                 </div>
-                                <div class="flex flex-col gap-2 text-sm">
+                                <div
+                                    class="flex flex-col gap-2 text-sm col-span-2">
                                     <label
                                         class="dark:text-light-primary-1"
                                         for="product_price"
@@ -255,6 +259,31 @@ function removeGallery(index) {
                                         id="product_price"
                                         placeholder="Enter Product Price"
                                         required />
+                                </div>
+                                <div class="flex flex-col gap-2 text-sm">
+                                    <div class="flex justify-between">
+                                        <label
+                                            class="dark:text-light-primary-1"
+                                            for="product_code_type"
+                                            >Product Code Type</label
+                                        >
+                                    </div>
+                                    <select
+                                        name="product_code_type"
+                                        class="text-sm rounded-lg bg-light-primary-1 w-full dark:bg-dark-primary-1 dark:text-light-primary-1 border !border-gray-500 dark:!border-typography-3"
+                                        id="product_code_type"
+                                        required
+                                        v-model="product_code_type">
+                                        <option value="" selected disabled>
+                                            Select Product Code Type
+                                        </option>
+                                        <option value="unique_code">
+                                            Unique Code
+                                        </option>
+                                        <option value="common_code">
+                                            Common Code
+                                        </option>
+                                    </select>
                                 </div>
                                 <div class="flex flex-col gap-2 text-sm">
                                     <div class="flex justify-between">
