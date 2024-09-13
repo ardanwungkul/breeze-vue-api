@@ -6,6 +6,10 @@ import { RouterView } from 'vue-router'
 const props = defineProps({
     slug: String,
     id: String,
+    footer: {
+      type: String,
+      default: 'enabled'
+    }
 })
 </script>
 <template>
@@ -15,5 +19,5 @@ const props = defineProps({
             <slot />
         </div>
     </div>
-    <Footer></Footer>
+    <Footer v-if="footer !== 'disable'"></Footer>
 </template>

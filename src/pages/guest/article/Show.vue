@@ -59,6 +59,7 @@ onBeforeMount(async () => {
                         <p class="text-8xl text-center uppercase">
                             {{ article?.category?.category_name }}
                         </p>
+                        <p>{{ article?.article_title }}</p>
                     </div>
                     <hr
                         id="divider"
@@ -67,7 +68,7 @@ onBeforeMount(async () => {
                     <blockquote
                         class="absolute w-[300px] border-l-[16px] border-gray-300 text-gray-300 bg-black -translate-x-full p-5 flex justify-center object-center text-3xl tracking-wide capitalize">
                         <p>
-                            {{ article?.article_title }}
+                            {{ article?.article_blockquote }}
                         </p>
                     </blockquote>
                     <div

@@ -44,7 +44,7 @@ async function fetchAboutUs() {
 }
 </script>
 <template>
-    <AppLayout>
+    <AppLayout footer="disable">
         <div class="flex-col w-full h-[calc(100vh-57px)] flex">
             <v-card style="border-radius: 0; box-shadow: none" class="h-full">
                 <div class="w-full h-[60%] sm:h-[65%] flex">

@@ -269,7 +269,7 @@ const routes = [
             verified: 'verified',
         },
         meta: {
-            guard: 'auth',
+            // guard: 'auth',
         },
     },
     // Payment
