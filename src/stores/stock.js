@@ -7,11 +7,15 @@ export const useStockStore = defineStore({
     id: 'stock',
     state: () => ({
         stocks: [],
+        products: [],
         loading: false,
         error: null,
         create: {},
         edit: [],
         singleStock: {},
+        product: {},
+        tempStocks: [],
+        tempProduct: {},
     }),
     getters: {
         allStock: state => state.stocks,
@@ -25,7 +29,8 @@ export const useStockStore = defineStore({
                 const response = await axios
                     .get('/api/stock')
                     .then(response => {
-                        this.stocks = response.data
+                        this.stocks = response.data.stock
+                        this.products = response.data.product
                     })
             } catch (error) {
                 this.error = error
@@ -105,27 +110,32 @@ export const useStockStore = defineStore({
         async generateStock(form, setErrors, processing, setSuccess) {
             await csrf()
             processing.value = true
-            axios
-                .post('/api/generate-stock', form)
-                .then(response => {
-                    console.log(response)
 
-                    processing.value = false
-                    if (response.data.status == 200) {
-                        setSuccess.value = Object.values(
-                            response.data.message,
-                        ).flat()
-                    }
-                })
-                .catch(error => {
-                    processing.value = false
-                    console.log(error)
-                    if (error.response.status !== 422) throw error
+            try {
+                const response = await axios.post('/api/generate-stock', form)
 
+                console.log(response)
+                processing.value = false
+
+                if (response.data.status == 200) {
+                    setSuccess.value = Object.values(
+                        response.data.message,
+                    ).flat()
+                    this.tempStocks = response.data.stock
+                    this.tempProduct = response.data.product
+                }
+            } catch (error) {
+                processing.value = false
+                console.log(error)
+
+                if (error.response && error.response.status === 422) {
                     setErrors.value = Object.values(
                         error.response.data.errors,
                     ).flat()
-                })
+                } else {
+                    throw error
+                }
+            }
         },
         async editStock(form, setErrors, processing, id) {
             await csrf()
@@ -161,6 +171,59 @@ export const useStockStore = defineStore({
                 processing.value = false
             } finally {
                 processing.value = false
+            }
+        },
+        async checkQr(form, result, setErrors, processing, qr, setSuccess) {
+            await csrf()
+            processing.value = true
+            qr.value.paused = true
+            try {
+                const response = await axios.post(`/api/stock-check-qr`, form)
+                const stock = response.data.stock
+                const stockExists = result.find(
+                    item => item.id === response.data.stock.id,
+                )
+                if (stock.product.product_code_type === 'common_code') {
+                    if (stockExists) {
+                        stockExists.amount += 1
+                        setSuccess.value = Object.values([
+                            'Success Added Product',
+                        ]).flat()
+                    } else {
+                        stock.amount = 1
+                        result.push(stock)
+                        setSuccess.value = Object.values([
+                            'Success Added Product',
+                        ]).flat()
+                    }
+                } else {
+                    if (stockExists) {
+                        setErrors.value = Object.values([
+                            'Product Already Scanned',
+                        ]).flat()
+                    } else {
+                        stock.amount = 1
+                        result.push(stock)
+                        setSuccess.value = Object.values([
+                            'Success Added Product',
+                        ]).flat()
+                    }
+                }
+                processing.value = false
+                qr.value.paused = false
+            } catch (error) {
+                console.log(error)
+
+                if (error.response.status !== 422) throw error
+                setErrors.value = Object.values(
+                    error.response.data.errors,
+                ).flat()
+                console.log(this.error)
+                processing.value = false
+                qr.value.paused = false
+            } finally {
+                processing.value = false
+                qr.value.paused = false
             }
         },
     },

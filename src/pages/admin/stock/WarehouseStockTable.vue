@@ -1,9 +1,9 @@
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 
 const props = defineProps({
-    categories: [],
-    data: [],
+    categories: Array,
+    data: Array,
 })
 const filter = ref('')
 const headersTable = [
@@ -14,13 +14,15 @@ const headersTable = [
 const search = ref('')
 const pageData = ref(1)
 const itemsPerPageData = ref(10)
-const pageCount = computed(() => {
-    return Math.ceil(filteredData.value.length / itemsPerPageData.value)
-})
+onMounted(() => {
+    const pageCount = computed(() => {
+        return Math.ceil(filteredData.value.length / itemsPerPageData.value)
+    })
 
-const filteredData = computed(() => {
-    return props.data.filter(Data => {
-        return Data.name.toLowerCase().includes(searchData.value)
+    const filteredData = computed(() => {
+        return props.data.filter(item => {
+            return item.id.toLowerCase().includes(searchData.value)
+        })
     })
 })
 </script>

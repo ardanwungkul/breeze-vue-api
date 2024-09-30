@@ -10,6 +10,8 @@ import ValidationErrors from '@/components/ValidationErrors.vue'
 import Multiselect from 'vue-multiselect'
 import '@/assets/css/vue-multiselect.css'
 import QrScanner from '@/components/dialog/QrScanner.vue'
+import { QuillEditor } from '@vueup/vue-quill'
+import '@/assets/css/quill.css'
 
 const storeProduct = useProductStore()
 const storeSubCategory = useSubCategoryStore()
@@ -24,6 +26,7 @@ async function fetchSubCategories() {
 }
 
 const product_name = ref('')
+const product_description = ref('')
 const product_price = ref('')
 const product_code = ref('')
 const product_code_type = ref('')
@@ -54,6 +57,7 @@ const AddProduct = async () => {
     formData.append('product_price', product_price.value)
     formData.append('product_code_type', product_code_type.value)
     formData.append('product_image', product_image.value)
+    formData.append('product_description', product_description.value)
     if (product_code.value !== '' && product_code.value !== null) {
         formData.append('product_code', product_code.value)
     }
@@ -270,6 +274,20 @@ function removeGallery(index) {
                                         track-by="sub_category_name"
                                         :preserve-search="true"
                                         placeholder="Select Categories"></multiselect>
+                                </div>
+                                <div
+                                    class="flex flex-col col-span-2 gap-2 text-sm">
+                                    <label class="dark:text-light-primary-1"
+                                        >Description</label
+                                    >
+                                    <QuillEditor
+                                        v-model:content="product_description"
+                                        contentType="html"
+                                        :toolbar="false"
+                                        id="article_content"
+                                        class="bg-light-primary-1 dark:bg-dark-primary-1 dark:text-typography-1 dark:!border-dark-primary-1 relative h-auto rounded-lg min-h-40 border shadow-lg"
+                                        placeholder="Enter Product Description"
+                                        toolbar="full"></QuillEditor>
                                 </div>
                             </div>
                         </div>

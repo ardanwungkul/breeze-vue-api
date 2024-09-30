@@ -11,6 +11,7 @@ onBeforeMount(() => {
         store.getData()
     }
 })
+
 const rail = inject('rail')
 const sidebarItem = ref([
     {

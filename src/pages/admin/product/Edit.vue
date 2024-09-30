@@ -13,6 +13,8 @@ import '@/assets/css/vue-multiselect.css'
 import LoadingAdmin from '@/components/LoadingAdmin.vue'
 import axios from 'axios'
 import QrScanner from '@/components/dialog/QrScanner.vue'
+import { QuillEditor } from '@vueup/vue-quill'
+import '@/assets/css/quill.css'
 
 const storeProduct = useProductStore()
 const storeSubCategory = useSubCategoryStore()
@@ -30,6 +32,7 @@ const product = ref(null)
 const router = useRouter()
 
 const product_name = ref('')
+const product_description = ref('')
 const product_price = ref('')
 const product_image = ref('')
 const product_code = ref('')
@@ -55,6 +58,7 @@ onBeforeMount(async () => {
         product_price.value = product.value.product_price
         product_code_type.value = product.value.product_code_type
         product_code.value = product.value.product_code
+        product_description.value = product.value.product_description
         img3D.value = product.value.product_image_3d
             ? import.meta.env.VITE_PUBLIC_BACKEND_URL +
               '/storage/images/product/3d/' +
@@ -66,7 +70,7 @@ onBeforeMount(async () => {
             try {
                 const response = await axios.get(
                     import.meta.env.VITE_PUBLIC_BACKEND_URL +
-                        '/storage/images/product/gallery/' +
+                        '/api/storage/images/product/gallery/' +
                         product.value.id +
                         '/' +
                         gallery.product_image,
@@ -123,6 +127,7 @@ const editProduct = async () => {
     formData.append('product_code_type', product_code_type.value)
     formData.append('product_price', product_price.value)
     formData.append('product_image', product_image.value)
+    formData.append('product_description', product_description.value)
     formData.append('_method', 'PUT')
     formData.append(
         'product_image_3d',
@@ -343,6 +348,20 @@ function removeGallery(index) {
                                         track-by="sub_category_name"
                                         :preserve-search="true"
                                         placeholder="Select Categories"></multiselect>
+                                </div>
+                                <div
+                                    class="flex flex-col col-span-2 gap-2 text-sm">
+                                    <label class="dark:text-light-primary-1"
+                                        >Description</label
+                                    >
+                                    <QuillEditor
+                                        v-model:content="product_description"
+                                        contentType="html"
+                                        :toolbar="false"
+                                        id="article_content"
+                                        class="bg-light-primary-1 dark:bg-dark-primary-1 dark:text-typography-1 dark:!border-dark-primary-1 relative h-auto rounded-lg min-h-40 border shadow-lg"
+                                        placeholder="Enter Product Description"
+                                        toolbar="full"></QuillEditor>
                                 </div>
                             </div>
                         </div>

@@ -68,7 +68,11 @@ onBeforeMount(async () => {
                     <blockquote
                         class="absolute w-[300px] border-l-[16px] border-gray-300 text-gray-300 bg-black -translate-x-full p-5 flex justify-center object-center text-3xl tracking-wide capitalize">
                         <p>
-                            {{ article?.article_blockquote }}
+                            {{
+                                article?.article_blockquote
+                                    ? article?.article_blockquote
+                                    : article?.article_title
+                            }}
                         </p>
                     </blockquote>
                     <div

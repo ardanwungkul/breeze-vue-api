@@ -6,16 +6,25 @@ import { ref, onBeforeMount } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useProductStore } from '@/stores/product'
 import Loading from '@/components/Loading.vue'
+import { VNumberInput } from 'vuetify/labs/VNumberInput'
+import '@/assets/css/vuetify.css'
+import { computed } from 'vue'
 
 const isLoading = ref(true)
 const storeProduct = useProductStore()
 const product = ref(null)
 const router = useRouter()
 const backendUrl = import.meta.env.VITE_PUBLIC_BACKEND_URL
+const form = ref({
+    quantity: 1,
+})
 
 function formatPrice(price) {
     return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')
 }
+const total = computed(() => {
+    return form.value.quantity * (product ? product.value.product_price : 0)
+})
 
 onBeforeMount(async () => {
     await fetchProduct()
@@ -49,12 +58,13 @@ const swiperJs = swiper => {}
 <template>
     <AppLayout>
         <Loading :isLoading="isLoading" />
-        <div class="px-10 mt-5" v-if="product">
+        <div class="px-10 py-5" v-if="product">
             <div
-                class="flex flex-row bg-white mx-auto rounded-lg shadow-lg gap-5 w-full">
+                class="flex flex-row bg-white mx-auto rounded-lg shadow-lg gap-3 w-full relative">
                 <div
-                    class="flex flex-col gap-2 h-full py-6 p-4 w-[35%] flex-none">
-                    <div class="w-full rounded-sm aspect-square">
+                    class="flex flex-col gap-2 h-full py-6 p-4 w-full max-w-sm flex-none sticky top-20">
+                    <div
+                        class="w-full rounded-sm overflow-hidden aspect-square">
                         <v-img
                             :src="mainImage"
                             class="mx-auto"
@@ -80,7 +90,7 @@ const swiperJs = swiper => {}
                             <v-img
                                 @click="mainImage = mainImageDefault"
                                 :src="mainImageDefault"
-                                class="!aspect-square w-full"
+                                class="!aspect-square w-full rounded-sm"
                                 cover>
                                 <template v-slot:placeholder>
                                     <div
@@ -146,7 +156,7 @@ const swiperJs = swiper => {}
                             </p>
                         </div>
                     </div>
-                    <div class="flex w-full flex-row gap-3 py-3">
+                    <div class="flex w-full flex-row gap-3">
                         <p class="text-2xl font-medium">
                             Rp.
                             {{
@@ -156,14 +166,53 @@ const swiperJs = swiper => {}
                             }}
                         </p>
                     </div>
-                    <div class="flex flex-row text-[13px] gap-2">
-                        <button
-                            class="py-3 px-4 duration-300 flex items-center gap-2 w-full justify-center bg-ezzora-100 rounded-lg">
-                            <div class="w-5 h-5">
-                                <i class="fa-regular fa-cart-shopping"></i>
-                            </div>
-                            <p>Add to Cart</p>
-                        </button>
+                    <fieldset
+                        class="p-5 bg-ezzora-50 rounded-lg !text-sm border">
+                        <legend
+                            class="bg-ezzora-200 rounded-lg px-5 py-1 font-semibold border text-xs">
+                            Details
+                        </legend>
+
+                        <p v-html="product.product_description"></p>
+                    </fieldset>
+                </div>
+                <div class="w-full sticky top-20 py-6 px-4 h-full max-w-sm">
+                    <div class="border rounded-lg p-3 space-y-3">
+                        <p class="font-semibold">Set quantity and notes</p>
+                        <div>
+                            <v-number-input
+                                :density="'compact'"
+                                v-model="form.quantity"
+                                class="border rounded-lg overflow-hidden"
+                                hide-details
+                                :single-line="false"
+                                variant="solo-filled"
+                                :min="1"
+                                control-variant="split"></v-number-input>
+                        </div>
+                        <div class="flex justify-between">
+                            <p class="text-sm">Subtotal</p>
+                            <p class="font-semibold">
+                                Rp. <span>{{ formatPrice(total) }}</span>
+                            </p>
+                        </div>
+                        <div
+                            class="flex flex-row justify-between text-[13px] gap-2">
+                            <button
+                                class="py-2 px-4 duration-300 flex items-center gap-2 w-full justify-center bg-ezzora-100 rounded-lg hover:bg-opacity-80">
+                                <div class="w-5 h-5">
+                                    <i class="fa-regular fa-plus"></i>
+                                </div>
+                                <p>Add to Cart</p>
+                            </button>
+                            <button
+                                class="py-2 px-4 duration-300 flex items-center gap-2 w-full justify-center bg-secondary-3 text-typography-1 rounded-lg hover:bg-opacity-80">
+                                <div class="w-5 h-5">
+                                    <i class="fa-regular fa-cart-shopping"></i>
+                                </div>
+                                <p>Buy Now</p>
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>

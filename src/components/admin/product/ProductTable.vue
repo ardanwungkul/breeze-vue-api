@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, watchEffect, onBeforeMount } from 'vue'
+import { ref, computed, watchEffect, onBeforeMount, nextTick } from 'vue'
 import ConfirmDelete from '@/components/dialog/ConfirmDelete.vue'
 import { useProductStore } from '@/stores/product'
 import ValidationErrors from '@/components/ValidationErrors.vue'
@@ -9,7 +9,10 @@ import saveSvgAsPng from 'save-svg-as-png'
 import { useUsers } from '@/stores/user'
 import { useStockStore } from '@/stores/stock'
 import SuccessMessage from '@/components/SuccessMessage.vue'
+import JSZip from 'jszip'
 
+const tempProduct = ref({})
+const tempStocks = ref([])
 const storeProduct = useProductStore()
 const stockStore = useStockStore()
 const userStore = useUsers()
@@ -35,7 +38,7 @@ const headersProduct = [
         align: 'start',
     },
     {
-        key: 'product_stock',
+        key: 'product_stocks',
         title: 'Stock',
         align: 'start',
     },
@@ -61,35 +64,11 @@ const success = computed(() => setSuccess.value)
 const setErrors = ref([])
 const errors = computed(() => setErrors.value)
 
-const editProduct = async (updateProduct, id) => {
-    await storeProduct.editProduct(updateProduct, setErrors, processing, id)
-    watchEffect(() => {
-        props.fetchProducts()
-    }, props.products)
-}
 const deleteProduct = async id => {
     await storeProduct.deleteProduct(id, processing)
     watchEffect(() => {
         props.fetchProducts()
     }, props.products)
-}
-
-const downloadQr = async item => {
-    if (item.product_code) {
-        saveSvgAsPng.saveSvgAsPng(
-            document.getElementById('qr-' + item.id),
-            item.product_name + '-qrcode.png',
-            {
-                scale: 10,
-                width: 0,
-                height: 0,
-            },
-        )
-    } else {
-        setErrors.value = Object.values([
-            'Please enter the Product Code before proceeding.',
-        ]).flat()
-    }
 }
 
 const generateStock = async (item, isActive) => {
@@ -101,15 +80,75 @@ const generateStock = async (item, isActive) => {
     formData.append('product_id', item.id)
     await stockStore.generateStock(formData, setErrors, processing, setSuccess)
     password.value = ''
+
+    tempProduct.value = stockStore.tempProduct
+    tempStocks.value = stockStore.tempStocks
+    downloadQrCodes()
     isActive.value = false
+}
+
+const downloadQrCodes = async () => {
+    if (tempProduct.value.product_code_type == 'unique_code') {
+        const zip = new JSZip()
+        const qrFolder = zip.folder('qr_codes')
+        await nextTick()
+        for (const stock of tempStocks.value) {
+            const svgElement = document.getElementById(
+                'qr-generated-' + stock.id,
+            )
+            const pngDataUrl = await saveSvgAsPng.svgAsPngUri(svgElement, {
+                scale: 10,
+                width: 0,
+                height: 0,
+            })
+
+            const pngBlob = await (await fetch(pngDataUrl)).blob()
+
+            qrFolder.file(
+                `${tempProduct.value.product_name}-${stock.product_code}.png`,
+                pngBlob,
+            )
+        }
+
+        zip.generateAsync({ type: 'blob' }).then(blob => {
+            const link = document.createElement('a')
+            link.href = URL.createObjectURL(blob)
+            link.download = 'qr_codes.zip'
+            link.click()
+        })
+    } else {
+        await nextTick()
+        saveSvgAsPng.saveSvgAsPng(
+            document.getElementById('qr-generated-' + tempStocks.value[0].id),
+            tempProduct.value.product_name + '-qrcode.png',
+            {
+                scale: 10,
+                width: 0,
+                height: 0,
+            },
+        )
+    }
+    tempProduct.value = {}
+    tempStocks.value = []
 }
 </script>
 <template>
     <div class="relative">
+        <div
+            v-if="tempStocks.length > 0"
+            v-for="(tempStock, index) in tempStocks"
+            :key="index">
+            <QrcodeVue
+                :id="'qr-generated-' + tempStock.id"
+                render-as="svg"
+                width="1000"
+                height="1000"
+                class="hidden"
+                margin="1"
+                :value="tempStock.product_code" />
+        </div>
         <ValidationErrors class="w-full" :errors="errors" />
         <SuccessMessage class="w-full" :messages="success" />
-
-        <div v-if="success">Success</div>
         <div
             class="bg-light-primary-1 dark:bg-dark-primary-2 p-5 rounded-lg space-y-3 shadow-lg">
             <div class="flex justify-between items-center">
@@ -266,22 +305,6 @@ const generateStock = async (item, isActive) => {
                                 </form>
                             </template>
                         </v-dialog>
-                        <!-- <button
-                            :class="item.product_code ? '' : 'opacity-20'"
-                            class="flex gap-2 items-center text-white bg-secondary-3 hover:bg-opacity-90 rounded-lg px-3 py-1 cursor-pointer"
-                            @click="downloadQr(item)">
-                            <i class="fa-solid fa-qrcode"></i>
-                            <p class="whitespace-nowrap">Qr Code</p>
-                            <QrcodeVue
-                                :id="'qr-' + item.id"
-                                v-if="item.product_code"
-                                render-as="svg"
-                                width="1000"
-                                height="1000"
-                                class="hidden"
-                                margin="1"
-                                :value="item.product_code" />
-                        </button> -->
                     </div>
                 </template>
             </v-data-table>

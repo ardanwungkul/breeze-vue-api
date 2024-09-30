@@ -1,13 +1,16 @@
 <script setup>
+import { onBeforeMount, onMounted, ref } from 'vue'
+import { useSubCategoryStore } from '@/stores/subcategory'
+import { useStockStore } from '@/stores/stock'
 import AdminLayout from '@/layouts/AdminLayout.vue'
+import LoadingAdmin from '@/components/LoadingAdmin.vue'
 import TotalProductTable from '@/pages/admin/stock/TotalProductTable.vue'
 import WarehouseStockTable from '@/pages/admin/stock/WarehouseStockTable.vue'
 import AgentStockTable from '@/pages/admin/stock/AgentStockTable.vue'
+import UntrackedProduct from '@/pages/admin/stock/UntrackedProduct.vue'
 import '@/assets/css/vuetify.css'
-import { onMounted, ref } from 'vue'
-import { useSubCategoryStore } from '@/stores/subcategory'
-import LoadingAdmin from '@/components/LoadingAdmin.vue'
 
+const store = useStockStore()
 const isLoading = ref(true)
 const startDateFilter = ref('2024-01-01')
 const endDateFilter = ref(getTomorrowDate())
@@ -24,10 +27,14 @@ function getTomorrowDate() {
 const data = ref({
     categories: [],
     stock: [],
+    products: [],
 })
 
-onMounted(async () => {
+onBeforeMount(async () => {
     await categoryStore.subCategoryAll()
+    await store.stockAll()
+    data.value.stock = store.stocks
+    data.value.products = store.products
     data.value.categories = categoryStore.subcategories
     isLoading.value = false
 })
@@ -37,21 +44,28 @@ const tab = ref(null)
 <template>
     <AdminLayout>
         <LoadingAdmin :isLoading="isLoading" />
-        <div class="w-full space-y-4">
-            <div class="flex gap-4 items-center">
-                <div class="w-full">
-                    <input
-                        type="date"
-                        v-model="startDateFilter"
-                        class="p-2 border rounded-lg dark:bg-dark-primary-2 dark:!border-typography-2 dark:text-light-primary-1 shadow-lg text-sm w-full" />
+        <div class="w-full space-y-4" v-if="!isLoading">
+            <div class="flex items-center justify-between gap-4">
+                <div class="flex gap-4 items-center w-full">
+                    <div class="w-full">
+                        <input
+                            type="date"
+                            v-model="startDateFilter"
+                            class="p-2 border rounded-lg dark:bg-dark-primary-2 dark:!border-typography-2 dark:text-light-primary-1 shadow-lg text-sm w-full" />
+                    </div>
+                    <p class="text-typography-2">-</p>
+                    <div class="w-full">
+                        <input
+                            type="date"
+                            v-model="endDateFilter"
+                            class="p-2 border rounded-lg dark:bg-dark-primary-2 dark:!border-typography-2 dark:text-light-primary-1 shadow-lg text-sm w-full" />
+                    </div>
                 </div>
-                <p class="text-typography-2">-</p>
-                <div class="w-full">
-                    <input
-                        type="date"
-                        v-model="endDateFilter"
-                        class="p-2 border rounded-lg dark:bg-dark-primary-2 dark:!border-typography-2 dark:text-light-primary-1 shadow-lg text-sm w-full" />
-                </div>
+                <router-link
+                    :to="{ name: 'admin.stock.scan' }"
+                    class="py-2 px-3 border rounded-lg dark:bg-dark-primary-2 bg-light-primary-1 border-gray-600 dark:!border-typography-2 dark:text-light-primary-1 shadow-lg text-sm h-full">
+                    <i class="fa-solid fa-barcode-scan"></i>
+                </router-link>
             </div>
             <div class="grid grid-cols-4 gap-3">
                 <div
@@ -110,6 +124,7 @@ const tab = ref(null)
                     <v-tab value="one">Total Stock</v-tab>
                     <v-tab value="two">Stock in Warehouse</v-tab>
                     <v-tab value="three">Stock in Agents</v-tab>
+                    <v-tab value="four">Untracked Product</v-tab>
                 </v-tabs>
 
                 <v-tabs-window
@@ -117,23 +132,30 @@ const tab = ref(null)
                     class="dark:bg-dark-primary-2 bg-light-primary-1 dark:text-light-primary-1 p-3 dark:!border-typography-2 border rounded-lg shadow-lg">
                     <v-tabs-window-item value="one">
                         <TotalProductTable
+                            v-if="!isLoading"
                             :data="data?.stock"
-                            :categories="data?.categories"
-                            v-if="data" />
+                            :categories="data?.categories" />
                     </v-tabs-window-item>
 
                     <v-tabs-window-item value="two">
                         <WarehouseStockTable
+                            v-if="!isLoading"
                             :data="data?.stock"
-                            :categories="data?.categories"
-                            v-if="data" />
+                            :categories="data?.categories" />
                     </v-tabs-window-item>
 
                     <v-tabs-window-item value="three">
                         <AgentStockTable
+                            v-if="!isLoading"
                             :data="data?.stock"
-                            :categories="data?.categories"
-                            v-if="data" />
+                            :categories="data?.categories" />
+                    </v-tabs-window-item>
+                    <v-tabs-window-item value="four">
+                        <UntrackedProduct
+                            v-if="!isLoading"
+                            :data="data?.stock"
+                            :products="data?.products"
+                            :categories="data?.categories" />
                     </v-tabs-window-item>
                 </v-tabs-window>
             </div>

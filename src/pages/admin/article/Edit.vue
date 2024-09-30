@@ -313,7 +313,7 @@ const updateArticle = async status => {
                                             type="text"
                                             v-model="form.article_blockquote"
                                             id="article_title"
-                                            placeholder="Enter Title" />
+                                            placeholder="Enter Blockquote" />
                                     </div>
                                     <div
                                         class="flex flex-col gap-2 text-sm col-span-2">

@@ -33,6 +33,7 @@ const form = ref({
     voucher_image: null,
     voucher_image_text_color: '#000000',
     voucher_auto_generate: false,
+    voucher_maximum_value: null,
 })
 onBeforeMount(async () => {
     await store.voucherById(voucherId.value)
@@ -66,6 +67,7 @@ onBeforeMount(async () => {
             ? voucher.value.voucher_image_text_color
             : '#000000'
         form.value.voucher_auto_generate = voucher.value.voucher_auto_generate
+        form.value.voucher_maximum_value = voucher.value.voucher_maximum_value
 
         isLoading.value = store.loading
     }
@@ -117,6 +119,12 @@ const EditVoucher = async () => {
         formData.append('voucher_code', form.value.voucher_code)
         formData.append('voucher_stock', form.value.voucher_stock)
     }
+    if (form.value.voucher_maximum_value) {
+        formData.append(
+            'voucher_maximum_value',
+            form.value.voucher_maximum_value,
+        )
+    }
     formData.append('voucher_type', form.value.voucher_type)
     formData.append('voucher_condition', form.value.voucher_condition)
     formData.append(
@@ -150,9 +158,9 @@ const changePlaceholder = event => {
     <AdminLayout title="Edit Voucher">
         <LoadingAdmin :isLoading="isLoading" />
         <ValidationErrors class="w-full" :errors="errors" />
-        <p class="text-white">
+        <!-- <p class="text-white">
             {{ form }}
-        </p>
+        </p> -->
         <div class="w-full" v-if="!isLoading">
             <div class="px-5 py-3">
                 <form @submit.prevent="EditVoucher">
@@ -370,6 +378,23 @@ const changePlaceholder = event => {
                                         id="voucher_discount_value"
                                         placeholder="Enter Voucher Condition Value"
                                         required />
+                                </div>
+                                <div
+                                    class="flex flex-col gap-2 text-sm col-span-2"
+                                    v-if="
+                                        form.voucher_discount_type == 'Percent'
+                                    ">
+                                    <label
+                                        class="dark:text-light-primary-1"
+                                        for="voucher_maximum_value"
+                                        >Voucher Maximum Value</label
+                                    >
+                                    <input
+                                        v-model="form.voucher_maximum_value"
+                                        class="text-sm rounded-lg bg-light-primary-1 w-full dark:bg-dark-primary-1 dark:text-light-primary-1 border !border-gray-500 dark:!border-typography-3"
+                                        type="number"
+                                        id="voucher_maximum_value"
+                                        placeholder="Enter Voucher Maximum Value" />
                                 </div>
                                 <div class="col-span-2 space-y-2">
                                     <p class="dark:text-light-primary-1">

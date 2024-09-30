@@ -70,6 +70,17 @@ const routes = [
             guard: 'auth',
         },
     },
+    {
+        path: '/admin/stock/scan',
+        name: 'admin.stock.scan',
+        component: () => import('@/pages/admin/stock/Scan.vue'),
+        query: {
+            verified: 'verified',
+        },
+        meta: {
+            guard: 'auth',
+        },
+    },
     // Product
     {
         path: '/admin/product',
