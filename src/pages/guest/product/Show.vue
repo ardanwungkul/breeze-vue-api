@@ -3,7 +3,7 @@ import AppLayout from '@/layouts/AppLayout.vue'
 import { Swiper, SwiperSlide } from 'swiper/vue'
 import 'swiper/css'
 import { ref, onBeforeMount } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
+import { RouterLink, useRoute, useRouter } from 'vue-router'
 import { useProductStore } from '@/stores/product'
 import Loading from '@/components/Loading.vue'
 import { VNumberInput } from 'vuetify/labs/VNumberInput'
@@ -205,13 +205,22 @@ const swiperJs = swiper => {}
                                 </div>
                                 <p>Add to Cart</p>
                             </button>
-                            <button
+                            <RouterLink
+                                :to="{
+                                    name: 'checkout',
+                                    params: {
+                                        id: product.id,
+                                        slug: useRoute().params.slug,
+                                        qty: form.quantity,
+                                        amount: total,
+                                    },
+                                }"
                                 class="py-2 px-4 duration-300 flex items-center gap-2 w-full justify-center bg-secondary-3 text-typography-1 rounded-lg hover:bg-opacity-80">
                                 <div class="w-5 h-5">
                                     <i class="fa-regular fa-cart-shopping"></i>
                                 </div>
                                 <p>Buy Now</p>
-                            </button>
+                            </RouterLink>
                         </div>
                     </div>
                 </div>

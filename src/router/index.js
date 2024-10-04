@@ -356,6 +356,7 @@ const routes = [
             guard: 'auth',
         },
     },
+    
     // Product Detail
     {
         path: '/product/detail/:slug/:id',
@@ -364,6 +365,18 @@ const routes = [
         props: true,
         meta: {
             title: 'Product Detail',
+        },
+    },
+    
+    // Checkout
+    {
+        path: '/checkout/:slug/:id/:qty/:amount',
+        name: 'checkout',
+        component: () => import('@/pages/guest/product/Checkout.vue'),
+        props: true,
+        meta: {
+            title: 'Checkout',
+            guard: 'auth',
         },
     },
 
