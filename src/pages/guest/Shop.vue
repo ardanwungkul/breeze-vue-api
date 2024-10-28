@@ -2,7 +2,6 @@
 import AppLayout from '@/layouts/AppLayout.vue'
 import skincare6 from '@/assets/images/skincare6.png'
 
-import { RouterLink } from 'vue-router'
 import { ref, onMounted, onBeforeMount } from 'vue'
 import { useShopStore } from '@/stores/shop-page/shop'
 
@@ -49,24 +48,11 @@ function formatPrice(price) {
     return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')
 }
 
-const reseller = ref([
-    {
-        index: 1,
-        shop: 'Beauty Shop',
-    },
-    {
-        index: 2,
-        shop: 'toko b',
-    },
-    {
-        index: 3,
-        shop: 'toko c',
-    },
-    {
-        index: 4,
-        shop: 'toko d',
-    },
-])
+const rating = ref(5)
+const activefilter = ref('no')
+const togglefilter = async i => {
+    activefilter.value = i
+}
 </script>
 <template>
     <AppLayout>
@@ -192,16 +178,6 @@ const reseller = ref([
                                     </button>
                                 </div>
                             </div>
-                            <ul
-                                class="flex flex-row flex-wrap md:flex-wrap-reverse md:justify-end">
-                                <li v-for="i in reseller" :key="i.index">
-                                    <button
-                                        type="button"
-                                        class="py-1 text-sm px-4 bg-customLightPurple focus:text-white focus:bg-semupink duration-200">
-                                        {{ i.shop }}
-                                    </button>
-                                </li>
-                            </ul>
                         </div>
                         <div>
                             <div
@@ -239,7 +215,7 @@ const reseller = ref([
                                         <div
                                             class="flex flex-row justify-between">
                                             <div class="mt-3">
-                                                <RouterLink
+                                                <router-link
                                                     :to="{
                                                         name: 'product.detail',
                                                         params: {
@@ -249,7 +225,7 @@ const reseller = ref([
                                                     }"
                                                     class="text-base bg-semupink text-white p-2 px-3 duration-300 hover:border-transparent rounded-xl hover:text-gray-500">
                                                     Buy
-                                                </RouterLink>
+                                                </router-link>
                                             </div>
                                             <div
                                                 class="text-slate-500 text-xs md:text-normal flex flex-col">
@@ -424,21 +400,7 @@ const reseller = ref([
         </div>
     </AppLayout>
 </template>
-<script>
-export default {
-    data() {
-        return {
-            rating: 5,
-            activefilter: 'no',
-        }
-    },
-    methods: {
-        togglefilter(i) {
-            this.activefilter = i
-        },
-    },
-}
-</script>
+
 <style>
 .curved-c {
     clip-path: circle(0% at 0 50%);

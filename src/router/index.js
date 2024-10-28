@@ -2,7 +2,6 @@ import { createWebHistory, createRouter } from 'vue-router'
 import { useUsers } from '@/stores/user'
 import Welcome from '@/pages/guest/Welcome.vue'
 import AboutUs from '@/pages/guest/AboutUs.vue'
-import Shop from '@/pages/guest/Shop.vue'
 import Article from '@/pages/guest/Article.vue'
 import OfficialAgent from '@/pages/guest/officialAgent.vue'
 
@@ -43,6 +42,7 @@ const routes = [
         },
         meta: {
             guard: 'auth',
+            role: 'admin',
         },
     },
 
@@ -56,6 +56,7 @@ const routes = [
         },
         meta: {
             guard: 'auth',
+            role: 'admin',
         },
     },
     // Stock
@@ -68,6 +69,7 @@ const routes = [
         },
         meta: {
             guard: 'auth',
+            role: 'admin',
         },
     },
     {
@@ -79,6 +81,7 @@ const routes = [
         },
         meta: {
             guard: 'auth',
+            role: 'admin',
         },
     },
     // Product
@@ -91,6 +94,7 @@ const routes = [
         },
         meta: {
             guard: 'auth',
+            role: 'admin',
         },
     },
     // Product Create
@@ -103,6 +107,7 @@ const routes = [
         },
         meta: {
             guard: 'auth',
+            role: 'admin',
         },
     },
     // Product Edit
@@ -114,6 +119,7 @@ const routes = [
         meta: {
             title: 'Edit Product',
             guard: 'auth',
+            role: 'admin',
         },
     },
     // Category
@@ -126,6 +132,7 @@ const routes = [
         },
         meta: {
             guard: 'auth',
+            role: 'admin',
         },
     },
 
@@ -139,6 +146,7 @@ const routes = [
         },
         meta: {
             guard: 'auth',
+            role: 'admin',
         },
     },
     // Shop Flash Sale
@@ -151,6 +159,7 @@ const routes = [
         },
         meta: {
             guard: 'auth',
+            role: 'admin',
         },
     },
     {
@@ -162,6 +171,7 @@ const routes = [
         },
         meta: {
             guard: 'auth',
+            role: 'admin',
         },
         props: true,
     },
@@ -176,6 +186,7 @@ const routes = [
         },
         meta: {
             guard: 'auth',
+            role: 'admin',
         },
     },
     // About Us Create
@@ -188,6 +199,7 @@ const routes = [
         },
         meta: {
             guard: 'auth',
+            role: 'admin',
         },
     },
     // About Us Edit
@@ -200,6 +212,7 @@ const routes = [
         },
         meta: {
             guard: 'auth',
+            role: 'admin',
         },
     },
     // Voucher
@@ -212,6 +225,7 @@ const routes = [
         },
         meta: {
             guard: 'auth',
+            role: 'admin',
         },
     },
     {
@@ -223,6 +237,7 @@ const routes = [
         },
         meta: {
             guard: 'auth',
+            role: 'admin',
         },
     },
     {
@@ -234,6 +249,7 @@ const routes = [
         },
         meta: {
             guard: 'auth',
+            role: 'admin',
         },
         props: true,
     },
@@ -248,6 +264,7 @@ const routes = [
         },
         meta: {
             guard: 'auth',
+            role: 'admin',
         },
     },
     {
@@ -259,6 +276,7 @@ const routes = [
         },
         meta: {
             guard: 'auth',
+            role: 'admin',
         },
     },
     {
@@ -270,6 +288,7 @@ const routes = [
         },
         meta: {
             guard: 'auth',
+            role: 'admin',
         },
     },
     {
@@ -293,6 +312,7 @@ const routes = [
         },
         meta: {
             guard: 'auth',
+            role: 'admin',
         },
     },
     // Cash Flow
@@ -305,6 +325,7 @@ const routes = [
         },
         meta: {
             guard: 'auth',
+            role: 'admin',
         },
     },
     {
@@ -316,6 +337,7 @@ const routes = [
         },
         meta: {
             guard: 'auth',
+            role: 'admin',
         },
     },
     {
@@ -327,6 +349,7 @@ const routes = [
         },
         meta: {
             guard: 'auth',
+            role: 'admin',
         },
         props: true,
     },
@@ -340,23 +363,10 @@ const routes = [
         },
         meta: {
             guard: 'auth',
+            role: 'admin',
         },
     },
 
-    // home
-    {
-        path: '/home',
-        redirect: '/dashboard',
-        name: 'dashboard',
-        component: Dashboard,
-        query: {
-            verified: 'verified',
-        },
-        meta: {
-            guard: 'auth',
-        },
-    },
-    
     // Product Detail
     {
         path: '/product/detail/:slug/:id',
@@ -365,17 +375,41 @@ const routes = [
         props: true,
         meta: {
             title: 'Product Detail',
+            guard: 'auth',
         },
     },
-    
+
+    // Cart
+    {
+        path: '/cart/',
+        name: 'cart.index',
+        component: () => import('@/pages/guest/order/Cart.vue'),
+        props: true,
+        meta: {
+            title: 'Cart List',
+            guard: 'auth',
+        },
+    },
+
     // Checkout
     {
-        path: '/checkout/:slug/:id/:qty/:amount',
+        path: '/checkout/:data/',
         name: 'checkout',
-        component: () => import('@/pages/guest/product/Checkout.vue'),
+        component: () => import('@/pages/guest/order/Checkout.vue'),
         props: true,
         meta: {
             title: 'Checkout',
+            guard: 'auth',
+        },
+    },
+    // Purchase
+    {
+        path: '/purchase/',
+        name: 'purchase',
+        component: () => import('@/pages/guest/order/Purchase.vue'),
+        props: true,
+        meta: {
+            title: 'Purchase',
             guard: 'auth',
         },
     },
@@ -384,7 +418,7 @@ const routes = [
     {
         path: '/shop',
         name: 'shop',
-        component: Shop,
+        component: () => import('@/pages/guest/Shop.vue'),
         meta: {
             title: 'Shop',
         },
@@ -425,6 +459,7 @@ const routes = [
         meta: {
             title: 'Dashboard',
             guard: 'auth',
+            role: 'admin',
         },
     },
     // Login
@@ -522,6 +557,28 @@ router.beforeEach((to, from, next) => {
     else if (to.matched.some(route => route.meta.guard === 'auth') && !auth)
         next({ name: 'login' })
     else next()
+})
+
+// Middleware Role
+router.beforeEach(async (to, from, next) => {
+    if (to.matched.some(route => route.meta.role)) {
+        const store = useUsers()
+        if (store.authUser) {
+            if (!store.hasUserData) {
+                await store.getData()
+            }
+        }
+        const role = store.userData.role
+        if (role && to.matched.some(route => route.meta.role === role)) {
+            next()
+        } else {
+            return role === 'admin'
+                ? next({ name: 'dashboard' })
+                : next({ name: 'welcome' })
+        }
+    } else {
+        next()
+    }
 })
 
 // Page Title and Metadata

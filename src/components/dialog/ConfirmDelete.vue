@@ -14,22 +14,28 @@ const props = defineProps({
         type: Function,
         required: true,
     },
+    buttonClass: {
+        type: String,
+    },
     label: {
         type: String,
     },
 })
+const dialogActive = ref(false)
 const processing = ref(false)
 const handleDelete = async () => {
     processing.value = true
     await props.method(props.id, processing)
     processing.value = false
+    dialogActive.value = false
 }
 </script>
 <template>
-    <v-dialog>
+    <v-dialog v-model="dialogActive">
         <template v-slot:activator="{ props: activatorProps }">
-            <button v-bind="activatorProps">
+            <button v-bind="activatorProps" type="button">
                 <div
+                    :class="buttonClass"
                     class="flex gap-2 items-center text-white bg-red-500 hover:bg-opacity-90 rounded-lg px-3 py-1">
                     <i class="fa-solid fa-trash"></i>
                     <p v-if="label">{{ label }}</p>

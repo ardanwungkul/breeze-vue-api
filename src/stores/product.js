@@ -130,6 +130,23 @@ export const useProductStore = defineStore({
                 processing.value = false
             }
         },
+        async deleteVariant(id, processing) {
+            await csrf()
+            processing.value = true
+            try {
+                const response = await axios.delete(
+                    `/api/product-variant/${id}`,
+                )
+                console.log(response)
+                processing.value = false
+            } catch (error) {
+                this.error = error
+                console.log(this.error)
+                processing.value = false
+            } finally {
+                processing.value = false
+            }
+        },
     },
 })
 

@@ -152,7 +152,7 @@ const submitLogout = () => {
                             class="bg-transparent">
                             <button
                                 type="button"
-                                class="group w-full py-2 px-2 hover:bg-light-primary-3 dark:hover:bg-white text-typography-3 dark:text-white cursor-pointer rounded-lg flex items-center gap-4"
+                                class="group w-full py-2 px-2 hover:bg-light-primary-3 dark:hover:bg-white transition-colors duration-500 text-typography-3 dark:text-white cursor-pointer rounded-lg flex items-center gap-4"
                                 @click="toggleAccordion(index)"
                                 :aria-expanded="activeAccordion === index"
                                 :aria-controls="'accordion-body-' + index">
@@ -176,13 +176,13 @@ const submitLogout = () => {
                                     :to="{ name: child.to }"
                                     v-for="(child, i) in item.child"
                                     :key="i"
-                                    class="group w-full py-2 px-2 hover:bg-light-primary-3 dark:hover:bg-white text-typography-3 dark:text-white cursor-pointer rounded-lg flex items-center gap-4">
+                                    class="group w-full py-2 px-2 hover:bg-light-primary-3 dark:hover:bg-white transition-colors duration-500 text-typography-3 dark:text-white cursor-pointer rounded-lg flex items-center gap-4">
                                     <div
                                         class="w-[28px] flex-none flex justify-center text-typography-3 dark:text-white group-hover:dark:text-typography-3">
                                         <i class="" :class="child.icon"></i>
                                     </div>
                                     <p
-                                        class="text-typography-3 dark:text-white font-medium dark:font-normal text-sm whitespace-nowrap group-hover:dark:text-typography-3">
+                                        class="text-typography-3 dark:text-white font-medium dark:font-normal text-sm whitespace-nowrap group-hover:dark:text-typography-3 transition-colors duration-500">
                                         {{ child.title }}
                                     </p>
                                 </router-link>
@@ -198,14 +198,14 @@ const submitLogout = () => {
                                     ? '!bg-light-primary-3'
                                     : ''
                             "
-                            class="group w-full py-2 px-2 hover:bg-light-primary-3 dark:hover:bg-white text-typography-3 dark:text-white cursor-pointer rounded-lg flex items-center gap-4">
+                            class="group w-full py-2 px-2 hover:bg-light-primary-3 dark:hover:bg-white transition-colors duration-500 text-typography-3 dark:text-white cursor-pointer rounded-lg flex items-center gap-4">
                             <div
                                 :class="
                                     route.name === item.to
                                         ? '!text-typography-3'
                                         : ''
                                 "
-                                class="w-[28px] flex-none flex justify-center text-typography-3 dark:text-white group-hover:dark:text-typography-3">
+                                class="w-[28px] flex-none flex justify-center text-typography-3 dark:text-white group-hover:dark:text-typography-3 transition-colors duration-500">
                                 <i :class="item.icon" class=""></i>
                             </div>
                             <p
@@ -214,7 +214,7 @@ const submitLogout = () => {
                                         ? '!text-typography-3'
                                         : ''
                                 "
-                                class="text-typography-3 dark:text-white font-medium dark:font-normal text-sm whitespace-nowrap group-hover:dark:text-typography-3">
+                                class="text-typography-3 dark:text-white font-medium dark:font-normal text-sm whitespace-nowrap group-hover:dark:text-typography-3 transition-colors duration-500">
                                 {{ item.title }}
                             </p>
                         </div>
@@ -231,13 +231,13 @@ const submitLogout = () => {
                     <button
                         @click="submitLogout"
                         type="button"
-                        class="group w-full py-2 px-2 hover:bg-light-primary-3 dark:hover:bg-white text-typography-3 dark:text-white cursor-pointer rounded-lg flex items-center gap-4">
+                        class="group w-full py-2 px-2 hover:bg-light-primary-3 dark:hover:bg-white transition-colors duration-500 text-typography-3 dark:text-white cursor-pointer rounded-lg flex items-center gap-4">
                         <div
-                            class="w-[28px] flex-none flex justify-center text-typography-3 dark:text-white group-hover:dark:text-typography-3">
+                            class="w-[28px] flex-none flex justify-center text-typography-3 dark:text-white group-hover:dark:text-typography-3 transition-colors duration-500">
                             <i class="fa-regular fa-right-from-bracket"></i>
                         </div>
                         <p
-                            class="text-typography-3 dark:text-white font-medium dark:font-normal text-sm whitespace-nowrap group-hover:dark:text-typography-3">
+                            class="text-typography-3 dark:text-white font-medium dark:font-normal text-sm whitespace-nowrap group-hover:dark:text-typography-3 transition-colors duration-500">
                             Sign Out
                         </p>
                     </button>

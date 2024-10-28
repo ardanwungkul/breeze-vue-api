@@ -34,7 +34,6 @@ export const useUsers = defineStore('users', {
                     this.userData = {}
                     this.router.push('/login')
                 } else if (error.response && error.response.status === 409) {
-                    // Jika status 409, arahkan ke halaman verifikasi email
                     this.router.push('/verify-email')
                 } else {
                     console.error('Error fetching user data:', error)
@@ -140,7 +139,7 @@ export const useUsers = defineStore('users', {
                 .then(response => {
                     this.authStatus = response.status
                     processing.value = false
-
+                    // this.getData()
                     this.router.push({ name: 'admin.dashboard' })
                 })
                 .catch(error => {

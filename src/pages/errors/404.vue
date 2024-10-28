@@ -21,7 +21,7 @@
 </script>
 
 <template>
-    <div class="w-full h-screen">
+    <div class="w-full h-screen" id="containerPageNotFound">
         <router-link :to="{ name: 'welcome' }">
             <div>
                 <p
@@ -1034,7 +1034,7 @@
     </div>
 </template>
 <style>
-body {
+#containerPageNotFound {
     background-color: #fff;
     background: radial-gradient(at 50% -20%, #908392, #0d060e) fixed;
 }

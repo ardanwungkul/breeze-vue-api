@@ -19,12 +19,11 @@ export const useShopStore = defineStore({
         async getData() {
             this.loading = true
             try {
-                const response = await axios
-                    .get('/api/shop-page')
-                    .then(response => {
-                        this.data = response.data
-                    })
+                const response = await axios.get('/api/shop-page')
+                console.log('Fetched data:', response.data)
+                this.data = response.data
             } catch (error) {
+                console.error('Error fetching data:', error)
                 this.error = error
             } finally {
                 this.loading = false

@@ -19,12 +19,19 @@ const subcategories = ref([])
 
 onMounted(async () => {
     await fetchSubCategories()
+    await storeProduct.productAll()
+    fetchProduct()
 })
+async function fetchProduct() {
+    allProduct.value = storeProduct.products
+}
 async function fetchSubCategories() {
     await storeSubCategory.subCategoryAll()
     subcategories.value = storeSubCategory.allSubCategories
 }
 
+const allProduct = ref([])
+const bundlings = ref([])
 const product_name = ref('')
 const product_description = ref('')
 const product_price = ref('')
@@ -76,6 +83,19 @@ const AddProduct = async () => {
             formData.append(`gallery[]`, image.file)
         }
     })
+    if (bundlings.value.length > 0) {
+        bundlings.value.forEach((bundling, index) => {
+            formData.append(`bundlings[${index}][name]`, bundling.name)
+            formData.append(`bundlings[${index}][price]`, bundling.price)
+
+            bundling.items.forEach((item, itemIndex) => {
+                formData.append(
+                    `bundlings[${index}][items][${itemIndex}]`,
+                    item.id,
+                )
+            })
+        })
+    }
     await storeProduct.addProduct(formData, setErrors, processing)
 }
 
@@ -138,6 +158,9 @@ function handleUploadGallery(event) {
 }
 function removeGallery(index) {
     imageGallery.value.splice(index, 1)
+}
+function removeBundling(index) {
+    this.bundlings.splice(index, 1)
 }
 </script>
 <template>
@@ -408,6 +431,117 @@ function removeGallery(index) {
                                             id="image3D" />
                                     </label>
                                 </div>
+                            </div>
+                        </div>
+                        <!-- Bundling -->
+                        <div
+                            class="border dark:!border-typography-3 dark-primary-2 border-gray-300 p-3 rounded-lg bg-light-primary-1 dark:bg-dark-primary-2">
+                            <!-- {{ bundlings }} -->
+                            <div
+                                class="pb-2 border-b mb-3 px-3 flex items-center justify-between">
+                                <p
+                                    class="dark:text-light-primary-1 font-medium text-lg">
+                                    Bundling Product
+                                </p>
+                                <button
+                                    type="button"
+                                    @click="
+                                        bundlings.push({
+                                            name: null,
+                                            price: null,
+                                            items: [],
+                                        })
+                                    "
+                                    class="bg-secondary-2 rounded-lg px-3 py-1 text-typography-1 shadow-lg text-sm">
+                                    Add Bundling
+                                </button>
+                            </div>
+                            <div
+                                class="flex flex-wrap gap-3 px-3"
+                                v-if="bundlings.length > 0">
+                                <table
+                                    class="w-full dark:text-typography-1 text-sm">
+                                    <thead class="border-b border-typography-2">
+                                        <tr>
+                                            <td class="px-3 py-2 text-center">
+                                                Bundling Name
+                                            </td>
+                                            <td class="px-3 py-2 text-center">
+                                                Bundling Price
+                                            </td>
+                                            <td class="px-3 py-2 text-center">
+                                                Bundling Item
+                                            </td>
+                                            <td class="px-3 py-2 text-center">
+                                                Action
+                                            </td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr
+                                            v-for="(item, index) in bundlings"
+                                            :key="index">
+                                            <td class="px-3 py-2">
+                                                <input
+                                                    placeholder="Enter Bundling Name"
+                                                    required
+                                                    class="text-sm rounded-lg bg-light-primary-1 w-full dark:bg-dark-primary-1 dark:text-light-primary-1 border !border-gray-500 dark:!border-typography-3"
+                                                    type="text"
+                                                    v-model="item.name" />
+                                            </td>
+                                            <td class="px-3 py-2">
+                                                <input
+                                                    placeholder="Enter Bundling Price"
+                                                    required
+                                                    class="text-sm rounded-lg bg-light-primary-1 w-full dark:bg-dark-primary-1 dark:text-light-primary-1 border !border-gray-500 dark:!border-typography-3"
+                                                    type="number"
+                                                    v-model="item.price" />
+                                            </td>
+                                            <td class="px-3 py-2">
+                                                <multiselect
+                                                    v-model="item.items"
+                                                    :options="allProduct"
+                                                    :searchable="true"
+                                                    :close-on-select="false"
+                                                    label="product_name"
+                                                    :multiple="true"
+                                                    track-by="product_name"
+                                                    :preserve-search="true"
+                                                    placeholder="Select Product">
+                                                    <template
+                                                        #selection="{
+                                                            values,
+                                                            search,
+                                                            isOpen,
+                                                        }">
+                                                        <span
+                                                            class="multiselect__single text-sm"
+                                                            v-if="values.length"
+                                                            v-show="!isOpen"
+                                                            >{{
+                                                                values.length
+                                                            }}
+                                                            selected</span
+                                                        >
+                                                    </template></multiselect
+                                                >
+                                            </td>
+                                            <td class="px-3 py-2">
+                                                <div
+                                                    class="flex items-center justify-center">
+                                                    <button
+                                                        @click="
+                                                            removeBundling(
+                                                                index,
+                                                            )
+                                                        "
+                                                        type="button"
+                                                        class="fa-solid fa-x text-red-500"></button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
                         <button

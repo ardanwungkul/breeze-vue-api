@@ -7,9 +7,9 @@ const props = defineProps({
     slug: String,
     id: String,
     footer: {
-      type: String,
-      default: 'enabled'
-    }
+        type: String,
+        default: 'enabled',
+    },
 })
 </script>
 <template>

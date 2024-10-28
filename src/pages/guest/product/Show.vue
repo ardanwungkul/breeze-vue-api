@@ -2,19 +2,25 @@
 import AppLayout from '@/layouts/AppLayout.vue'
 import { Swiper, SwiperSlide } from 'swiper/vue'
 import 'swiper/css'
-import { ref, onBeforeMount } from 'vue'
+import { ref, onBeforeMount, computed } from 'vue'
 import { RouterLink, useRoute, useRouter } from 'vue-router'
 import { useProductStore } from '@/stores/product'
 import Loading from '@/components/Loading.vue'
 import { VNumberInput } from 'vuetify/labs/VNumberInput'
 import '@/assets/css/vuetify.css'
-import { computed } from 'vue'
+import { useCartStore } from '@/stores/cart'
+import { useUsers } from '@/stores/user'
 
+const variant = ref(null)
 const isLoading = ref(true)
 const storeProduct = useProductStore()
+const storeCart = useCartStore()
+const storeUser = useUsers()
 const product = ref(null)
 const router = useRouter()
 const backendUrl = import.meta.env.VITE_PUBLIC_BACKEND_URL
+const processing = ref(false)
+const defaultPrice = ref()
 const form = ref({
     quantity: 1,
 })
@@ -23,10 +29,22 @@ function formatPrice(price) {
     return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')
 }
 const total = computed(() => {
-    return form.value.quantity * (product ? product.value.product_price : 0)
+    return (
+        form.value.quantity *
+        (variant.value
+            ? variant.value.price
+            : product
+            ? product.value.product_price
+            : 0)
+    )
 })
 
 onBeforeMount(async () => {
+    if (storeUser.authUser) {
+        if (!storeUser.hasUserData) {
+            storeUser.getData()
+        }
+    }
     await fetchProduct()
 })
 const mainImage = ref()
@@ -49,8 +67,20 @@ async function fetchProduct() {
             '/storage/images/product/' +
             product.value.product_image
         mainImageDefault.value = mainImage.value
+        defaultPrice.value = product.value.product_price
         isLoading.value = storeProduct.loading
     }
+}
+
+const addToCart = async () => {
+    const formData = new FormData()
+    formData.append('quantity', form.value.quantity)
+    formData.append('user_id', storeUser.userData.id)
+    formData.append('product_id', product.value.id)
+    if (variant.value && variant.value !== null) {
+        formData.append('bundling_id', variant.value.id)
+    }
+    await storeCart.addCart(formData, isLoading)
 }
 
 const swiperJs = swiper => {}
@@ -160,11 +190,47 @@ const swiperJs = swiper => {}
                         <p class="text-2xl font-medium">
                             Rp.
                             {{
-                                product
+                                variant
+                                    ? formatPrice(variant.price)
+                                    : product
                                     ? formatPrice(product.product_price)
                                     : ''
                             }}
                         </p>
+                    </div>
+                    <div v-if="product?.bundling?.length > 0">
+                        <div class="flex flex-wrap gap-2 text-xs py-3">
+                            <div>
+                                <input
+                                    class="hidden peer"
+                                    type="radio"
+                                    id="defaultPrice"
+                                    :value="null"
+                                    v-model="variant"
+                                    name="selectedVariant" />
+                                <label
+                                    class="border rounded-lg px-3 py-1 peer-checked:border-secondary-3 peer-checked:text-secondary-3"
+                                    for="defaultPrice">
+                                    None
+                                </label>
+                            </div>
+                            <div
+                                v-for="(item, index) in product.bundling"
+                                :key="index">
+                                <input
+                                    class="hidden peer"
+                                    :id="'variant-' + item.id"
+                                    type="radio"
+                                    name="selectedVariant"
+                                    :value="item"
+                                    v-model="variant" />
+                                <label
+                                    class="border rounded-lg px-3 py-1 peer-checked:border-secondary-3 peer-checked:text-secondary-3"
+                                    :for="'variant-' + item.id">
+                                    {{ item.name }}
+                                </label>
+                            </div>
+                        </div>
                     </div>
                     <fieldset
                         class="p-5 bg-ezzora-50 rounded-lg !text-sm border">
@@ -198,29 +264,25 @@ const swiperJs = swiper => {}
                         </div>
                         <div
                             class="flex flex-row justify-between text-[13px] gap-2">
-                            <button
-                                class="py-2 px-4 duration-300 flex items-center gap-2 w-full justify-center bg-ezzora-100 rounded-lg hover:bg-opacity-80">
-                                <div class="w-5 h-5">
-                                    <i class="fa-regular fa-plus"></i>
-                                </div>
-                                <p>Add to Cart</p>
-                            </button>
-                            <RouterLink
-                                :to="{
-                                    name: 'checkout',
-                                    params: {
-                                        id: product.id,
-                                        slug: useRoute().params.slug,
-                                        qty: form.quantity,
-                                        amount: total,
-                                    },
-                                }"
-                                class="py-2 px-4 duration-300 flex items-center gap-2 w-full justify-center bg-secondary-3 text-typography-1 rounded-lg hover:bg-opacity-80">
-                                <div class="w-5 h-5">
-                                    <i class="fa-regular fa-cart-shopping"></i>
-                                </div>
-                                <p>Buy Now</p>
-                            </RouterLink>
+                            <form @submit.prevent="addToCart()" class="w-full">
+                                <button
+                                    class="py-2 px-4 duration-300 flex items-center gap-2 w-full justify-center bg-ezzora-100 rounded-lg hover:bg-opacity-80">
+                                    <div class="w-5 h-5">
+                                        <i class="fa-regular fa-plus"></i>
+                                    </div>
+                                    <p>Add to Cart</p>
+                                </button>
+                            </form>
+                            <form class="w-full">
+                                <button
+                                    class="py-2 px-4 duration-300 flex items-center gap-2 w-full justify-center bg-secondary-3 text-typography-1 rounded-lg hover:bg-opacity-80">
+                                    <div class="w-5 h-5">
+                                        <i
+                                            class="fa-regular fa-cart-shopping"></i>
+                                    </div>
+                                    <p>Buy Now</p>
+                                </button>
+                            </form>
                         </div>
                     </div>
                 </div>

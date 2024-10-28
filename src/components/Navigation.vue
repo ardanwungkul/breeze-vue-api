@@ -1,15 +1,26 @@
 <script setup>
 import NavLink from '@/components/NavLink.vue'
-import { ref, onMounted, onBeforeMount } from 'vue'
+import { ref, onMounted, onBeforeMount, watchEffect } from 'vue'
 import { Collapse } from 'flowbite'
 import { useUsers } from '@/stores/user'
+import { useCartStore } from '@/stores/cart'
 
 const store = useUsers()
-onMounted(() => {
+const storeCart = useCartStore()
+const processing = ref(false)
+onBeforeMount(() => {
+    if (store.authUser) {
+        if (!store.hasUserData) {
+            store.getData()
+        }
+    }
+})
+onMounted(async () => {
     const $targetEl = document.getElementById('targetEl')
     const $triggerEl = document.getElementById('triggerEl')
 
     new Collapse($targetEl, $triggerEl)
+    await storeCart.cartAll(store.userData.id, processing)
 })
 
 const navItems = ref([
@@ -66,9 +77,19 @@ const submitLogout = () => {
                         <div>
                             <i class="fa-regular fa-heart"></i>
                         </div>
-                        <div>
-                            <i class="fa-solid fa-cart-shopping"></i>
-                        </div>
+                        <router-link :to="{ name: 'cart.index' }">
+                            <div class="relative">
+                                <i class="fa-solid fa-cart-shopping"></i>
+                                <p
+                                    v-if="
+                                        store.hasUserData &&
+                                        storeCart.cartsCount > 0
+                                    "
+                                    class="absolute -top-1 -right-3 text-xs bg-red-500 text-typography-1 rounded-full px-1">
+                                    <span>{{ storeCart.cartsCount }}</span>
+                                </p>
+                            </div>
+                        </router-link>
                         <v-menu>
                             <template v-slot:activator="{ props }">
                                 <div
@@ -95,12 +116,24 @@ const submitLogout = () => {
                                         </router-link>
                                     </li>
                                     <li></li>
-                                    <li v-if="store.authUser">
+                                    <li
+                                        v-if="
+                                            store.authUser &&
+                                            store.userData.role == 'admin'
+                                        ">
                                         <router-link
                                             :to="{ name: 'admin.dashboard' }">
                                             <div
                                                 class="tracking-wide font-semibold hover:bg-white px-3 py-2 rounded-lg text-gray-600">
                                                 Dashboard
+                                            </div>
+                                        </router-link>
+                                    </li>
+                                    <li v-if="store.authUser">
+                                        <router-link :to="{ name: 'purchase' }">
+                                            <div
+                                                class="tracking-wide font-semibold hover:bg-white px-3 py-2 rounded-lg text-gray-600">
+                                                My Orders
                                             </div>
                                         </router-link>
                                     </li>

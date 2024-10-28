@@ -6,11 +6,6 @@ import { ref, onMounted } from 'vue'
 
 import individualcare from '@/assets/images/individualcare.jpg'
 
-import { Swiper, SwiperSlide } from 'swiper/vue'
-import { Navigation, Autoplay } from 'swiper/modules'
-import { Tabs } from 'flowbite'
-import 'swiper/css'
-
 import Hero from '@/pages/guest/welcome/Hero.vue'
 import ProductTab from '@/pages/guest/welcome/ProductTab.vue'
 import BestSeller from '@/pages/guest/welcome/BestSeller.vue'
@@ -21,47 +16,8 @@ const store = useWelcome()
 onMounted(async () => {
     await store.getData()
     data.value = store.data
-
-    const tabsElement = document.getElementById('tabs-flash-sale')
-    const tabElements = [
-        {
-            id: 'new-product',
-            triggerEl: document.querySelector('#new-product-tab'),
-            targetEl: document.querySelector('#new-product'),
-        },
-        {
-            id: 'on-sale',
-            triggerEl: document.querySelector('#on-sale-tab'),
-            targetEl: document.querySelector('#on-sale'),
-        },
-        {
-            id: 'feature-product',
-            triggerEl: document.querySelector('#feature-product-tab'),
-            targetEl: document.querySelector('#feature-product'),
-        },
-    ]
-    const options = {
-        defaultTabId: 'new-product',
-        activeClasses: 'text-black border-blue-600',
-        inactiveClasses:
-            'text-gray-400 hover:text-gray-600 border-gray-100 hover:border-gray-300',
-    }
-    const instanceOptions = {
-        id: 'tabs-flash-sale',
-        override: true,
-    }
-    new Tabs(tabsElement, tabElements, options, instanceOptions)
 })
-const swiperModules = [Navigation, Autoplay]
-const swiperJs = swiper => {}
-const swiperConfig = {
-    navigation: {
-        nextEl: '.swiper-button-next',
-        prevEl: '.swiper-button-prev',
-    },
-}
-const modules = swiperModules
-const activeTab = ref('first')
+const tab = ref(null)
 </script>
 <template>
     <AppLayout>
@@ -72,71 +28,45 @@ const activeTab = ref('first')
                 <!-- Best Seller -->
                 <BestSeller />
 
-                <!-- Flash Sale Button -->
-                <div class="mb-4 border-gray-200 dark:border-gray-700">
-                    <ul
-                        class="flex flex-wrap -mb-px text-sm font-medium text-center text-gray-500 dark:text-gray-400 gap-3"
-                        id="tabs-flash-sale"
-                        role="tablist">
-                        <li role="presentation">
-                            <button
-                                class="uppercase sm:text-xl text-sm"
-                                id="new-product-tab"
-                                type="button"
-                                role="tab"
-                                aria-controls="new-product"
-                                aria-selected="false">
-                                New Products
-                            </button>
-                        </li>
-                        <li role="presentation">
-                            <button
-                                class="uppercase sm:text-xl text-sm"
-                                id="on-sale-tab"
-                                type="button"
-                                role="tab"
-                                aria-controls="on-sale"
-                                aria-selected="false">
-                                On Sale
-                            </button>
-                        </li>
-                        <li role="presentation">
-                            <button
-                                class="uppercase sm:text-xl text-sm"
-                                id="feature-product-tab"
-                                type="button"
-                                role="tab"
-                                aria-controls="feature-product"
-                                aria-selected="false">
-                                Feature Products
-                            </button>
-                        </li>
-                    </ul>
-                </div>
-
                 <!-- Flash Sale -->
-                <div id="tabFlashSale" class="min-h-[144px]">
-                    <div
-                        class="hidden rounded-lg bg-gray-50 p-4 dark:bg-gray-800"
-                        id="new-product"
-                        role="tabpanel"
-                        aria-labelledby="new-product-tab">
-                        <ProductTab />
-                    </div>
-                    <div
-                        class="hidden rounded-lg bg-gray-50 p-4 dark:bg-gray-800"
-                        id="on-sale"
-                        role="tabpanel"
-                        aria-labelledby="on-sale-tab">
-                        <ProductTab />
-                    </div>
-                    <div
-                        class="hidden rounded-lg bg-gray-50 p-4 dark:bg-gray-800"
-                        id="feature-product"
-                        role="tabpanel"
-                        aria-labelledby="feature-product-tab">
-                        <ProductTab />
-                    </div>
+                <div class="min-h-[144px]">
+                    <v-tabs
+                        v-model="tab"
+                        align-tabs="start"
+                        :color="'#000000'"
+                        hide-slider
+                        bg-color="transparent"
+                        selected-class="hover:!text-black">
+                        <v-tab :base-color="'#9ca3af'" :value="1">
+                            <p
+                                class="!text-lg hover:!bg-transparent hover:text-gray-600">
+                                New Products
+                            </p></v-tab
+                        >
+                        <v-tab :base-color="'#9ca3af'" :value="2">
+                            <p
+                                class="!text-lg hover:!bg-transparent hover:text-gray-600">
+                                On Sale
+                            </p>
+                        </v-tab>
+                        <v-tab :base-color="'#9ca3af'" :value="3">
+                            <p
+                                class="!text-lg hover:!bg-transparent hover:text-gray-600">
+                                Feature Products
+                            </p>
+                        </v-tab>
+                    </v-tabs>
+
+                    <v-tabs-window v-model="tab">
+                        <div class="py-3">
+                            <v-tabs-window-item
+                                v-for="n in 3"
+                                :key="n"
+                                :value="n">
+                                <ProductTab />
+                            </v-tabs-window-item>
+                        </div>
+                    </v-tabs-window>
                 </div>
 
                 <!-- 3D Products -->

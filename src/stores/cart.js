@@ -3,91 +3,50 @@ import { defineStore, acceptHMRUpdate } from 'pinia'
 
 const csrf = () => axios.get('/sanctum/csrf-cookie')
 
-export const usePaymentStore = defineStore({
-    id: 'payment',
+export const useCartStore = defineStore({
+    id: 'cart',
     state: () => ({
-        payments: [],
+        carts: [],
         loading: false,
         error: null,
-        create: {},
-        edit: [],
-        singlePayment: {},
+        singleCart: {},
     }),
     getters: {
-        allPayment: state => state.payments,
+        allCart: state => state.carts,
+        cartsCount: state => state.carts.length,
         isLoading: state => state.loading,
         getError: state => state.error,
     },
     actions: {
-        async paymentAll() {
+        async cartAll(id, processing) {
             this.loading = true
             try {
                 const response = await axios
-                    .get('/api/payment')
+                    .get(`/api/cart/${id}`)
                     .then(response => {
-                        this.payments = response.data
+                        this.carts = response.data
                     })
+                processing.value = false
             } catch (error) {
                 this.error = error
+                processing.value = false
             } finally {
                 this.loading = false
-            }
-        },
-        async purchaseUser(id, processing) {
-            processing.value = true
-            try {
-                const response = await axios
-                    .get(`/api/purchase/user/${id}`)
-                    .then(response => {
-                        this.payments = response.data
-                    })
-            } catch (error) {
-                this.error = error
-            } finally {
                 processing.value = false
             }
         },
-        async getDataCreate() {
+        async cartById(id) {
             this.loading = true
             try {
-                const response = await axios
-                    .get('/api/payment/create')
-                    .then(response => {
-                        this.create = response.data
-                    })
-            } catch (error) {
-                this.error = error
-            } finally {
-                this.loading = false
-            }
-        },
-        async paymentById(id) {
-            this.loading = true
-            try {
-                const response = await axios.get(`/api/payment/${id}`)
+                const response = await axios.get(`/api/cart/cart-id/${id}`)
                 if (response.status === 200) {
-                    this.singlePayment = response.data
+                    this.singleCart = response.data
                 } else {
-                    this.singlePayment = {}
+                    this.singleCart = {}
                 }
             } catch (error) {
                 if (error.response && error.response.status === 404) {
-                    this.singlePayment = {}
-                } else {
-                    this.error = error
-                }
-            } finally {
-                this.loading = false
-            }
-        },
-        async getDataEdit(id) {
-            this.loading = true
-            try {
-                const response = await axios.get(`/api/payment/${id}/edit`)
-                this.edit = response.data
-            } catch (error) {
-                if (error.response && error.response.status === 404) {
-                    this.edit = []
+                    this.singleCart = {}
                 } else {
                     this.error = error
                 }
@@ -96,15 +55,17 @@ export const usePaymentStore = defineStore({
             }
         },
 
-        async addPayment(form, setErrors, processing) {
+        async changeQuantity(form, processing) {
             await csrf()
             processing.value = true
             axios
-                .post('/api/payment', form)
+                .post('/api/cart-change-quantity', form)
                 .then(response => {
                     processing.value = false
-                    this.payments.push(response.data)
-                    this.router.push({ name: 'admin.payment.index' })
+                    console.log(response)
+
+                    // this.carts.push(response.data)
+                    // this.router.push({ name: 'cart.index' })
                 })
                 .catch(error => {
                     console.log(error)
@@ -116,16 +77,36 @@ export const usePaymentStore = defineStore({
                     processing.value = false
                 })
         },
-        async checkout(form, processing) {
+        async getDataByMultipleId(form, processing) {
             await csrf()
             processing.value = true
             axios
-                .post('/api/payment-checkout', form)
+                .post('/api/cart-by-multiple-id', form)
+                .then(response => {
+                    processing.value = false
+                    this.carts = response.data
+                })
+                .catch(error => {
+                    console.log(error)
+                    if (error.response.status !== 422) throw error
+
+                    setErrors.value = Object.values(
+                        error.response.data.errors,
+                    ).flat()
+                    processing.value = false
+                })
+        },
+        async addCart(form, processing) {
+            await csrf()
+            processing.value = true
+            axios
+                .post('/api/cart', form)
                 .then(response => {
                     processing.value = false
                     console.log(response.data)
-
-                    window.location = response.data.payment_url
+                    if (response.data.status == 'new') {
+                        this.carts.push(response.data.cart)
+                    }
                 })
                 .catch(error => {
                     console.log(error)
@@ -137,14 +118,14 @@ export const usePaymentStore = defineStore({
                     processing.value = false
                 })
         },
-        async editPayment(form, setErrors, processing, id) {
+        async editCart(form, setErrors, processing, id) {
             await csrf()
             processing.value = true
             axios
-                .post(`/api/payment/${id}`, form)
+                .post(`/api/cart/${id}`, form)
                 .then(response => {
                     processing.value = false
-                    this.router.push({ name: 'admin.payment.index' })
+                    this.router.push({ name: 'cart.index' })
                     console.log(response)
                 })
                 .catch(error => {
@@ -157,15 +138,32 @@ export const usePaymentStore = defineStore({
                     processing.value = false
                 })
         },
-        async deletePayment(id, processing) {
+        async deleteCart(id, processing) {
             await csrf()
             processing.value = true
             try {
-                const response = await axios.delete(`/api/payment/${id}`)
-                this.payments = this.payments.filter(
-                    Payment => Payment.id !== id,
+                const response = await axios.delete(`/api/cart/${id}`)
+                this.carts = this.carts.filter(Cart => Cart.id !== id)
+                processing.value = false
+            } catch (error) {
+                this.error = error
+                console.log(this.error)
+                processing.value = false
+            } finally {
+                processing.value = false
+            }
+        },
+        async deleteSelectedCart(form, processing) {
+            await csrf()
+            processing.value = true
+            try {
+                const response = await axios.post(
+                    `/api/delete-multiple-cart/`,
+                    form,
                 )
-
+                this.carts = this.carts.filter(
+                    cart => !response.data.includes(cart.id.toString()),
+                )
                 processing.value = false
             } catch (error) {
                 this.error = error
@@ -179,5 +177,5 @@ export const usePaymentStore = defineStore({
 })
 
 if (import.meta.hot) {
-    import.meta.hot.accept(acceptHMRUpdate(usePaymentStore, import.meta.hot))
+    import.meta.hot.accept(acceptHMRUpdate(useCartStore, import.meta.hot))
 }
