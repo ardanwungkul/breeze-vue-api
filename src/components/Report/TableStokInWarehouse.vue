@@ -28,7 +28,7 @@ const BodyStokInWarehouse = [
                 </select>
             </div>
         </div>
-        <hr class="bg-typography-2 !mb-4">
+        <hr class="border-typography-2 !mb-4">
         <div class="space-y-4">
             <v-data-table :headers="headersStokinWarehouse" :items="BodyStokInWarehouse" hide-default-footer
                 class="border dark:!border-typography-2/20 !rounded-lg shadow-lg dark:!bg-dark-primary-1 !bg-light-primary-2 dark:!text-typography-1"

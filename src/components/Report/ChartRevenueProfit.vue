@@ -50,7 +50,7 @@ const chartData = ref({
                     </select>
                 </div>
             </div>
-            <hr class="bg-typography-2 !mb-4">
+            <hr class="border-typography-2 !mb-4">
             <div class="grid grid-cols-3 gap-3">
                 <div
                     class="bg-light-primary-1 shadow-lg border border-typography-2 rounded-lg p-2 dark:bg-dark-primary-1 dark:text-typography-1">
