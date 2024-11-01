@@ -90,7 +90,7 @@ const bodyExpensesDetail = [
                             <option value="">Glowing shop</option>
                         </select>
                     </div>
-                    <hr class="bg-typography-2 !mb-4">
+                    <hr class="border-typography-2 !mb-4">
                     <div class="space-y-4">
                         <v-data-table :headers="header" :items="products" hide-default-footer
                             class="border dark:!border-typography-2/20 !rounded-lg !shadow-lg dark:!bg-dark-primary-1 !bg-light-primary-2 dark:!text-typography-1"
@@ -114,7 +114,7 @@ const bodyExpensesDetail = [
                             <option value="">Beautygirl shop</option>
                         </select>
                     </div>
-                    <hr class="bg-typography-2 !mb-4">
+                    <hr class="border-typography-2 !mb-4">
                     <div class="space-y-4">
                         <v-data-table :headers="header" :items="products" hide-default-footer
                             class="border dark:!border-typography-2/20 !rounded-lg shadow-lg dark:!bg-dark-primary-1 !bg-light-primary-2 dark:!text-typography-1"
@@ -138,7 +138,7 @@ const bodyExpensesDetail = [
                             <option value="">Glowing shop</option>
                         </select>
                     </div>
-                    <hr class="bg-typography-2 !mb-4">
+                    <hr class="border-typography-2 !mb-4">
                     <div class="space-y-4">
                         <v-data-table :headers="header" :items="products" hide-default-footer
                             class="border dark:!border-typography-2/20 !rounded-lg shadow-lg dark:!bg-dark-primary-1 !bg-light-primary-2 dark:!text-typography-1"
@@ -156,7 +156,7 @@ const bodyExpensesDetail = [
                 <div class="border-gray-200">
                     <div class="text-lg dark:text-typography-1">Detailed expenses</div>
                 </div>
-                <hr class="bg-typography-2 !mb-4">
+                <hr class="border-typography-2 !mb-4">
                 <div class="space-y-4">
                     <v-data-table :headers="headerExpensesDetail" :items="bodyExpensesDetail" hide-default-footer
                         class="border dark:!border-typography-2/20 !rounded-lg shadow-lg dark:!bg-dark-primary-1 !bg-light-primary-2 dark:!text-typography-1"

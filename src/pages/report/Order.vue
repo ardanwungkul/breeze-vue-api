@@ -183,7 +183,7 @@ const formatCurrency = (value) => {
             <div class="grid grid-cols-2 gap-3">
                 <div class="bg-light-primary-1 rounded-lg shadow-lg p-5 space-y-4 dark:bg-dark-primary-2">
                     <div class="px-4 text-lg font-medium dark:text-typography-1">Order Quantity</div>
-                    <hr class="bg-typography-2 !mb-4">
+                    <hr class="border-typography-2 !mb-4">
                     <div class="space-y-4">
                         <v-data-table :headers="HeadersOrderQuantity" :items="BodyOrderQuantity" hide-default-footer
                             class="border dark:!border-typography-2/20 !rounded-lg shadow-lg dark:!bg-dark-primary-1 !bg-light-primary-2 dark:!text-typography-1"
@@ -198,7 +198,7 @@ const formatCurrency = (value) => {
                 </div>
                 <div class="bg-light-primary-1 rounded-lg shadow-lg p-5 space-y-4 dark:bg-dark-primary-2">
                     <div class="px-4 text-lg font-medium dark:text-typography-1">Order Payment Status</div>
-                    <hr class="bg-typography-2 !mb-4">
+                    <hr class="border-typography-2 !mb-4">
                     <div class="space-y-4">
                         <v-data-table :headers="HeadersOrderPaymentStatus" :items="BodyOrderPaymentStatus"
                             hide-default-footer
@@ -222,7 +222,7 @@ const formatCurrency = (value) => {
             </div>
             <div class="bg-light-primary-1 rounded-lg shadow-lg space-y-4 dark:bg-dark-primary-2 p-5">
                 <div class="px-4 text-lg font-medium dark:text-typography-1">Delivery Order Report</div>
-                <hr class="bg-typography-2 !mb-4">
+                <hr class="border-typography-2 !mb-4">
                 <div class="space-y-4">
                     <v-data-table :headers="HeadersDeliveryOrderReport" :items="BodyDeliveryOrderReport"
                         hide-default-footer
@@ -250,7 +250,7 @@ const formatCurrency = (value) => {
             </div>
             <div class="bg-light-primary-1 p-5 space-y-4 rounded-lg dark:bg-dark-primary-2 shadow-lg">
                 <div class="text-lg font-medium px-4 dark:text-typography-1">History</div>
-                <hr class="bg-typography-2 !mb-4">
+                <hr class="border-typography-2 !mb-4">
                 <div class="flex gap-6">
                     <div class="space-y-1">
                         <p class="text-base text-typography-2 dark:text-typography-1">Sort by:</p>
@@ -311,7 +311,7 @@ const formatCurrency = (value) => {
             <div class="grid grid-cols-2 gap-3">
                 <div class="bg-light-primary-1 rounded-lg shadow-lg p-5 space-y-4 dark:bg-dark-primary-2">
                     <div class="px-4 text-lg font-medium dark:text-typography-1">Report Order Cancel</div>
-                    <hr class="bg-typography-2 !mb-4">
+                    <hr class="border-typography-2 !mb-4">
                     <div class="space-y-4">
                         <v-data-table :headers="HeadersReportOrderCancel" :items="BodyReportOrderCancel"
                             hide-default-footer
@@ -327,7 +327,7 @@ const formatCurrency = (value) => {
                 </div>
                 <div class="bg-light-primary-1 rounded-lg shadow-lg p-5 space-y-4 dark:bg-dark-primary-2">
                     <div class="px-4 text-lg font-medium dark:text-typography-1">Report Order Return</div>
-                    <hr class="bg-typography-2 !mb-4">
+                    <hr class="border-typography-2 !mb-4">
                     <div class="space-y-4">
                         <v-data-table :headers="HeadersReportOrderReturn" :items="BodyReportOrderReturn"
                             hide-default-footer

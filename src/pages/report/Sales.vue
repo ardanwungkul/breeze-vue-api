@@ -96,7 +96,7 @@ const BodySalesDataAgent = [
                         </select>
                     </div>
                 </div>
-                <hr class="bg-typography-2 !mb-4">
+                <hr class="border-typography-2 !mb-4">
                 <div class="grid grid-cols-3 gap-3">
                     <div
                         class="bg-light-primary-1 shadow-lg border border-typography-2 rounded-lg p-2 dark:bg-dark-primary-1 dark:text-typography-1">
@@ -144,7 +144,7 @@ const BodySalesDataAgent = [
                         </select>
                     </div>
                 </div>
-                <hr class="bg-typography-2 !mb-4">
+                <hr class="border-typography-2 !mb-4">
                 <div class="grid grid-cols-3 gap-3">
                     <div
                         class="bg-light-primary-1 shadow-lg border border-typography-2 rounded-lg p-2 dark:bg-dark-primary-1 dark:text-typography-1">
@@ -181,11 +181,11 @@ const BodySalesDataAgent = [
             </div>
             <div class="bg-light-primary-1 p-5 space-y-4 rounded-lg dark:bg-dark-primary-2 shadow-lg">
                 <div class="text-xl dark:text-typography-1">Sales Data</div>
-                <hr class="bg-typography-2 !mb-4">
+                <hr class="border-typography-2 !mb-4">
                 <div class="flex gap-6">
                     <div class="space-y-1">
                         <p class="text-base text-typography-2 dark:text-typography-1">filter by: Time</p>
-                        <select name="" id=""
+                        <select
                             class="rounded-xl text-sm border dark:bg-dark-primary-1 min-w-40 dark:text-typography-1 dark:border-typography-2">
                             <option value="">Weekly</option>
                             <option value="">Monthly</option>
@@ -221,7 +221,7 @@ const BodySalesDataAgent = [
             </div>
             <div class="bg-light-primary-1 p-5 space-y-4 rounded-lg dark:bg-dark-primary-2 shadow-lg">
                 <div class="text-xl dark:text-typography-1">Sales Data Agent</div>
-                <hr class="bg-typography-2 !mb-4">
+                <hr class="border-typography-2 !mb-4">
                 <div class="flex gap-6">
                     <div class="space-y-1">
                         <p class="text-base text-typography-2 dark:text-typography-1">filter by: Time</p>
