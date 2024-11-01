@@ -11,6 +11,8 @@ import { createVuetify } from 'vuetify'
 import * as components from 'vuetify/components'
 import * as directives from 'vuetify/directives'
 import { aliases, mdi } from 'vuetify/iconsets/mdi-svg'
+import VueDatePicker from '@vuepic/vue-datepicker'
+import '@vuepic/vue-datepicker/dist/main.css'
 
 const vuetify = createVuetify({
     components,
@@ -31,6 +33,8 @@ app.use(
         store.router = markRaw(router)
     }),
 )
+app.component('VueDatePicker', VueDatePicker)
+
 app.use(router)
 app.use(vuetify)
 app.mount('#app')
