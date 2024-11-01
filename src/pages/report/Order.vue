@@ -106,7 +106,7 @@ const formatCurrency = (value) => {
                         class="h-28 w-full shadow-lg rounded-lg flex p-5 gap-1 justify-between items-center bg-light-primary-1 dark:bg-dark-primary-2 dark:text-typography-1 border dark:!border-typography-2 cursor-pointer">
                         <div
                             class="dark:bg-light-primary-1 bg-light-primary-2 text-typography-2 rounded-full p-3 w-14 h-14 flex-none flex items-center justify-center">
-                            <i class="fa-solid fa-box text-4xl"></i>
+                            <i class="fa-solid fa-cart-shopping-fast text-3xl"></i>
                         </div>
                         <div class="flex flex-col w-full justify-center py-1">
                             <p class="text-xl font-medium text-center">0</p>
@@ -119,9 +119,9 @@ const formatCurrency = (value) => {
                         class="h-28 w-full shadow-lg rounded-lg flex p-5 gap-1 justify-between items-center bg-light-primary-1 dark:bg-dark-primary-2 dark:text-typography-1 border dark:!border-typography-2 cursor-pointer">
                         <div
                             class="dark:bg-light-primary-1 bg-light-primary-2 text-typography-2 rounded-full p-3 w-14 h-14 flex-none flex items-center justify-center">
-                            <i class="fa-solid fa-box text-4xl"></i>
+                            <i class="fa-solid fa-file-invoice-dollar text-3xl"></i>
                         </div>
-                        <div class="flex flex-col w-full justify-center py-1    ">
+                        <div class="flex flex-col w-full justify-center py-1">
                             <p class="text-lg font-medium text-center">0</p>
                             <p class="text-base text-center">Total Invoice</p>
                         </div>
@@ -132,9 +132,9 @@ const formatCurrency = (value) => {
                         class="h-28 w-full shadow-lg rounded-lg flex p-5 gap-1 justify-between items-center bg-light-primary-1 dark:bg-dark-primary-2 dark:text-typography-1 border dark:!border-typography-2 cursor-pointer">
                         <div
                             class="dark:bg-light-primary-1 bg-light-primary-2 text-typography-2 rounded-full p-3 w-14 h-14 flex-none flex items-center justify-center">
-                            <i class="fa-solid fa-box text-4xl"></i>
+                            <i class="fa-light fa-receipt text-4xl"></i>
                         </div>
-                        <div class="flex flex-col w-full justify-center py-1    ">
+                        <div class="flex flex-col w-full justify-center py-1">
                             <p class="text-lg font-medium text-center">0</p>
                             <p class="text-base text-center">Paid Invoice</p>
                         </div>
@@ -145,9 +145,9 @@ const formatCurrency = (value) => {
                         class="h-28 w-full shadow-lg rounded-lg flex p-5 gap-1 justify-between items-center bg-light-primary-1 dark:bg-dark-primary-2 dark:text-typography-1 border dark:!border-typography-2 cursor-pointer">
                         <div
                             class="dark:bg-light-primary-1 bg-light-primary-2 text-typography-2 rounded-full p-3 w-14 h-14 flex-none flex items-center justify-center">
-                            <i class="fa-solid fa-box text-4xl"></i>
+                            <i class="fa-solid fa-file-invoice text-4xl"></i>
                         </div>
-                        <div class="flex flex-col w-full justify-center py-1    ">
+                        <div class="flex flex-col w-full justify-center py-1">
                             <p class="text-lg font-medium text-center">0</p>
                             <p class="text-base text-center">Unpaid Invoice</p>
                         </div>
@@ -158,9 +158,9 @@ const formatCurrency = (value) => {
                         class="h-28 w-full shadow-lg rounded-lg flex p-5 gap-1 justify-between items-center bg-light-primary-1 dark:bg-dark-primary-2 dark:text-typography-1 border dark:!border-typography-2 cursor-pointer">
                         <div
                             class="dark:bg-light-primary-1 bg-light-primary-2 text-typography-2 rounded-full p-3 w-14 h-14 flex-none flex items-center justify-center">
-                            <i class="fa-solid fa-box text-4xl"></i>
+                            <i class="fa-solid fa-shop text-3xl"></i>
                         </div>
-                        <div class="flex flex-col w-full justify-center py-1    ">
+                        <div class="flex flex-col w-full justify-center py-1">
                             <p class="text-lg font-medium text-center">0</p>
                             <p class="text-base text-center">Stock in Shop</p>
                         </div>
@@ -171,9 +171,9 @@ const formatCurrency = (value) => {
                         class="h-28 w-full shadow-lg rounded-lg flex p-5 gap-1 justify-between items-center bg-light-primary-1 dark:bg-dark-primary-2 dark:text-typography-1 border dark:!border-typography-2 cursor-pointer">
                         <div
                             class="dark:bg-light-primary-1 bg-light-primary-2 text-typography-2 rounded-full p-3 w-14 h-14 flex-none flex items-center justify-center">
-                            <i class="fa-solid fa-box text-4xl"></i>
+                            <i class="fa-solid fa-warehouse text-3xl"></i>
                         </div>
-                        <div class="flex flex-col w-full justify-center py-1    ">
+                        <div class="flex flex-col w-full justify-center py-1">
                             <p class="text-lg font-medium text-center">0</p>
                             <p class="text-base text-center">Stock in Warehouse</p>
                         </div>
@@ -181,8 +181,9 @@ const formatCurrency = (value) => {
                 </div>
             </div>
             <div class="grid grid-cols-2 gap-3">
-                <div class="bg-light-primary-1 rounded-lg shadow-lg p-5 dark:bg-dark-primary-2">
-                    <div class="px-4 py-4 text-lg font-medium dark:text-typography-1">Order Quantity</div>
+                <div class="bg-light-primary-1 rounded-lg shadow-lg p-5 space-y-4 dark:bg-dark-primary-2">
+                    <div class="px-4 text-lg font-medium dark:text-typography-1">Order Quantity</div>
+                    <hr class="bg-typography-2 !mb-4">
                     <div class="space-y-4">
                         <v-data-table :headers="HeadersOrderQuantity" :items="BodyOrderQuantity" hide-default-footer
                             class="border dark:!border-typography-2/20 !rounded-lg shadow-lg dark:!bg-dark-primary-1 !bg-light-primary-2 dark:!text-typography-1"
@@ -195,8 +196,9 @@ const formatCurrency = (value) => {
                         </v-pagination>
                     </div>
                 </div>
-                <div class="bg-light-primary-1 rounded-lg shadow-lg p-5 dark:bg-dark-primary-2">
-                    <div class="px-4 py-4 text-lg font-medium dark:text-typography-1">Order Payment Status</div>
+                <div class="bg-light-primary-1 rounded-lg shadow-lg p-5 space-y-4 dark:bg-dark-primary-2">
+                    <div class="px-4 text-lg font-medium dark:text-typography-1">Order Payment Status</div>
+                    <hr class="bg-typography-2 !mb-4">
                     <div class="space-y-4">
                         <v-data-table :headers="HeadersOrderPaymentStatus" :items="BodyOrderPaymentStatus"
                             hide-default-footer
@@ -218,8 +220,9 @@ const formatCurrency = (value) => {
                     </div>
                 </div>
             </div>
-            <div class="bg-light-primary-1 rounded-lg shadow-lg dark:bg-dark-primary-2 p-5">
-                <div class="px-4 py-4 text-lg font-medium dark:text-typography-1">Delivery Order Report</div>
+            <div class="bg-light-primary-1 rounded-lg shadow-lg space-y-4 dark:bg-dark-primary-2 p-5">
+                <div class="px-4 text-lg font-medium dark:text-typography-1">Delivery Order Report</div>
+                <hr class="bg-typography-2 !mb-4">
                 <div class="space-y-4">
                     <v-data-table :headers="HeadersDeliveryOrderReport" :items="BodyDeliveryOrderReport"
                         hide-default-footer
@@ -245,13 +248,14 @@ const formatCurrency = (value) => {
                     </v-pagination>
                 </div>
             </div>
-            <div class="bg-light-primary-1 p-5 space-y-3 rounded-lg dark:bg-dark-primary-2 shadow-lg">
-                <div class="text-lg font-medium dark:text-typography-1">History</div>
+            <div class="bg-light-primary-1 p-5 space-y-4 rounded-lg dark:bg-dark-primary-2 shadow-lg">
+                <div class="text-lg font-medium px-4 dark:text-typography-1">History</div>
+                <hr class="bg-typography-2 !mb-4">
                 <div class="flex gap-6">
                     <div class="space-y-1">
-                        <p class="text-base text-typography-2">Sort by:</p>
-                        <select name="" id=""
-                            class="rounded-lg w-36 text-sm border dark:bg-dark-primary-2 dark:text-typography-1 dark:border-typography-2">
+                        <p class="text-base text-typography-2 dark:text-typography-1">Sort by:</p>
+                        <select
+                            class="rounded-xl min-w-40 text-sm border dark:bg-dark-primary-1 dark:text-typography-1 dark:border-typography-2">
                             <option value="">All Time</option>
                             <option value="">Daily</option>
                             <option value="">Weekly</option>
@@ -260,9 +264,9 @@ const formatCurrency = (value) => {
                         </select>
                     </div>
                     <div class="space-y-1">
-                        <p class="text-base text-typography-2">Sort by:</p>
-                        <select name="" id=""
-                            class="rounded-lg w-46 text-sm border dark:bg-dark-primary-2 dark:text-typography-1 dark:border-typography-2">
+                        <p class="text-base text-typography-2 dark:text-typography-1">Sort by:</p>
+                        <select
+                            class="rounded-xl min-w-40 text-sm border dark:bg-dark-primary-1 dark:text-typography-1 dark:border-typography-2">
                             <option value="">Amount (Lowest to Highest)</option>
                             <option value="">Amount (Highest to Lowest)</option>
                             <option value="">Nominal (Lowest to Highest)</option>
@@ -305,8 +309,9 @@ const formatCurrency = (value) => {
                 </div>
             </div>
             <div class="grid grid-cols-2 gap-3">
-                <div class="bg-light-primary-1 rounded-lg shadow-lg p-5 dark:bg-dark-primary-2">
-                    <div class="px-4 py-4 text-lg font-medium dark:text-typography-1">Report Order Cancel</div>
+                <div class="bg-light-primary-1 rounded-lg shadow-lg p-5 space-y-4 dark:bg-dark-primary-2">
+                    <div class="px-4 text-lg font-medium dark:text-typography-1">Report Order Cancel</div>
+                    <hr class="bg-typography-2 !mb-4">
                     <div class="space-y-4">
                         <v-data-table :headers="HeadersReportOrderCancel" :items="BodyReportOrderCancel"
                             hide-default-footer
@@ -320,8 +325,9 @@ const formatCurrency = (value) => {
                         </v-pagination>
                     </div>
                 </div>
-                <div class="bg-light-primary-1 rounded-lg shadow-lg p-5 dark:bg-dark-primary-2">
-                    <div class="px-4 py-4 text-lg font-medium dark:text-typography-1">Report Order Return</div>
+                <div class="bg-light-primary-1 rounded-lg shadow-lg p-5 space-y-4 dark:bg-dark-primary-2">
+                    <div class="px-4 text-lg font-medium dark:text-typography-1">Report Order Return</div>
+                    <hr class="bg-typography-2 !mb-4">
                     <div class="space-y-4">
                         <v-data-table :headers="HeadersReportOrderReturn" :items="BodyReportOrderReturn"
                             hide-default-footer

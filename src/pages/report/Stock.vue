@@ -1,6 +1,7 @@
 <script setup>
 import ReportLayout from '@/layouts/ReportLayout.vue';
-import Table_StokInWarehouse from '@/components/Report/Table_StokInWarehouse.vue';
+import TableStokInWarehouse from '@/components/Report/TableStokInWarehouse.vue';
+// data dummy
 const products = [
     { product: 'Nightcream', stock: 150, sold: 2400 },
     { product: 'Daycream', stock: 1001, sold: 2400 },
@@ -12,7 +13,7 @@ const products = [
 const header = [
     { key: 'product', title: 'Product' },
     { key: 'stock', title: 'Stock' },
-    { key: 'sold', title: 'Sould' },
+    { key: 'sold', title: 'Sold' },
 ]
 const headerExpensesDetail = [
     { key: 'date', title: 'Date' },
@@ -25,6 +26,7 @@ const bodyExpensesDetail = [
     { date: '2024-04-02', keterangan: 'Transportasi', amount: 'Rp 150,000' }
 
 ]
+// end data dummy
 </script>
 <template>
     <ReportLayout title="Stock Report">
@@ -76,47 +78,19 @@ const bodyExpensesDetail = [
                 </div>
             </div>
             <div class="grid grid-cols-2 gap-3">
-                <div class="bg-light-primary-1 dark:bg-dark-primary-2 p-5 w-full rounded-lg shadow-lg">
-                    <div class="flex justify-between p-4 items-center">
-                        <div class="text-lg dark:text-typography-1">Stok in Warehouse</div>
-                        <div class="space-y-2">
-                            <div class="dark:text-typography-1 text-sm">Filter by</div>
-                            <select name="" id=""
-                                class="rounded-xl border text-sm w-44 dark:bg-dark-primary-2 dark:text-typography-1 dark:!border-typography-2">
-                                <option value="">All</option>
-                                <option value="">Day Cream</option>
-                                <option value="">Night Cream</option>
-                                <option value="">SunScreen</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="space-y-4">
-                        <v-data-table :headers="header" :items="products" hide-default-footer
-                            class="border dark:!border-typography-2/20 !rounded-lg shadow-lg dark:!bg-dark-primary-1 !bg-light-primary-2 dark:!text-typography-1"
-                            :header-props="{
-                                class: 'dark:bg-dark-primary-1 bg-light-primary-2 dark:!text-white border-b dark:!border-white/30',
-                            }"></v-data-table>
-                        <v-pagination v-model="pageUser" :length="pageCount"
-                            class="bg-light-primary-2 border !border-typography-2/20 shadow-lg rounded-lg dark:bg-dark-primary-1 dark:text-white"
-                            :total-visible="5">
-                        </v-pagination>
-                    </div>
-                    <!-- <Table_StokInWarehouse /> -->
-                </div>
-                <div class="bg-light-primary-1 dark:bg-dark-primary-2 p-5 w-full rounded-lg shadow-lg">
-                    <div class="flex justify-between p-4 items-center">
+                <TableStokInWarehouse />
+                <div class="bg-light-primary-1 dark:bg-dark-primary-2 p-5 w-full space-y-4 rounded-lg shadow-lg">
+                    <div class="flex justify-between items-center">
                         <div class="text-lg dark:text-typography-1">Stok in Shop</div>
-                        <div class="space-y-2">
-                            <div class="dark:text-typography-1 text-sm">Filter by Shop</div>
-                            <select name="" id=""
-                                class="rounded-xl border text-sm w-44 dark:bg-dark-primary-2 dark:text-typography-1 dark:!border-typography-2">
-                                <option value="">All</option>
-                                <option value="">Beauty Shopm</option>
-                                <option value="">Girl Shop</option>
-                                <option value="">Glowing shop</option>
-                            </select>
-                        </div>
+                        <select
+                            class="rounded-xl border text-sm min-w-40 dark:bg-dark-primary-1 dark:text-typography-1 dark:!border-typography-2">
+                            <option value="">All</option>
+                            <option value="">Beauty Shopm</option>
+                            <option value="">Girl Shop</option>
+                            <option value="">Glowing shop</option>
+                        </select>
                     </div>
+                    <hr class="bg-typography-2 !mb-4">
                     <div class="space-y-4">
                         <v-data-table :headers="header" :items="products" hide-default-footer
                             class="border dark:!border-typography-2/20 !rounded-lg !shadow-lg dark:!bg-dark-primary-1 !bg-light-primary-2 dark:!text-typography-1"
@@ -129,20 +103,18 @@ const bodyExpensesDetail = [
                         </v-pagination>
                     </div>
                 </div>
-                <div class="bg-light-primary-1 dark:bg-dark-primary-2 p-5 w-full rounded-lg shadow-lg">
-                    <div class="flex justify-between p-4 items-center">
+                <div class="bg-light-primary-1 dark:bg-dark-primary-2 p-5 space-y-4 w-full rounded-lg shadow-lg">
+                    <div class="flex justify-between items-center">
                         <div class="text-lg dark:text-typography-1">Stok in Agent</div>
-                        <div class="space-y-2">
-                            <div class="dark:text-typography-1 text-sm">Filter by</div>
-                            <select name="" id=""
-                                class="rounded-xl border text-sm w-44 dark:bg-dark-primary-2 dark:text-typography-1 dark:!border-typography-2">
-                                <option value="">Beauty shop</option>
-                                <option value="">Girly shop</option>
-                                <option value="">Glow shop</option>
-                                <option value="">Beautygirl shop</option>
-                            </select>
-                        </div>
+                        <select
+                            class="rounded-xl border text-sm min-w-40 dark:bg-dark-primary-1 dark:text-typography-1 dark:!border-typography-2">
+                            <option value="">Beauty shop</option>
+                            <option value="">Girly shop</option>
+                            <option value="">Glow shop</option>
+                            <option value="">Beautygirl shop</option>
+                        </select>
                     </div>
+                    <hr class="bg-typography-2 !mb-4">
                     <div class="space-y-4">
                         <v-data-table :headers="header" :items="products" hide-default-footer
                             class="border dark:!border-typography-2/20 !rounded-lg shadow-lg dark:!bg-dark-primary-1 !bg-light-primary-2 dark:!text-typography-1"
@@ -155,20 +127,18 @@ const bodyExpensesDetail = [
                         </v-pagination>
                     </div>
                 </div>
-                <div class="bg-light-primary-1 dark:bg-dark-primary-2 p-5 w-full rounded-lg shadow-lg">
-                    <div class="flex justify-between p-4 gap-3 items-center">
+                <div class="bg-light-primary-1 dark:bg-dark-primary-2 p-5 space-y-4 w-full rounded-lg shadow-lg">
+                    <div class="flex justify-between gap-3 items-center">
                         <div class="text-lg dark:text-typography-1 text-wrap">Agent Stock and Purchase</div>
-                        <div class="space-y-2">
-                            <div class="dark:text-typography-1 text-sm">Filter by Shop</div>
-                            <select name="" id=""
-                                class="rounded-xl border text-sm w-44 dark:bg-dark-primary-2 dark:text-typography-1 dark:!border-typography-2">
-                                <option value="">All</option>
-                                <option value="">Beauty Shopm</option>
-                                <option value="">Girl Shop</option>
-                                <option value="">Glowing shop</option>
-                            </select>
-                        </div>
+                        <select
+                            class="rounded-xl border text-sm min-w-40 dark:bg-dark-primary-1 dark:text-typography-1 dark:!border-typography-2">
+                            <option value="">All</option>
+                            <option value="">Beauty Shopm</option>
+                            <option value="">Girl Shop</option>
+                            <option value="">Glowing shop</option>
+                        </select>
                     </div>
+                    <hr class="bg-typography-2 !mb-4">
                     <div class="space-y-4">
                         <v-data-table :headers="header" :items="products" hide-default-footer
                             class="border dark:!border-typography-2/20 !rounded-lg shadow-lg dark:!bg-dark-primary-1 !bg-light-primary-2 dark:!text-typography-1"
@@ -182,10 +152,11 @@ const bodyExpensesDetail = [
                     </div>
                 </div>
             </div>
-            <div class="bg-light-primary-1 dark:bg-dark-primary-2 p-5 rounded-lg shadow-lg space-y-3">
-                <div class="p-3 border-b-2 border-gray-200">
+            <div class="bg-light-primary-1 dark:bg-dark-primary-2 p-5 rounded-lg shadow-lg space-y-4">
+                <div class="border-gray-200">
                     <div class="text-lg dark:text-typography-1">Detailed expenses</div>
                 </div>
+                <hr class="bg-typography-2 !mb-4">
                 <div class="space-y-4">
                     <v-data-table :headers="headerExpensesDetail" :items="bodyExpensesDetail" hide-default-footer
                         class="border dark:!border-typography-2/20 !rounded-lg shadow-lg dark:!bg-dark-primary-1 !bg-light-primary-2 dark:!text-typography-1"
