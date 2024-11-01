@@ -39,21 +39,17 @@ function hideCityCount(event) {
 // end maps
 </script>
 <template>
-    <!-- <div
-        class=""> -->
-    <div>
-        <div>
-            <svg width="100%" height="400" viewBox="0 29 793 288">
-                <path v-for="location in map.locations" :key="location.id" :id="location.id" :d="location.path"
-                    class="province" :class="cityCountData.some(ids => ids.id === location.id) ? '!fill-red-500' : ''"
-                    @mouseover="handleCityHover($event, location.id)" @mouseleave="hideCityCount" />
-            </svg>
-            <div v-if="hoveredCityCount" class="tooltip" :style="{ top: `${tooltipY}px`, left: `${tooltipX}px` }">
-                {{ hoveredCityCount }} kota
-            </div>
+    <div
+        class="w-full shadow-lg dark:bg-dark-primary-2 border dark:!border-typography-2 bg-light-primary-1 px-8 rounded-lg">
+        <svg width="100%" height="400" viewBox="0 29 793 288">
+            <path v-for="location in map.locations" :key="location.id" :id="location.id" :d="location.path"
+                class="province" :class="cityCountData.some(ids => ids.id === location.id) ? '!fill-red-500' : ''"
+                @mouseover="handleCityHover($event, location.id)" @mouseleave="hideCityCount" />
+        </svg>
+        <div v-if="hoveredCityCount" class="tooltip" :style="{ top: `${tooltipY}px`, left: `${tooltipX}px` }">
+            {{ hoveredCityCount }} kota
         </div>
     </div>
-    <!-- </div> -->
 </template>
 <style>
 .province {

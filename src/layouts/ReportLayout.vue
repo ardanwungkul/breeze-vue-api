@@ -1,5 +1,5 @@
 <script setup>
-import { ref, watchEffect, provide, onBeforeMount } from 'vue'
+import { ref, watchEffect, provide, onBeforeMount, watch } from 'vue'
 import Navigation from '@/components/ReportNavigation.vue'
 import { useUsers } from '@/stores/user'
 
@@ -28,12 +28,10 @@ const currentDate = new Date();
 const startOfYear = new Date(currentDate.getFullYear(), 0, 1); // 1 Januari tahun ini
 const daysSinceStartOfYear = Math.floor((currentDate - startOfYear) / (24 * 60 * 60 * 1000));
 const currentWeek = Math.ceil((daysSinceStartOfYear + startOfYear.getDay() + 1) / 7);
-const IsDate = ref({
+const isDate = ref({
     startDateFilter: null,
     endDateFilter: null,
-    // weekly: currentWeek.toString(),
-    weekly: ["2024-04-01T17:00:00.000Z", "2024-04-08T16:59:59.999Z"]
-    ,
+    weekly: currentWeek,
     yearly: currentDate.getFullYear().toString(),
     monthly: String(currentDate.getMonth() + 1).padStart(2, '0'),
 })
@@ -44,7 +42,6 @@ const IsDate = ref({
         <Navigation />
         <v-main>
             <v-container class="!py-0 !max-w-none">
-                <!-- {{ IsDate.weekly }} -->
                 <div class="py-5 space-y-3 px-10">
                     <div class="w-full flex justify-between items-center mb-5">
                         <p class="text-2xl font-bold dark:font-medium text-ezzora-900 dark:text-white">
@@ -71,33 +68,33 @@ const IsDate = ref({
                     <div class="flex items-center justify-between gap-4">
                         <div v-if="IsSelectedDate === 'weekly'"
                             class="flex gap-4 items-center w-full shadow-lg rounded-lg">
-                            <div class="w-full  !rounded-lg !overflow-hidden">
-                                <VueDatePicker v-model="IsDate.weekly" week-picker
+                            <div class="w-full">
+                                <VueDatePicker v-model="isDate.weekly" week-picker
                                     :class="isDark ? 'dp__theme_dark' : 'dp_theme_light'" />
                             </div>
                         </div>
                         <div v-if="IsSelectedDate === 'yearly'"
                             class="flex gap-4 items-center w-full shadow-lg rounded-lg">
                             <div class="w-full">
-                                <VueDatePicker v-model="IsDate.yearly" year-picker
+                                <VueDatePicker v-model="isDate.yearly" year-picker
                                     :class="isDark ? 'dp__theme_dark' : 'dp_theme_light'" />
                             </div>
                         </div>
                         <div v-if="IsSelectedDate === 'monthly'"
                             class="flex gap-4 items-center w-full shadow-lg text-sm rounded-lg">
                             <div class="w-full">
-                                <VueDatePicker v-model="IsDate.monthly" month-picker
+                                <VueDatePicker v-model="isDate.monthly" month-picker
                                     :class="isDark ? 'dp__theme_dark' : 'dp_theme_light'" />
                             </div>
                         </div>
                         <div v-if="IsSelectedDate === 'date'" class="flex gap-4 items-center w-full rounded-lg">
                             <div class="w-full">
-                                <input type="date" v-model="IsDate.startDateFilter"
+                                <input type="date" v-model="isDate.startDateFilter"
                                     class="p-2 border rounded-lg dark:bg-dark-primary-2 dark:!border-typography-2 dark:text-typography-1 shadow-lg text-sm w-full" />
                             </div>
                             <p class="text-typography-2">-</p>
                             <div class="w-full">
-                                <input type="date" v-model="IsDate.endDateFilter"
+                                <input type="date" v-model="isDate.endDateFilter"
                                     class="p-2 border rounded-lg dark:bg-dark-primary-2 dark:!border-typography-2 dark:text-typography-1 shadow-lg text-sm w-full" />
                             </div>
                         </div>

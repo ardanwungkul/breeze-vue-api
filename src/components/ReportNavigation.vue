@@ -33,7 +33,7 @@ const sidebarItem = ref([
         isHasChild: false,
     },
     {
-        icon: 'fa-regular fa-money-bill-transfer',
+        icon: 'fa-sharp-duotone fa-solid fa-chart-waterfall',
         to: 'report.order',
         title: 'Order report',
         isHasChild: false,

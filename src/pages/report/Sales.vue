@@ -1,8 +1,8 @@
 <script setup>
 import ReportLayout from '@/layouts/ReportLayout.vue';
 import Maps from '@/components/Report/Maps.vue';
-import Chart_Revenue_Profit from '@/components/Report/Chart_Revenue_Profit.vue';
-import Table_UserPayment from '@/components/Report/Table_UserPayment.vue';
+import ChartRevenueProfit from '@/components/Report/ChartRevenueProfit.vue';
+import TableUserPayment from '@/components/Report/TableUserPayment.vue';
 import { ref } from 'vue'
 import { Line } from 'vue-chartjs';
 import { Chart as ChartJS, Title, Tooltip, Legend, LineElement, PointElement, CategoryScale, LinearScale } from 'chart.js';
@@ -80,21 +80,15 @@ const BodySalesDataAgent = [
 <template>
     <ReportLayout title="Sales Report">
         <div class="space-y-4 w-full">
-            <div class="w-full shadow-lg dark:bg-dark-primary-2 border bg-light-primary-1 px-8 rounded-lg">
-                <Maps />
-            </div>
-            <div class="bg-light-primary-1 p-5 dark:bg-dark-primary-2 rounded-lg shadow-lg">
-                <Table_UserPayment />
-            </div>
-            <div class="bg-light-primary-1 p-5 space-y-3 rounded-lg dark:bg-dark-primary-2 shadow-lg">
-                <Chart_Revenue_Profit />
-            </div>
-            <div class="bg-light-primary-1 p-5 space-y-3 rounded-lg dark:bg-dark-primary-2 shadow-lg">
+            <Maps />
+            <TableUserPayment />
+            <ChartRevenueProfit />
+            <div class="bg-light-primary-1 p-5 space-y-4 rounded-lg dark:bg-dark-primary-2 shadow-lg">
                 <div class="flex justify-between items-center">
-                    <div class="text-2xl dark:text-typography-1">Report By Kategori</div>
+                    <div class="text-xl dark:text-typography-1">Report By Kategori</div>
                     <div>
-                        <select name="" id=""
-                            class="rounded-lg border dark:bg-dark-primary-2 dark:border-typography-2 dark:text-typography-1">
+                        <select
+                            class="rounded-xl border text-sm dark:bg-dark-primary-1 min-w-40 dark:border-typography-2 dark:text-typography-1">
                             <option value="">All</option>
                             <option value="">Kategori-1</option>
                             <option value="">Kategori-2</option>
@@ -102,46 +96,47 @@ const BodySalesDataAgent = [
                         </select>
                     </div>
                 </div>
+                <hr class="bg-typography-2 !mb-4">
                 <div class="grid grid-cols-3 gap-3">
                     <div
-                        class="bg-light-primary-1 shadow-lg border border-typography-2 rounded-lg p-2 dark:bg-dark-primary-2 dark:text-typography-1">
+                        class="bg-light-primary-1 shadow-lg border border-typography-2 rounded-lg p-2 dark:bg-dark-primary-1 dark:text-typography-1">
                         <div class="text-center">Total Revenue</div>
                         <p class="text-center">0</p>
                     </div>
                     <div
-                        class="bg-light-primary-1 shadow-lg border border-typography-2 rounded-lg p-2 dark:bg-dark-primary-2 dark:text-typography-1">
+                        class="bg-light-primary-1 shadow-lg border border-typography-2 rounded-lg p-2 dark:bg-dark-primary-1 dark:text-typography-1">
                         <div class="text-center">Average Revenue</div>
                         <p class="text-center">0</p>
                     </div>
                     <div
-                        class="bg-light-primary-1 shadow-lg border border-typography-2 rounded-lg p-2 dark:bg-dark-primary-2 dark:text-typography-1">
+                        class="bg-light-primary-1 shadow-lg border border-typography-2 rounded-lg p-2 dark:bg-dark-primary-1 dark:text-typography-1">
                         <div class="text-center">Maksimum Revenue</div>
                         <p class="text-center">0</p>
                     </div>
                     <div
-                        class="bg-light-primary-1 shadow-lg border border-typography-2 rounded-lg p-2 dark:bg-dark-primary-2 dark:text-typography-1">
+                        class="bg-light-primary-1 shadow-lg border border-typography-2 rounded-lg p-2 dark:bg-dark-primary-1 dark:text-typography-1">
                         <div class="text-center">Minimum Revenue</div>
                         <p class="text-center">0</p>
                     </div>
                     <div
-                        class="bg-light-primary-1 shadow-lg border border-typography-2 rounded-lg p-2 dark:bg-dark-primary-2 dark:text-typography-1">
+                        class="bg-light-primary-1 shadow-lg border border-typography-2 rounded-lg p-2 dark:bg-dark-primary-1 dark:text-typography-1">
                         <div class="text-center">Total Expense</div>
                         <p class="text-center">0</p>
                     </div>
                     <div
-                        class="bg-light-primary-1 shadow-lg border border-typography-2 rounded-lg p-2 dark:bg-dark-primary-2 dark:text-typography-1">
+                        class="bg-light-primary-1 shadow-lg border border-typography-2 rounded-lg p-2 dark:bg-dark-primary-1 dark:text-typography-1">
                         <div class="text-center">Total Profit</div>
                         <p class="text-center">0</p>
                     </div>
                 </div>
                 <Line :data="chartData" :options="chartOptions" />
             </div>
-            <div class="bg-light-primary-1 p-5 space-y-3 rounded-lg dark:bg-dark-primary-2 shadow-lg">
+            <div class="bg-light-primary-1 p-5 space-y-4 rounded-lg dark:bg-dark-primary-2 shadow-lg">
                 <div class="flex justify-between items-center">
-                    <div class="text-2xl dark:text-typography-1">Report By Regional</div>
+                    <div class="text-xl dark:text-typography-1">Report By Regional</div>
                     <div>
-                        <select name="" id=""
-                            class="rounded-lg border dark:bg-dark-primary-2 dark:border-typography-2 dark:text-typography-1">
+                        <select
+                            class="rounded-xl border text-sm dark:bg-dark-primary-1 min-w-40 dark:border-typography-2 dark:text-typography-1">
                             <option value="">All</option>
                             <option value="">Regional-1</option>
                             <option value="">Regional-2</option>
@@ -149,47 +144,49 @@ const BodySalesDataAgent = [
                         </select>
                     </div>
                 </div>
+                <hr class="bg-typography-2 !mb-4">
                 <div class="grid grid-cols-3 gap-3">
                     <div
-                        class="bg-light-primary-1 shadow-lg border border-typography-2 rounded-lg p-2 dark:bg-dark-primary-2 dark:text-typography-1">
+                        class="bg-light-primary-1 shadow-lg border border-typography-2 rounded-lg p-2 dark:bg-dark-primary-1 dark:text-typography-1">
                         <div class="text-center">Total Revenue</div>
                         <p class="text-center">0</p>
                     </div>
                     <div
-                        class="bg-light-primary-1 shadow-lg border border-typography-2 rounded-lg p-2 dark:bg-dark-primary-2 dark:text-typography-1">
+                        class="bg-light-primary-1 shadow-lg border border-typography-2 rounded-lg p-2 dark:bg-dark-primary-1 dark:text-typography-1">
                         <div class="text-center">Average Revenue</div>
                         <p class="text-center">0</p>
                     </div>
                     <div
-                        class="bg-light-primary-1 shadow-lg border border-typography-2 rounded-lg p-2 dark:bg-dark-primary-2 dark:text-typography-1">
+                        class="bg-light-primary-1 shadow-lg border border-typography-2 rounded-lg p-2 dark:bg-dark-primary-1 dark:text-typography-1">
                         <div class="text-center">Maksimum Revenue</div>
                         <p class="text-center">0</p>
                     </div>
                     <div
-                        class="bg-light-primary-1 shadow-lg border border-typography-2 rounded-lg p-2 dark:bg-dark-primary-2 dark:text-typography-1">
+                        class="bg-light-primary-1 shadow-lg border border-typography-2 rounded-lg p-2 dark:bg-dark-primary-1 dark:text-typography-1">
                         <div class="text-center">Minimum Revenue</div>
                         <p class="text-center">0</p>
                     </div>
                     <div
-                        class="bg-light-primary-1 shadow-lg border border-typography-2 rounded-lg p-2 dark:bg-dark-primary-2 dark:text-typography-1">
+                        class="bg-light-primary-1 shadow-lg border border-typography-2 rounded-lg p-2 dark:bg-dark-primary-1 dark:text-typography-1">
                         <div class="text-center">Total Expense</div>
                         <p class="text-center">0</p>
                     </div>
                     <div
-                        class="bg-light-primary-1 shadow-lg border border-typography-2 rounded-lg p-2 dark:bg-dark-primary-2 dark:text-typography-1">
+                        class="bg-light-primary-1 shadow-lg border border-typography-2 rounded-lg p-2 dark:bg-dark-primary-1 dark:text-typography-1">
                         <div class="text-center">Total Profit</div>
                         <p class="text-center">0</p>
                     </div>
                 </div>
                 <Line :data="chartData" :options="chartOptions" />
             </div>
-            <div class="bg-light-primary-1 p-5 space-y-3 rounded-lg dark:bg-dark-primary-2 shadow-lg">
+            <div class="bg-light-primary-1 p-5 space-y-4 rounded-lg dark:bg-dark-primary-2 shadow-lg">
                 <div class="text-xl dark:text-typography-1">Sales Data</div>
+                <hr class="bg-typography-2 !mb-4">
                 <div class="flex gap-6">
                     <div class="space-y-1">
                         <p class="text-base text-typography-2 dark:text-typography-1">filter by: Time</p>
                         <select name="" id=""
-                            class="rounded-lg w-36 text-sm border dark:bg-dark-primary-2 dark:text-typography-1 dark:border-typography-2">
+                            class="rounded-xl text-sm border dark:bg-dark-primary-1 min-w-40 dark:text-typography-1 dark:border-typography-2">
                             <option value="">Weekly</option>
                             <option value="">Monthly</option>
                             <option value="">Yearly</option>
@@ -197,8 +194,8 @@ const BodySalesDataAgent = [
                     </div>
                     <div class="space-y-1">
                         <p class="text-base text-typography-2 dark:text-typography-1">filter by: Product</p>
-                        <select name="" id=""
-                            class="rounded-lg w-36 text-sm border dark:bg-dark-primary-2 dark:text-typography-1 dark:border-typography-2">
+                        <select
+                            class="rounded-xl text-sm border dark:bg-dark-primary-1 min-w-40 dark:text-typography-1 dark:border-typography-2">
                             <option value="">All</option>
                             <option value="">Day Cream</option>
                             <option value="">Night Cream</option>
@@ -222,13 +219,14 @@ const BodySalesDataAgent = [
                     </v-pagination>
                 </div>
             </div>
-            <div class="bg-light-primary-1 p-5 space-y-3 rounded-lg dark:bg-dark-primary-2 shadow-lg">
+            <div class="bg-light-primary-1 p-5 space-y-4 rounded-lg dark:bg-dark-primary-2 shadow-lg">
                 <div class="text-xl dark:text-typography-1">Sales Data Agent</div>
+                <hr class="bg-typography-2 !mb-4">
                 <div class="flex gap-6">
                     <div class="space-y-1">
                         <p class="text-base text-typography-2 dark:text-typography-1">filter by: Time</p>
-                        <select name="" id=""
-                            class="rounded-lg w-36 text-sm border dark:bg-dark-primary-2 dark:text-typography-1 dark:border-typography-2">
+                        <select
+                            class="rounded-xl text-sm border dark:bg-dark-primary-1 min-w-40 dark:text-typography-1 dark:border-typography-2">
                             <option value="">Weekly</option>
                             <option value="">Monthly</option>
                             <option value="">Yearly</option>
@@ -236,8 +234,8 @@ const BodySalesDataAgent = [
                     </div>
                     <div class="space-y-1">
                         <p class="text-base text-typography-2 dark:text-typography-1">filter by: Agent</p>
-                        <select name="" id=""
-                            class="rounded-lg w-36 text-sm border dark:bg-dark-primary-2 dark:text-typography-1 dark:border-typography-2">
+                        <select
+                            class="rounded-xl text-sm border dark:bg-dark-primary-1 min-w-40 dark:text-typography-1 dark:border-typography-2">
                             <option value="">Beuaty shop</option>
                             <option value="">Girly shop</option>
                             <option value="">Glow beauty shop</option>

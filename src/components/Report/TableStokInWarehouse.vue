@@ -16,19 +16,19 @@ const BodyStokInWarehouse = [
 // end data dummy
 </script>
 <template>
-    <div class="space-y-4">
+    <div class="space-y-4 bg-light-primary-1 dark:bg-dark-primary-2 p-5 rounded-lg shadow-lg">
         <div class="flex justify-between items-center">
             <div class="text-lg dark:text-typography-1">Stok in Warehouse</div>
             <div>
-                <!-- <div class="dark:text-typography-1 text-base">Filter by:</div> -->
-                <select name="" id=""
-                    class="rounded-xl border text-sm w-72 dark:bg-dark-primary-2 dark:text-typography-1 dark:!border-typography-2">
+                <select
+                    class="rounded-xl border text-sm min-w-40 dark:bg-dark-primary-1 dark:text-typography-1 dark:!border-typography-2">
                     <option value="">Day Cream</option>
                     <option value="">Night Cream</option>
                     <option value="">SunScreen</option>
                 </select>
             </div>
         </div>
+        <hr class="bg-typography-2 !mb-4">
         <div class="space-y-4">
             <v-data-table :headers="headersStokinWarehouse" :items="BodyStokInWarehouse" hide-default-footer
                 class="border dark:!border-typography-2/20 !rounded-lg shadow-lg dark:!bg-dark-primary-1 !bg-light-primary-2 dark:!text-typography-1"
