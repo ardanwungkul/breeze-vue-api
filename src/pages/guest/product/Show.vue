@@ -198,6 +198,7 @@ const swiperJs = swiper => {}
                             }}
                         </p>
                     </div>
+
                     <div v-if="product?.bundling?.length > 0">
                         <div class="flex flex-wrap gap-2 text-xs py-3">
                             <div>
@@ -209,11 +210,12 @@ const swiperJs = swiper => {}
                                     v-model="variant"
                                     name="selectedVariant" />
                                 <label
-                                    class="border rounded-lg px-3 py-1 peer-checked:border-secondary-3 peer-checked:text-secondary-3"
+                                    class="border rounded-lg px-3 py-1 peer-checked:border-secondary-3 peer-checked:text-secondary-3 cursor-pointer"
                                     for="defaultPrice">
                                     None
                                 </label>
                             </div>
+
                             <div
                                 v-for="(item, index) in product.bundling"
                                 :key="index">
@@ -224,11 +226,48 @@ const swiperJs = swiper => {}
                                     name="selectedVariant"
                                     :value="item"
                                     v-model="variant" />
-                                <label
-                                    class="border rounded-lg px-3 py-1 peer-checked:border-secondary-3 peer-checked:text-secondary-3"
-                                    :for="'variant-' + item.id">
-                                    {{ item.name }}
-                                </label>
+                                <v-menu open-on-hover :location="'bottom'">
+                                    <template v-slot:activator="{ props }">
+                                        <label
+                                            v-bind="props"
+                                            class="border rounded-lg px-3 py-1 peer-checked:border-secondary-3 peer-checked:text-secondary-3 cursor-pointer"
+                                            :for="'variant-' + item.id">
+                                            {{ item.name }}
+                                        </label>
+                                    </template>
+
+                                    <div class="py-1">
+                                        <div
+                                            class="bg-light-primary-1 border p-3 rounded-lg max-w-xl shadow-lg">
+                                            <div class="divide-y">
+                                                <a
+                                                    :href="{ name: 'welcome' }"
+                                                    target="_blank"
+                                                    v-for="(p, i) in item.item"
+                                                    class="py-2 flex items-center gap-2 bg-light-primary-1 hover:bg-light-primary-2">
+                                                    <div class="w-10 flex-none">
+                                                        <img
+                                                            class="aspect-square !w-full rounded-lg object-cover"
+                                                            :src="
+                                                                backendUrl +
+                                                                '/storage/images/product/' +
+                                                                p.product
+                                                                    .product_image
+                                                            "
+                                                            alt="" />
+                                                    </div>
+                                                    <p
+                                                        class="line-clamp-1 text-sm">
+                                                        {{
+                                                            p.product
+                                                                .product_name
+                                                        }}
+                                                    </p>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </v-menu>
                             </div>
                         </div>
                     </div>

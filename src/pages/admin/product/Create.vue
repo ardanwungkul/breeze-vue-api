@@ -88,6 +88,9 @@ const AddProduct = async () => {
             formData.append(`bundlings[${index}][name]`, bundling.name)
             formData.append(`bundlings[${index}][price]`, bundling.price)
 
+            if (bundling.image !== null && bundling.image) {
+                formData.append(`bundlings[${index}][image]`, bundling.image)
+            }
             bundling.items.forEach((item, itemIndex) => {
                 formData.append(
                     `bundlings[${index}][items][${itemIndex}]`,
@@ -156,6 +159,14 @@ function handleUploadGallery(event) {
     }
     event.target.value = ''
 }
+function handleUploadBundlingImage(item, event) {
+    const files = event.target.files[0]
+    if (files) {
+        item.imageSrc = URL.createObjectURL(files)
+        item.image = files
+    }
+}
+const test = ref()
 function removeGallery(index) {
     imageGallery.value.splice(index, 1)
 }
@@ -408,7 +419,6 @@ function removeBundling(index) {
                                     Product Image 3D
                                 </p>
                                 <div class="px-3">
-                                    {{ product_image_3d }}
                                     <label
                                         for="image3D"
                                         class="w-32 h-32 border-dashed border !border-typography-2 rounded-lg flex-none flex justify-center items-center dark:hover:bg-dark-primary-1 hover:bg-light-primary-2 cursor-pointer overflow-hidden">
@@ -447,6 +457,7 @@ function removeBundling(index) {
                                     type="button"
                                     @click="
                                         bundlings.push({
+                                            image: null,
                                             name: null,
                                             price: null,
                                             items: [],
@@ -459,89 +470,118 @@ function removeBundling(index) {
                             <div
                                 class="flex flex-wrap gap-3 px-3"
                                 v-if="bundlings.length > 0">
-                                <table
+                                <div
                                     class="w-full dark:text-typography-1 text-sm">
-                                    <thead class="border-b border-typography-2">
-                                        <tr>
-                                            <td class="px-3 py-2 text-center">
-                                                Bundling Name
-                                            </td>
-                                            <td class="px-3 py-2 text-center">
-                                                Bundling Price
-                                            </td>
-                                            <td class="px-3 py-2 text-center">
-                                                Bundling Item
-                                            </td>
-                                            <td class="px-3 py-2 text-center">
-                                                Action
-                                            </td>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr
+                                    <div
+                                        class="divide-y divide-typography-2 w-full">
+                                        <div
                                             v-for="(item, index) in bundlings"
                                             :key="index">
-                                            <td class="px-3 py-2">
-                                                <input
-                                                    placeholder="Enter Bundling Name"
-                                                    required
-                                                    class="text-sm rounded-lg bg-light-primary-1 w-full dark:bg-dark-primary-1 dark:text-light-primary-1 border !border-gray-500 dark:!border-typography-3"
-                                                    type="text"
-                                                    v-model="item.name" />
-                                            </td>
-                                            <td class="px-3 py-2">
-                                                <input
-                                                    placeholder="Enter Bundling Price"
-                                                    required
-                                                    class="text-sm rounded-lg bg-light-primary-1 w-full dark:bg-dark-primary-1 dark:text-light-primary-1 border !border-gray-500 dark:!border-typography-3"
-                                                    type="number"
-                                                    v-model="item.price" />
-                                            </td>
-                                            <td class="px-3 py-2">
-                                                <multiselect
-                                                    v-model="item.items"
-                                                    :options="allProduct"
-                                                    :searchable="true"
-                                                    :close-on-select="false"
-                                                    label="product_name"
-                                                    :multiple="true"
-                                                    track-by="product_name"
-                                                    :preserve-search="true"
-                                                    placeholder="Select Product">
-                                                    <template
-                                                        #selection="{
-                                                            values,
-                                                            search,
-                                                            isOpen,
-                                                        }">
-                                                        <span
-                                                            class="multiselect__single text-sm"
-                                                            v-if="values.length"
-                                                            v-show="!isOpen"
-                                                            >{{
-                                                                values.length
-                                                            }}
-                                                            selected</span
-                                                        >
-                                                    </template></multiselect
-                                                >
-                                            </td>
-                                            <td class="px-3 py-2">
+                                            <div class="px-3 py-2">
                                                 <div
-                                                    class="flex items-center justify-center">
-                                                    <button
-                                                        @click="
-                                                            removeBundling(
-                                                                index,
-                                                            )
-                                                        "
-                                                        type="button"
-                                                        class="fa-solid fa-x text-red-500"></button>
+                                                    class="flex flex-col gap-3 justify-center items-center">
+                                                    <div class="flex self-end">
+                                                        <button
+                                                            @click="
+                                                                removeBundling(
+                                                                    index,
+                                                                )
+                                                            "
+                                                            type="button"
+                                                            class="fa-solid fa-x text-red-500"></button>
+                                                    </div>
+                                                    <div>
+                                                        <label
+                                                            :for="
+                                                                imageBundling +
+                                                                '-' +
+                                                                index
+                                                            "
+                                                            class="w-32 h-32 border-dashed border !border-typography-2 rounded-lg flex-none flex justify-center items-center dark:hover:bg-dark-primary-1 hover:bg-light-primary-2 cursor-pointer overflow-hidden">
+                                                            <div
+                                                                v-if="
+                                                                    !item.imageSrc
+                                                                "
+                                                                class="flex items-center justify-center flex-col">
+                                                                <i
+                                                                    class="fa-regular fa-image text-typography-2 text-2xl"></i>
+                                                                <p
+                                                                    class="text-typography-2 text-xs text-center">
+                                                                    Add Bundle
+                                                                    Image
+                                                                </p>
+                                                            </div>
+                                                            <img
+                                                                :src="
+                                                                    item.imageSrc
+                                                                "
+                                                                v-if="
+                                                                    item.imageSrc
+                                                                "
+                                                                alt="" />
+                                                            <input
+                                                                type="file"
+                                                                accept="image/*"
+                                                                class="hidden"
+                                                                @change="
+                                                                    handleUploadBundlingImage(
+                                                                        item,
+                                                                        $event,
+                                                                    )
+                                                                "
+                                                                :id="
+                                                                    imageBundling +
+                                                                    '-' +
+                                                                    index
+                                                                " />
+                                                        </label>
+                                                    </div>
+                                                    <input
+                                                        placeholder="Enter Bundling Name"
+                                                        required
+                                                        class="text-sm rounded-lg bg-light-primary-1 w-full dark:bg-dark-primary-1 dark:text-light-primary-1 border !border-gray-500 dark:!border-typography-3"
+                                                        type="text"
+                                                        v-model="item.name" />
+                                                    <input
+                                                        placeholder="Enter Bundling Price"
+                                                        required
+                                                        class="text-sm rounded-lg bg-light-primary-1 w-full dark:bg-dark-primary-1 dark:text-light-primary-1 border !border-gray-500 dark:!border-typography-3"
+                                                        type="number"
+                                                        v-model="item.price" />
+                                                    <multiselect
+                                                        v-model="item.items"
+                                                        :options="allProduct"
+                                                        :searchable="true"
+                                                        :close-on-select="false"
+                                                        label="product_name"
+                                                        :multiple="true"
+                                                        track-by="product_name"
+                                                        :preserve-search="true"
+                                                        placeholder="Select Product">
+                                                        <template
+                                                            #selection="{
+                                                                values,
+                                                                search,
+                                                                isOpen,
+                                                            }">
+                                                            <span
+                                                                class="multiselect__single text-sm"
+                                                                v-if="
+                                                                    values.length
+                                                                "
+                                                                v-show="!isOpen"
+                                                                >{{
+                                                                    values.length
+                                                                }}
+                                                                selected</span
+                                                            >
+                                                        </template></multiselect
+                                                    >
                                                 </div>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <button

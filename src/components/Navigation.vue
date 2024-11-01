@@ -1,6 +1,6 @@
 <script setup>
 import NavLink from '@/components/NavLink.vue'
-import { ref, onMounted, onBeforeMount, watchEffect } from 'vue'
+import { ref, onMounted, onBeforeMount } from 'vue'
 import { Collapse } from 'flowbite'
 import { useUsers } from '@/stores/user'
 import { useCartStore } from '@/stores/cart'

@@ -40,7 +40,7 @@ const products = computed(() => {
 })
 
 onMounted(async () => {
-    await shopStore.getData()
+    await shopStore.getData(isLoading)
     data.value = shopStore.data
     isLoading.value = shopStore.loading
 })
@@ -57,6 +57,7 @@ const togglefilter = async i => {
 <template>
     <AppLayout>
         <Loading :isLoading="isLoading" />
+
         <MainBanner :main_banner="data.main_banner" v-if="!isLoading" />
         <!-- Banner -->
         <div class="w-full py-8 px-4 md:px-8 lg:px-0 md:py-16">

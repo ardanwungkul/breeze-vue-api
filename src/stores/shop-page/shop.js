@@ -10,23 +10,17 @@ export const useShopStore = defineStore({
         loading: false,
         error: null,
     }),
-    getters: {
-        allData: state => state.data,
-        isLoading: state => state.loading,
-        getError: state => state.error,
-    },
     actions: {
-        async getData() {
-            this.loading = true
+        async getData(loading) {
+            loading.value = true
             try {
                 const response = await axios.get('/api/shop-page')
-                console.log('Fetched data:', response.data)
                 this.data = response.data
             } catch (error) {
                 console.error('Error fetching data:', error)
                 this.error = error
             } finally {
-                this.loading = false
+                loading.value = false
             }
         },
     },
