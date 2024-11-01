@@ -462,6 +462,46 @@ const routes = [
             role: 'admin',
         },
     },
+    // Report Dashboard
+    {
+        path: '/report/dashboard',
+        name: 'report.dashboard',
+        component: () => import('@/pages/report/Dashboard.vue'),
+        meta: {
+            guard: 'auth',
+            role: 'report',
+        },
+    },
+    // Report Stock
+    {
+        path: '/report/stock',
+        name: 'report.stock',
+        component: () => import('@/pages/report/Stock.vue'),
+        meta: {
+            guard: 'auth',
+            role: 'report',
+        },
+    },
+    // Report Sales
+    {
+        path: '/report/sales',
+        name: 'report.sales',
+        component: () => import('@/pages/report/Sales.vue'),
+        meta: {
+            guard: 'auth',
+            role: 'report',
+        },
+    },
+    // Report Order
+    {
+        path: '/report/order',
+        name: 'report.order',
+        component: () => import('@/pages/report/Order.vue'),
+        meta: {
+            guard: 'auth',
+            role: 'report',
+        },
+    },
     // Login
     {
         path: '/login',
