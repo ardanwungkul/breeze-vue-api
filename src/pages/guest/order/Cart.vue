@@ -203,11 +203,79 @@ const deleteSelectedCart = async id => {
                                                 class="line-clamp-3">
                                                 {{ item.product.product_name }}
                                             </router-link>
-                                            <p
-                                                v-if="item.bundling"
-                                                class="border rounded px-3 py-1">
-                                                {{ item.bundling.name }}
-                                            </p>
+                                            <div>
+                                                <v-menu
+                                                    open-on-hover
+                                                    :location="'bottom'">
+                                                    <template
+                                                        v-slot:activator="{
+                                                            props,
+                                                        }">
+                                                        <p
+                                                            v-bind="props"
+                                                            v-if="item.bundling"
+                                                            class="border rounded px-3 py-1 cursor-pointer">
+                                                            {{
+                                                                item.bundling
+                                                                    .name
+                                                            }}
+                                                        </p>
+                                                    </template>
+
+                                                    <div class="py-1">
+                                                        <div
+                                                            class="bg-light-primary-1 border p-3 rounded-lg max-w-xl shadow-lg">
+                                                            <div
+                                                                class="divide-y">
+                                                                <div
+                                                                    v-for="(
+                                                                        p, i
+                                                                    ) in item
+                                                                        .bundling
+                                                                        .item"
+                                                                    :key="i">
+                                                                    <router-link
+                                                                        :to="{
+                                                                            name: 'product.detail',
+                                                                            params: {
+                                                                                slug: p
+                                                                                    ?.product
+                                                                                    ?.product_slug,
+                                                                                id: p
+                                                                                    ?.product
+                                                                                    ?.id,
+                                                                            },
+                                                                        }"
+                                                                        target="_blank"
+                                                                        class="py-2 flex items-center gap-2 bg-light-primary-1 hover:bg-light-primary-2">
+                                                                        <div
+                                                                            class="w-10 flex-none">
+                                                                            <img
+                                                                                class="aspect-square !w-full rounded-lg object-cover"
+                                                                                :src="
+                                                                                    backendUrl +
+                                                                                    '/storage/images/product/' +
+                                                                                    p
+                                                                                        .product
+                                                                                        .product_image
+                                                                                "
+                                                                                alt="" />
+                                                                        </div>
+                                                                        <p
+                                                                            class="line-clamp-1 text-sm">
+                                                                            {{
+                                                                                p
+                                                                                    .product
+                                                                                    .product_name
+                                                                            }}
+                                                                        </p>
+                                                                    </router-link>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </v-menu>
+                                            </div>
                                         </div>
                                     </div>
                                     <div

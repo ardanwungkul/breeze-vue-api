@@ -134,22 +134,35 @@ export const useUsers = defineStore('users', {
 
             processing.value = true
 
-            axios
-                .post('/login', form.value)
-                .then(response => {
-                    this.authStatus = response.status
+            try {
+                const response = await axios.post('/login', form.value)
+                this.authStatus = response.status
+
+                try {
+                    const dataResponse = await axios.get('/user')
                     processing.value = false
-                    // this.getData()
-                    this.router.push({ name: 'admin.dashboard' })
-                })
-                .catch(error => {
-                    console.log(error)
-                    if (error.response.status !== 422) throw error
-                    setErrors.value = Object.values(
-                        error.response.data.errors,
-                    ).flat()
-                    processing.value = false
-                })
+                    if (dataResponse.data.role == 'admin') {
+                        this.router.push({ name: 'admin.dashboard' })
+                    } else if (dataResponse.data.role == 'report') {
+                        this.router.push({ name: 'report.dashboard' })
+                    } else {
+                        this.router.push({ name: 'welcome' })
+                    }
+                } catch (error) {
+                    console.error(
+                        'Error saat mengambil data dari getData:',
+                        error,
+                    )
+                    this.router.push({ name: 'welcome' })
+                }
+            } catch (error) {
+                console.log(error)
+                if (error.response && error.response.status !== 422) throw error
+                setErrors.value = Object.values(
+                    error.response.data.errors || {},
+                ).flat()
+                processing.value = false
+            }
         },
 
         async forgotPassword(form, setStatus, setErrors, processing) {

@@ -118,7 +118,10 @@ const swiperJs = swiper => {}
                         <swiper-slide
                             class="cursor-pointer flex items-center justify-center">
                             <v-img
-                                @click="mainImage = mainImageDefault"
+                                @click="
+                                    ;(mainImage = mainImageDefault),
+                                        (variant = null)
+                                "
                                 :src="mainImageDefault"
                                 class="!aspect-square w-full rounded-sm"
                                 cover>
@@ -151,6 +154,40 @@ const swiperJs = swiper => {}
                                     product?.id +
                                     '/' +
                                     item.product_image
+                                "
+                                class="!aspect-square w-full"
+                                cover>
+                                <template v-slot:placeholder>
+                                    <div
+                                        class="w-full flex justify-center items-center h-full">
+                                        <v-progress-circular
+                                            color=""
+                                            indeterminate></v-progress-circular>
+                                    </div>
+                                </template>
+                            </v-img>
+                        </swiper-slide>
+                        <swiper-slide
+                            v-for="(bundling, index) in product?.bundling"
+                            :key="index"
+                            v-if="product?.bundling?.length > 0"
+                            class="cursor-pointer flex items-center justify-center">
+                            <v-img
+                                @click="
+                                    ;(variant = bundling),
+                                        (mainImage =
+                                            backendUrl +
+                                            '/storage/images/product/bundling/' +
+                                            product?.id +
+                                            '/' +
+                                            bundling?.image)
+                                "
+                                :src="
+                                    backendUrl +
+                                    '/storage/images/product/bundling/' +
+                                    product?.id +
+                                    '/' +
+                                    bundling?.image
                                 "
                                 class="!aspect-square w-full"
                                 cover>
@@ -240,30 +277,42 @@ const swiperJs = swiper => {}
                                         <div
                                             class="bg-light-primary-1 border p-3 rounded-lg max-w-xl shadow-lg">
                                             <div class="divide-y">
-                                                <a
-                                                    :href="{ name: 'welcome' }"
-                                                    target="_blank"
+                                                <div
                                                     v-for="(p, i) in item.item"
-                                                    class="py-2 flex items-center gap-2 bg-light-primary-1 hover:bg-light-primary-2">
-                                                    <div class="w-10 flex-none">
-                                                        <img
-                                                            class="aspect-square !w-full rounded-lg object-cover"
-                                                            :src="
-                                                                backendUrl +
-                                                                '/storage/images/product/' +
+                                                    :key="i">
+                                                    <router-link
+                                                        :to="{
+                                                            name: 'product.detail',
+                                                            params: {
+                                                                slug: p.product
+                                                                    ?.product_slug,
+                                                                id: p?.product
+                                                                    ?.id,
+                                                            },
+                                                        }"
+                                                        target="_blank"
+                                                        class="py-2 flex items-center gap-2 bg-light-primary-1 hover:bg-light-primary-2">
+                                                        <div
+                                                            class="w-10 flex-none">
+                                                            <img
+                                                                class="aspect-square !w-full rounded-lg object-cover"
+                                                                :src="
+                                                                    backendUrl +
+                                                                    '/storage/images/product/' +
+                                                                    p.product
+                                                                        .product_image
+                                                                "
+                                                                alt="" />
+                                                        </div>
+                                                        <p
+                                                            class="line-clamp-1 text-sm">
+                                                            {{
                                                                 p.product
-                                                                    .product_image
-                                                            "
-                                                            alt="" />
-                                                    </div>
-                                                    <p
-                                                        class="line-clamp-1 text-sm">
-                                                        {{
-                                                            p.product
-                                                                .product_name
-                                                        }}
-                                                    </p>
-                                                </a>
+                                                                    .product_name
+                                                            }}
+                                                        </p>
+                                                    </router-link>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>

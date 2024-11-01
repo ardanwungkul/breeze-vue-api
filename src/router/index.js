@@ -613,7 +613,9 @@ router.beforeEach(async (to, from, next) => {
             next()
         } else {
             return role === 'admin'
-                ? next({ name: 'dashboard' })
+                ? next({ name: 'admin.dashboard' })
+                : role === 'report'
+                ? next({ name: 'report.dashboard' })
                 : next({ name: 'welcome' })
         }
     } else {
