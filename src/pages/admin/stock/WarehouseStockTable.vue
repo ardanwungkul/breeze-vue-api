@@ -5,9 +5,13 @@ const props = defineProps({
     categories: Array,
     data: Array,
 })
+const stocks = props.data.stock
+const products = props.data.products
+console.log(stocks, products, props.data)
+
 const filter = ref('')
 const headersTable = [
-    { key: 'id', title: 'Product Name' },
+    { key: 'product_name', title: 'Product Name' },
     { key: 'id', title: 'Stock' },
     { key: 'id', title: 'Sold' },
 ]
@@ -18,12 +22,15 @@ onMounted(() => {
     const pageCount = computed(() => {
         return Math.ceil(filteredData.value.length / itemsPerPageData.value)
     })
+})
+// const warehouseData = computed(() => {
+//     return stocks.filter(item => item.product_stock_status === 'warehouse')
+// })
 
-    const filteredData = computed(() => {
-        return props.data.filter(item => {
-            return item.id.toLowerCase().includes(searchData.value)
-        })
-    })
+const filteredData = computed(() => {
+    return products.filter(item =>
+        item.id.toString().toLowerCase().includes(search.value.toLowerCase()),
+    )
 })
 </script>
 <template>
@@ -53,7 +60,7 @@ onMounted(() => {
                 v-model:page="pageData"
                 :search="search"
                 :headers="headersTable"
-                :items="data"
+                :items="data.products"
                 hide-default-footer
                 :header-props="{
                     class: 'dark:bg-dark-primary-1 bg-light-primary-2 dark:!text-white border-b dark:!border-white/30',

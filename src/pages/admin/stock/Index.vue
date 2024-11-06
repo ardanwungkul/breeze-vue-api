@@ -140,7 +140,7 @@ const tab = ref(null)
                     <v-tabs-window-item value="two">
                         <WarehouseStockTable
                             v-if="!isLoading"
-                            :data="data?.stock"
+                            :data="data"
                             :categories="data?.categories" />
                     </v-tabs-window-item>
 

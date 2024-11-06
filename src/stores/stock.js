@@ -226,6 +226,28 @@ export const useStockStore = defineStore({
                 qr.value.paused = false
             }
         },
+        async submitToWarehouse(data, form, setErrors, processing) {
+            await csrf()
+            processing.value = true
+            axios
+                .post('/api/stock-to-warehouse', form)
+                .then(response => {
+                    processing.value = false
+                    console.log(response.data)
+                    data = []
+                    // this.stocks.push(response.data)
+                    // this.router.push({ name: 'admin.stock.index' })
+                })
+                .catch(error => {
+                    console.log(error)
+                    if (error.response.status !== 422) throw error
+
+                    setErrors.value = Object.values(
+                        error.response.data.errors,
+                    ).flat()
+                    processing.value = false
+                })
+        },
     },
 })
 

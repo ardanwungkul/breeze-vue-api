@@ -24,10 +24,14 @@ const toggleDarkMode = () => {
 }
 const rail = ref(false)
 provide('rail', rail)
-const currentDate = new Date();
-const startOfYear = new Date(currentDate.getFullYear(), 0, 1); // 1 Januari tahun ini
-const daysSinceStartOfYear = Math.floor((currentDate - startOfYear) / (24 * 60 * 60 * 1000));
-const currentWeek = Math.ceil((daysSinceStartOfYear + startOfYear.getDay() + 1) / 7);
+const currentDate = new Date()
+const startOfYear = new Date(currentDate.getFullYear(), 0, 1)
+const daysSinceStartOfYear = Math.floor(
+    (currentDate - startOfYear) / (24 * 60 * 60 * 1000),
+)
+const currentWeek = Math.ceil(
+    (daysSinceStartOfYear + startOfYear.getDay() + 1) / 7,
+)
 const isDate = ref({
     startDateFilter: null,
     endDateFilter: null,
@@ -37,28 +41,40 @@ const isDate = ref({
 })
 </script>
 <template>
-    <v-app class="!bg-light-primary-2 dark:!bg-dark-primary-1 font-inter !transition-colors !duration-500"
+    <v-app
+        class="!bg-light-primary-2 dark:!bg-dark-primary-1 font-inter !transition-colors !duration-500"
         :class="isDark ? 'dark' : ''">
         <Navigation />
         <v-main>
             <v-container class="!py-0 !max-w-none">
                 <div class="py-5 space-y-3 px-10">
                     <div class="w-full flex justify-between items-center mb-5">
-                        <p class="text-2xl font-bold dark:font-medium text-ezzora-900 dark:text-white">
+                        <p
+                            class="text-2xl font-bold dark:font-medium text-ezzora-900 dark:text-white">
                             {{ title }}
                         </p>
                         <div class="flex gap-10 items-center">
                             <div class="flex justify-center gap-2 items-center">
-                                <i class="fa-light fa-sun-bright text-gray-900 dark:text-gray-600"></i>
+                                <i
+                                    class="fa-light fa-sun-bright text-gray-900 dark:text-gray-600"></i>
                                 <div id="page">
-                                    <input @click="toggleDarkMode" type="checkbox" id="theme-toggle" v-model="isDark" />
-                                    <label for="theme-toggle"><span></span></label>
+                                    <input
+                                        @click="toggleDarkMode"
+                                        type="checkbox"
+                                        id="theme-toggle"
+                                        v-model="isDark" />
+                                    <label for="theme-toggle"
+                                        ><span></span
+                                    ></label>
                                 </div>
-                                <i class="fa-light fa-moon text-gray-300 dark:text-white"></i>
+                                <i
+                                    class="fa-light fa-moon text-gray-300 dark:text-white"></i>
                             </div>
                             <div class="flex gap-3 items-center">
-                                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQP3jfOPCgGScFht2teS6zF4P3_NFVrfe1IhQ&s"
-                                    class="rounded-full h-10 border w-10 object-cover" alt="" />
+                                <img
+                                    src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQP3jfOPCgGScFht2teS6zF4P3_NFVrfe1IhQ&s"
+                                    class="rounded-full h-10 border w-10 object-cover"
+                                    alt="" />
                                 <p class="text-sm dark:text-typography-2">
                                     {{ store.userData.name }}
                                 </p>
@@ -66,39 +82,67 @@ const isDate = ref({
                         </div>
                     </div>
                     <div class="flex items-center justify-between gap-4">
-                        <div v-if="IsSelectedDate === 'weekly'"
+                        <div
+                            v-if="IsSelectedDate === 'weekly'"
                             class="flex gap-4 items-center w-full shadow-lg rounded-lg">
                             <div class="w-full">
-                                <VueDatePicker v-model="isDate.weekly" week-picker
-                                    :class="isDark ? 'dp__theme_dark' : 'dp_theme_light'" />
+                                <VueDatePicker
+                                    v-model="isDate.weekly"
+                                    week-picker
+                                    :class="
+                                        isDark
+                                            ? 'dp__theme_dark'
+                                            : 'dp_theme_light'
+                                    " />
                             </div>
                         </div>
-                        <div v-if="IsSelectedDate === 'yearly'"
+                        <div
+                            v-if="IsSelectedDate === 'yearly'"
                             class="flex gap-4 items-center w-full shadow-lg rounded-lg">
                             <div class="w-full">
-                                <VueDatePicker v-model="isDate.yearly" year-picker
-                                    :class="isDark ? 'dp__theme_dark' : 'dp_theme_light'" />
+                                <VueDatePicker
+                                    v-model="isDate.yearly"
+                                    year-picker
+                                    :class="
+                                        isDark
+                                            ? 'dp__theme_dark'
+                                            : 'dp_theme_light'
+                                    " />
                             </div>
                         </div>
-                        <div v-if="IsSelectedDate === 'monthly'"
+                        <div
+                            v-if="IsSelectedDate === 'monthly'"
                             class="flex gap-4 items-center w-full shadow-lg text-sm rounded-lg">
                             <div class="w-full">
-                                <VueDatePicker v-model="isDate.monthly" month-picker
-                                    :class="isDark ? 'dp__theme_dark' : 'dp_theme_light'" />
+                                <VueDatePicker
+                                    v-model="isDate.monthly"
+                                    month-picker
+                                    :class="
+                                        isDark
+                                            ? 'dp__theme_dark'
+                                            : 'dp_theme_light'
+                                    " />
                             </div>
                         </div>
-                        <div v-if="IsSelectedDate === 'date'" class="flex gap-4 items-center w-full rounded-lg">
+                        <div
+                            v-if="IsSelectedDate === 'date'"
+                            class="flex gap-4 items-center w-full rounded-lg">
                             <div class="w-full">
-                                <input type="date" v-model="isDate.startDateFilter"
+                                <input
+                                    type="date"
+                                    v-model="isDate.startDateFilter"
                                     class="p-2 border rounded-lg dark:bg-dark-primary-2 dark:!border-typography-2 dark:text-typography-1 shadow-lg text-sm w-full" />
                             </div>
                             <p class="text-typography-2">-</p>
                             <div class="w-full">
-                                <input type="date" v-model="isDate.endDateFilter"
+                                <input
+                                    type="date"
+                                    v-model="isDate.endDateFilter"
                                     class="p-2 border rounded-lg dark:bg-dark-primary-2 dark:!border-typography-2 dark:text-typography-1 shadow-lg text-sm w-full" />
                             </div>
                         </div>
-                        <select v-model="IsSelectedDate"
+                        <select
+                            v-model="IsSelectedDate"
                             class="p-2 !border-solid rounded-lg dark:bg-dark-primary-2 dark:!border-typography-2 dark:text-typography-1 shadow-lg text-sm">
                             <option value="weekly">Weekly</option>
                             <option value="yearly">Yearly</option>
@@ -108,7 +152,6 @@ const isDate = ref({
                     </div>
                     <slot />
                 </div>
-
             </v-container>
         </v-main>
     </v-app>

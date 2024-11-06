@@ -65,6 +65,31 @@ const timeout = async ms => {
         window.setTimeout(resolve, ms)
     })
 }
+const submitStock = async () => {
+    if (data.value.products.length > 0) {
+        const formData = new FormData()
+        data.value.products.forEach((product, index) => {
+            formData.append(`products[${index}][id]`, product.id)
+            formData.append(
+                `products[${index}][product_id]`,
+                product.product_id,
+            )
+            formData.append(`products[${index}][amount]`, product.amount)
+            formData.append(
+                `products[${index}][product_code]`,
+                product.product_code,
+            )
+        })
+        await store.submitToWarehouse(
+            data.value.products,
+            formData,
+            setErrors,
+            processing,
+        )
+    } else {
+        setErrors.value = Object.values(['Scan More Than 1 Products']).flat()
+    }
+}
 </script>
 <template>
     <AdminLayout>
@@ -73,6 +98,7 @@ const timeout = async ms => {
         <div class="w-full space-y-4">
             <div
                 class="bg-light-primary-1 dark:bg-dark-primary-2 p-5 rounded-lg space-y-3 shadow-lg">
+                <!-- {{ data.products }} -->
                 <div class="flex justify-between">
                     <v-dialog>
                         <template v-slot:activator="{ props: activatorProps }">
@@ -99,6 +125,7 @@ const timeout = async ms => {
                     </v-dialog>
                     <button
                         type="button"
+                        @click="submitStock"
                         class="bg-secondary-3 hover:bg-opacity-90 !text-light-primary-1 px-3 py-2 rounded-lg text-sm cursor-pointer flex justify-center items-center gap-3">
                         <i class="fa-solid fa-check"></i>
                         <p>Save</p>
