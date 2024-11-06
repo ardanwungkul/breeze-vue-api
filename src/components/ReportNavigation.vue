@@ -23,19 +23,25 @@ const sidebarItem = ref([
     {
         icon: 'fa-sharp-duotone fa-solid fa-box',
         to: 'report.stock',
-        title: 'Stock report',
+        title: 'Stock Report',
         isHasChild: false,
     },
     {
         icon: 'fa-solid fa-chart-mixed',
         to: 'report.sales',
-        title: 'Sales report',
+        title: 'Sales Report',
         isHasChild: false,
     },
     {
         icon: 'fa-sharp-duotone fa-solid fa-chart-waterfall',
         to: 'report.order',
-        title: 'Order report',
+        title: 'Order Report',
+        isHasChild: false,
+    },
+    {
+        icon: 'fa-regular fa-money-bill-transfer',
+        to: 'report.cashflow',
+        title: 'Cash Flow',
         isHasChild: false,
     },
 ])
