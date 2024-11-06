@@ -6,6 +6,7 @@ import TableUserPayment from '@/components/Report/TableUserPayment.vue';
 import { ref } from 'vue'
 import { Line } from 'vue-chartjs';
 import { Chart as ChartJS, Title, Tooltip, Legend, LineElement, PointElement, CategoryScale, LinearScale } from 'chart.js';
+import { RouterLink } from 'vue-router';
 ChartJS.register(Title, Tooltip, Legend, LineElement, PointElement, CategoryScale, LinearScale);
 // Data untuk chart
 const chartData = ref({
@@ -255,48 +256,17 @@ const BodySalesDataAgent = [
                     </v-pagination>
                 </div>
             </div>
-            <div class="bg-gradient py-11 rounded-xl">
-                <div class="text-center space-y-1 text-typography-1">
-                    <div class=""><i class="fa-solid fa-wallet text-5xl"></i></div>
-                    <div class="text-2xl font-medium">Total Expenses</div>
-                    <p class="text-sm font-normal">View and manage your expenses easily</p>
-                    <div class="text-3xl font-medium">Rp 10,000,000</div>
+            <RouterLink :to="{ name: 'report.cashflow' }">
+                <div
+                    class="transition-all duration-500 bg-gradient-to-r to-[#7F00FF] via-[#BF00FF] from-[#FF00FF] bg-size-200 bg-pos-0 hover:bg-pos-100 py-11 rounded-xl mt-4">
+                    <div class="text-center space-y-1 text-typography-1">
+                        <div class=""><i class="fa-solid fa-wallet text-5xl"></i></div>
+                        <div class="text-2xl font-medium">Total Expenses</div>
+                        <p class="text-sm font-normal">View and manage your expenses easily</p>
+                        <div class="text-3xl font-medium">Rp 10,000,000</div>
+                    </div>
                 </div>
-            </div>
+            </RouterLink>
         </div>
     </ReportLayout>
 </template>
-<style>
-.bg-gradient {
-    background: linear-gradient(to right, rgb(127, 0, 255), rgb(225, 0, 255));
-}
-
-.province {
-    fill: #ccc;
-    stroke: #333;
-    stroke-width: 1;
-}
-
-.tooltip {
-    position: fixed;
-    background-color: white;
-    border: 1px solid #ccc;
-    padding: 10px;
-    border-radius: 8px;
-    transform: translate(-50%, -100%);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    z-index: 1000;
-    transition: opacity 0.3s ease;
-}
-
-/* Segitiga untuk penjorokan */
-.tooltip::after {
-    content: '';
-    position: absolute;
-    top: 100%;
-    left: calc(50% - 8px);
-    border-width: 8px;
-    border-style: solid;
-    border-color: white transparent transparent transparent;
-}
-</style>

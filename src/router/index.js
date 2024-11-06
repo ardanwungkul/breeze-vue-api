@@ -502,6 +502,16 @@ const routes = [
             role: 'report',
         },
     },
+    // Report Cash Flow
+    {
+        path: '/report/cash-flow',
+        name: 'report.cashflow',
+        component: () => import('@/pages/report/CashFlow.vue'),
+        meta: {
+            guard: 'auth',
+            role: 'report',
+        },
+    },
     // Login
     {
         path: '/login',

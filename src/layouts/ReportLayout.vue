@@ -4,7 +4,6 @@ import Navigation from '@/components/ReportNavigation.vue'
 import { useUsers } from '@/stores/user'
 
 const store = useUsers()
-const IsSelectedDate = ref('date')
 const props = defineProps({
     title: String,
 })
@@ -12,6 +11,12 @@ const props = defineProps({
 onBeforeMount(() => {
     if (!store.hasUserData) {
         store.getData()
+    }
+    const savedDates = localStorage.getItem('isDate');
+    if (savedDates) {
+        isSelectedDate.value = JSON.parse(savedDates);
+    } else {
+        localStorage.setItem('isDate', JSON.stringify(isSelectedDate.value));
     }
 })
 const isDark = ref(localStorage.getItem('isDark') === 'true')
@@ -25,16 +30,29 @@ const toggleDarkMode = () => {
 const rail = ref(false)
 provide('rail', rail)
 const currentDate = new Date();
-const startOfYear = new Date(currentDate.getFullYear(), 0, 1); // 1 Januari tahun ini
+let startOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
+startOfMonth.setHours(startOfMonth.getHours() + 7);
+let endOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
+endOfMonth.setHours(endOfMonth.getHours() + 7);
+const startOfYear = new Date(currentDate.getFullYear(), 0, 1);
 const daysSinceStartOfYear = Math.floor((currentDate - startOfYear) / (24 * 60 * 60 * 1000));
 const currentWeek = Math.ceil((daysSinceStartOfYear + startOfYear.getDay() + 1) / 7);
-const isDate = ref({
-    startDateFilter: null,
-    endDateFilter: null,
+const isSelectedDate = ref({
+    selectedType: 'date',
+    startDateFilter: startOfMonth.toISOString().split('T')[0],
+    endDateFilter: endOfMonth.toISOString().split('T')[0],
     weekly: currentWeek,
     yearly: currentDate.getFullYear().toString(),
     monthly: String(currentDate.getMonth() + 1).padStart(2, '0'),
 })
+watch(
+    isSelectedDate,
+    (newValue) => {
+        localStorage.setItem('isDate', JSON.stringify(newValue));
+    },
+    { deep: true }
+);
+
 </script>
 <template>
     <v-app class="!bg-light-primary-2 dark:!bg-dark-primary-1 font-inter !transition-colors !duration-500"
@@ -66,39 +84,40 @@ const isDate = ref({
                         </div>
                     </div>
                     <div class="flex items-center justify-between gap-4">
-                        <div v-if="IsSelectedDate === 'weekly'"
+                        <div v-if="isSelectedDate.selectedType === 'weekly'"
                             class="flex gap-4 items-center w-full shadow-lg rounded-lg">
                             <div class="w-full">
-                                <VueDatePicker v-model="isDate.weekly" week-picker
+                                <VueDatePicker v-model="isSelectedDate.weekly" week-picker
                                     :class="isDark ? 'dp__theme_dark' : 'dp_theme_light'" />
                             </div>
                         </div>
-                        <div v-if="IsSelectedDate === 'yearly'"
+                        <div v-if="isSelectedDate.selectedType === 'yearly'"
                             class="flex gap-4 items-center w-full shadow-lg rounded-lg">
                             <div class="w-full">
-                                <VueDatePicker v-model="isDate.yearly" year-picker
+                                <VueDatePicker v-model="isSelectedDate.yearly" year-picker
                                     :class="isDark ? 'dp__theme_dark' : 'dp_theme_light'" />
                             </div>
                         </div>
-                        <div v-if="IsSelectedDate === 'monthly'"
+                        <div v-if="isSelectedDate.selectedType === 'monthly'"
                             class="flex gap-4 items-center w-full shadow-lg text-sm rounded-lg">
                             <div class="w-full">
-                                <VueDatePicker v-model="isDate.monthly" month-picker
+                                <VueDatePicker v-model="isSelectedDate.monthly" month-picker
                                     :class="isDark ? 'dp__theme_dark' : 'dp_theme_light'" />
                             </div>
                         </div>
-                        <div v-if="IsSelectedDate === 'date'" class="flex gap-4 items-center w-full rounded-lg">
+                        <div v-if="isSelectedDate.selectedType === 'date'"
+                            class="flex gap-4 items-center w-full rounded-lg">
                             <div class="w-full">
-                                <input type="date" v-model="isDate.startDateFilter"
+                                <input type="date" v-model="isSelectedDate.startDateFilter"
                                     class="p-2 border rounded-lg dark:bg-dark-primary-2 dark:!border-typography-2 dark:text-typography-1 shadow-lg text-sm w-full" />
                             </div>
                             <p class="text-typography-2">-</p>
                             <div class="w-full">
-                                <input type="date" v-model="isDate.endDateFilter"
+                                <input type="date" v-model="isSelectedDate.endDateFilter"
                                     class="p-2 border rounded-lg dark:bg-dark-primary-2 dark:!border-typography-2 dark:text-typography-1 shadow-lg text-sm w-full" />
                             </div>
                         </div>
-                        <select v-model="IsSelectedDate"
+                        <select v-model="isSelectedDate.selectedType"
                             class="p-2 !border-solid rounded-lg dark:bg-dark-primary-2 dark:!border-typography-2 dark:text-typography-1 shadow-lg text-sm">
                             <option value="weekly">Weekly</option>
                             <option value="yearly">Yearly</option>
@@ -108,7 +127,6 @@ const isDate = ref({
                     </div>
                     <slot />
                 </div>
-
             </v-container>
         </v-main>
     </v-app>
