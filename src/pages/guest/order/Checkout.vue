@@ -1,7 +1,14 @@
 <script setup>
 import AppLayout from '@/layouts/AppLayout.vue'
 import 'swiper/css'
-import { ref, onBeforeMount, onMounted, watchEffect, computed } from 'vue'
+import {
+    ref,
+    onBeforeMount,
+    onMounted,
+    watchEffect,
+    computed,
+    watch,
+} from 'vue'
 import { RouterLink, useRoute, useRouter } from 'vue-router'
 import { useProductStore } from '@/stores/product'
 import Loading from '@/components/Loading.vue'
@@ -23,6 +30,17 @@ const route = useRoute()
 const address = ref([])
 const setErrors = ref([])
 const errors = computed(() => setErrors.value)
+const courierDialog = ref(false)
+
+const couriers = ref([])
+const itemsCourierRates = ref([
+    {
+        name: 'Sample Item',
+        weight: 1000,
+        quantity: 1,
+        value: 50000,
+    },
+])
 
 const secretKey = 'ezzorasecretkey'
 const encryptedData = route.params.data
@@ -79,6 +97,11 @@ const fetchAddress = async () => {
 const selectedAddress = computed(() => {
     return address.value.find(ad => ad.isDefault)
 })
+watch(selectedAddress, (newAddress, oldAddress) => {
+    if (newAddress !== oldAddress) {
+        couriers.value = []
+    }
+})
 
 const checkout = async () => {
     if (!selectedAddress.value) {
@@ -86,6 +109,7 @@ const checkout = async () => {
     } else {
         const formData = new FormData()
         formData.append('user_id', storeUser.userData.id)
+        formData.append('address_id', selectedAddress.value.id)
         carts.value.forEach(cart => {
             formData.append('carts[]', cart.id)
         })
@@ -96,6 +120,43 @@ watchEffect(() => {
     fetchAddress()
     fetchProduct()
 })
+
+const searchCourierRates = async () => {
+    if (!selectedAddress.value) {
+        setErrors.value = Object.values(['Please Select Address First.']).flat()
+    } else {
+        if (couriers.value.length <= 0) {
+            const formData = new FormData()
+            formData.append('origin_area_id', 'IDNP9IDNC22IDND2019')
+            formData.append('destination_area_id', selectedAddress.value.map_id)
+            formData.append('origin_latitude', -6.965101234471844)
+            formData.append('origin_longitude', 107.63886094093324)
+            formData.append(
+                'destination_latitude',
+                selectedAddress.value.latitude,
+            )
+            formData.append(
+                'destination_longitude',
+                selectedAddress.value.longitude,
+            )
+            formData.append('origin_postal_code', 40287)
+            formData.append(
+                'destination_postal_code',
+                selectedAddress.value.post_code,
+            )
+            formData.append(
+                'couriers',
+                'gojek,grab,deliveree,jne,tiki,ninja,lion,sicepat,sentralcargo,jnt,idexpress,rpx,wahana,pos,anteraja,sap,paxel,borzo,lalamove',
+            )
+            itemsCourierRates.value.forEach((item, index) => {
+                formData.append(`items[${index}]`, JSON.stringify(item))
+            })
+            await storeAddress.getRate(formData, processing, couriers)
+        }
+
+        courierDialog.value = true
+    }
+}
 </script>
 <template>
     <AppLayout>
@@ -136,16 +197,19 @@ watchEffect(() => {
                             v-if="selectedAddress">
                             <div
                                 class="text-wrap font-semibold col-span-1 text-sm">
-                                {{ selectedAddress?.name }}
-                                {{ selectedAddress?.phone_number }}
+                                <p>
+                                    {{ selectedAddress?.name }}
+                                </p>
+                                <p>
+                                    {{ selectedAddress?.phone_number }}
+                                </p>
                             </div>
                             <div class="col-span-4 text-sm">
                                 {{ selectedAddress?.detail }},
-                                {{ selectedAddress?.province?.name }},
-                                {{ selectedAddress?.city?.name }},
-                                {{ selectedAddress?.subdistrict?.name }},
-                                {{ selectedAddress?.village?.name }},
-                                {{ selectedAddress?.post_code?.post_code }},
+                                {{ selectedAddress?.province }},
+                                {{ selectedAddress?.city }},
+                                {{ selectedAddress?.subdistrict }},
+                                {{ selectedAddress?.post_code }},
                             </div>
                         </div>
                     </div>
@@ -180,8 +244,7 @@ watchEffect(() => {
                                         ]">
                                         <div
                                             class="text-sm pl-6 flex flex-row gap-4 col-span-2">
-                                            <div
-                                                class="min-w-10 aspect-square overflow-hidden rounded-sm">
+                                            <div class="rounded-sm">
                                                 <v-img
                                                     :src="
                                                         backendUrl +
@@ -189,8 +252,8 @@ watchEffect(() => {
                                                         cart.product
                                                             .product_image
                                                     "
-                                                    class="!aspect-square w-full rounded-sm"
-                                                    cover>
+                                                    class="!h-24 !w-24 rounded-lg"
+                                                    contain>
                                                     <template
                                                         v-slot:placeholder>
                                                         <div
@@ -202,11 +265,91 @@ watchEffect(() => {
                                                     </template>
                                                 </v-img>
                                             </div>
-                                            <div>
-                                                <P class="line-clamp-1">{{
-                                                    cart.product.product_name
-                                                }}</P>
-                                                <P></P>
+                                            <div class="space-y-1">
+                                                <p class="line-clamp-3">
+                                                    {{
+                                                        cart.product
+                                                            .product_name
+                                                    }}
+                                                </p>
+                                                <div>
+                                                    <v-menu
+                                                        open-on-hover
+                                                        :location="'bottom'">
+                                                        <template
+                                                            v-slot:activator="{
+                                                                props,
+                                                            }">
+                                                            <p
+                                                                v-bind="props"
+                                                                v-if="
+                                                                    cart.bundling
+                                                                "
+                                                                class="border rounded px-3 py-1 cursor-pointer w-min whitespace-nowrap">
+                                                                {{
+                                                                    cart
+                                                                        .bundling
+                                                                        .name
+                                                                }}
+                                                            </p>
+                                                        </template>
+
+                                                        <div class="py-1">
+                                                            <div
+                                                                class="bg-light-primary-1 border p-3 rounded-lg max-w-xl shadow-lg">
+                                                                <div
+                                                                    class="divide-y">
+                                                                    <div
+                                                                        v-for="(
+                                                                            p, i
+                                                                        ) in cart
+                                                                            .bundling
+                                                                            .item"
+                                                                        :key="
+                                                                            i
+                                                                        ">
+                                                                        <router-link
+                                                                            :to="{
+                                                                                name: 'product.detail',
+                                                                                params: {
+                                                                                    slug: p
+                                                                                        ?.product
+                                                                                        ?.product_slug,
+                                                                                    id: p
+                                                                                        ?.product
+                                                                                        ?.id,
+                                                                                },
+                                                                            }"
+                                                                            target="_blank"
+                                                                            class="py-2 flex items-center gap-2 bg-light-primary-1 hover:bg-light-primary-2">
+                                                                            <div
+                                                                                class="w-10 flex-none">
+                                                                                <img
+                                                                                    class="aspect-square !w-full rounded-lg object-cover"
+                                                                                    :src="
+                                                                                        backendUrl +
+                                                                                        '/storage/images/product/' +
+                                                                                        p
+                                                                                            .product
+                                                                                            .product_image
+                                                                                    "
+                                                                                    alt="" />
+                                                                            </div>
+                                                                            <p
+                                                                                class="line-clamp-1 text-sm">
+                                                                                {{
+                                                                                    p
+                                                                                        .product
+                                                                                        .product_name
+                                                                                }}
+                                                                            </p>
+                                                                        </router-link>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </v-menu>
+                                                </div>
                                             </div>
                                         </div>
                                         <div
@@ -250,7 +393,160 @@ watchEffect(() => {
                             </div>
                         </div>
                         <div class="py-6">
-                            <p class="font-medium">Voucher</p>
+                            <div class="flex justify-between">
+                                <p class="font-medium">Shipping options:</p>
+                                <div>
+                                    <v-dialog
+                                        v-model="courierDialog"
+                                        class="max-w-3xl">
+                                        <template
+                                            v-slot:activator="{
+                                                props: activatorProps,
+                                            }">
+                                            <button
+                                                v-bind="activatorProps"
+                                                @click="searchCourierRates()"
+                                                type="button"
+                                                class="text-blue-500 text-sm">
+                                                Change
+                                            </button>
+                                        </template>
+
+                                        <v-card
+                                            class="invisible-scrollbar relative">
+                                            <div
+                                                class="sticky top-0 p-5 border flex justify-between items-center bg-white">
+                                                <p class="text-lg font-medium">
+                                                    Shipping Options
+                                                </p>
+                                                <button
+                                                    class="w-8 border rounded-full h-8 text-gray-700 hover:text-white hover:bg-red-500 transition-colors duration-300"
+                                                    @click="
+                                                        courierDialog = false
+                                                    ">
+                                                    <i
+                                                        class="fa-solid fa-x"></i>
+                                                </button>
+                                            </div>
+                                            <div class="p-5 space-y-5">
+                                                <div
+                                                    v-if="couriers.length > 0"
+                                                    v-for="(
+                                                        courier, index
+                                                    ) in couriers"
+                                                    :key="index">
+                                                    <div
+                                                        class="border rounded-lg p-3 shadow-lg">
+                                                        <div
+                                                            class="grid grid-cols-5 gap-3 text-xs">
+                                                            <div
+                                                                class="flex items-center justify-center">
+                                                                <img
+                                                                    class="w-20"
+                                                                    :src="
+                                                                        '/assets/images/couriers/' +
+                                                                        courier.courier_code +
+                                                                        '.png'
+                                                                    "
+                                                                    alt="Courier Image" />
+                                                            </div>
+                                                            <div
+                                                                class="flex flex-col">
+                                                                <p
+                                                                    class="font-bold text-center">
+                                                                    Type of
+                                                                    Service
+                                                                </p>
+                                                                <div
+                                                                    class="flex items-center justify-center h-full py-2">
+                                                                    <p
+                                                                        class="text-center">
+                                                                        {{
+                                                                            courier.courier_name
+                                                                        }}
+                                                                        {{
+                                                                            courier.courier_service_name
+                                                                        }}
+                                                                    </p>
+                                                                </div>
+                                                            </div>
+                                                            <div
+                                                                class="flex flex-col">
+                                                                <p
+                                                                    class="font-bold text-center">
+                                                                    Estimated
+                                                                    Shipping
+                                                                </p>
+                                                                <div
+                                                                    class="flex items-center justify-center h-full py-2">
+                                                                    <p
+                                                                        class="text-center">
+                                                                        {{
+                                                                            courier.duration
+                                                                        }}
+                                                                    </p>
+                                                                </div>
+                                                            </div>
+                                                            <div
+                                                                class="flex flex-col">
+                                                                <p
+                                                                    class="font-bold text-center">
+                                                                    Description
+                                                                </p>
+                                                                <div
+                                                                    class="flex items-center justify-center h-full py-2">
+                                                                    <p
+                                                                        class="text-center">
+                                                                        {{
+                                                                            courier.description
+                                                                        }}
+                                                                    </p>
+                                                                </div>
+                                                            </div>
+                                                            <div
+                                                                class="flex flex-col">
+                                                                <p
+                                                                    class="font-bold text-center">
+                                                                    Price
+                                                                </p>
+                                                                <div
+                                                                    class="flex items-center justify-center h-full py-2">
+                                                                    <p
+                                                                        class="text-center">
+                                                                        Rp.
+                                                                        {{
+                                                                            formatPrice(
+                                                                                courier.price,
+                                                                            )
+                                                                        }}
+                                                                    </p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div
+                                                    v-else
+                                                    class="flex items-center justify-center">
+                                                    <svg
+                                                        role="status"
+                                                        class="inline mr-2 w-10 h-10 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600"
+                                                        viewBox="0 0 100 101"
+                                                        fill="none"
+                                                        xmlns="http://www.w3.org/2000/svg">
+                                                        <path
+                                                            d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
+                                                            fill="currentColor" />
+                                                        <path
+                                                            d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
+                                                            fill="currentFill" />
+                                                    </svg>
+                                                </div>
+                                            </div>
+                                        </v-card>
+                                    </v-dialog>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

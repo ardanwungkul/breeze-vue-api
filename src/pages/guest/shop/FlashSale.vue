@@ -39,35 +39,20 @@ onMounted(async () => {
 
     const ongoingSales = props.flash_sale
         .filter(sale => {
-            const saleFrom = DateTime.fromFormat(
-                sale.flash_sale_from,
-                'yyyy-MM-dd HH:mm:ss',
-            )
-            const saleUntil = DateTime.fromFormat(
-                sale.flash_sale_until,
-                'yyyy-MM-dd HH:mm:ss',
-            )
+            const saleFrom = DateTime.fromISO(sale.flash_sale_from)
+            const saleUntil = DateTime.fromISO(sale.flash_sale_until)
             const isOngoing = saleFrom <= now && saleUntil >= now
 
             return isOngoing
         })
         .sort(
             (a, b) =>
-                DateTime.fromFormat(
-                    a.flash_sale_from,
-                    'yyyy-MM-dd HH:mm:ss',
-                ).toMillis() -
-                DateTime.fromFormat(
-                    b.flash_sale_from,
-                    'yyyy-MM-dd HH:mm:ss',
-                ).toMillis(),
+                DateTime.fromISO(a.flash_sale_from).toMillis() -
+                DateTime.fromISO(b.flash_sale_from).toMillis(),
         )
     flashSaleNow.value = ongoingSales.length > 0 ? ongoingSales[0] : null
     if (flashSaleNow.value) {
-        const endTime = DateTime.fromFormat(
-            flashSaleNow.value.flash_sale_until,
-            'yyyy-MM-dd HH:mm:ss',
-        )
+        const endTime = DateTime.fromISO(flashSaleNow.value.flash_sale_until)
 
         const updateTimeLeft = () => {
             const now = DateTime.now()

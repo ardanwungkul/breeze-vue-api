@@ -12,8 +12,8 @@ console.log(stocks, products, props.data)
 const filter = ref('')
 const headersTable = [
     { key: 'product_name', title: 'Product Name' },
-    { key: 'id', title: 'Stock' },
-    { key: 'id', title: 'Sold' },
+    { key: 'stock', title: 'Stock' },
+    { key: 'sold', title: 'Sold' },
 ]
 const search = ref('')
 const pageData = ref(1)
@@ -67,6 +67,18 @@ const filteredData = computed(() => {
                 }"
                 item-key="id"
                 class="border dark:!border-typography-2/20 shadow-lg dark:!bg-dark-primary-1 !bg-light-primary-2 dark:!text-typography-1">
+                <template v-slot:item.stock="{ item }">
+                    <p>
+                        {{
+                            item.stock.filter(s => {
+                                return s.product_stock_status == 'warehouse'
+                            }).length
+                        }}
+                    </p>
+                </template>
+                <template v-slot:item.sold="{ item }">
+                    <p>0</p>
+                </template>
             </v-data-table>
         </div>
         <v-pagination

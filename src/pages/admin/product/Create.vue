@@ -12,6 +12,15 @@ import '@/assets/css/vue-multiselect.css'
 import QrScanner from '@/components/dialog/QrScanner.vue'
 import { QuillEditor } from '@vueup/vue-quill'
 import '@/assets/css/quill.css'
+import { vMaska } from 'maska/vue'
+
+const optionsMoney = {
+    mask: '9.99#',
+    tokens: {
+        9: { pattern: /[0-9]/, repeated: true },
+    },
+    reversed: true,
+}
 
 const storeProduct = useProductStore()
 const storeSubCategory = useSubCategoryStore()
@@ -40,6 +49,11 @@ const product_code_type = ref('')
 const product_image = ref('')
 const selectedCategory = ref([])
 const product_image_3d = ref('')
+const product_promo = ref({
+    status: false,
+    price: null,
+    percentage: null,
+})
 
 const qr = ref({
     paused: false,
@@ -98,6 +112,9 @@ const AddProduct = async () => {
                 )
             })
         })
+    }
+    if (product_promo.value.price && product_promo.value.status) {
+        formData.append('product_promo_price', product_promo.value.price)
     }
     await storeProduct.addProduct(formData, setErrors, processing)
 }
@@ -173,6 +190,35 @@ function removeGallery(index) {
 function removeBundling(index) {
     this.bundlings.splice(index, 1)
 }
+async function inputPromoPrice() {
+    if (product_promo.value.price > product_price.value) {
+        const price = parseInt(product_promo.value.price)
+        const normal = parseInt(product_price.value)
+        const profit = parseInt(price - normal)
+        const value = (profit / price) * 100
+        product_promo.value.percentage = value
+    } else {
+        product_promo.value.price = null
+    }
+}
+async function inputPromoPercentage() {
+    if (product_promo.value.percentage > 0) {
+        const percentage = parseFloat(product_promo.value.percentage)
+        const price = parseInt(product_price.value)
+        const normal = price / (1 - percentage / 100)
+        product_promo.value.price = Math.round(normal)
+    } else {
+        product_promo.value.percentage = null
+    }
+}
+async function inputProductPrice() {
+    if (product_promo.value.price) {
+        const percentage = parseFloat(product_promo.value.percentage)
+        const price = parseInt(product_price.value)
+        const normal = price / (1 - percentage / 100)
+        product_promo.value.price = Math.round(normal)
+    }
+}
 </script>
 <template>
     <AdminLayout title="Add Products">
@@ -212,18 +258,81 @@ function removeBundling(index) {
                                 </div>
                                 <div
                                     class="flex flex-col gap-2 text-sm col-span-2">
-                                    <label
-                                        class="dark:text-light-primary-1"
-                                        for="product_price"
-                                        >Price</label
-                                    >
+                                    <div
+                                        class="flex justify-between items-center">
+                                        <label
+                                            class="dark:text-light-primary-1"
+                                            for="product_price"
+                                            >Price</label
+                                        >
+                                        <div class="flex items-center gap-1">
+                                            <input
+                                                :disabled="!product_price"
+                                                class="rounded-full"
+                                                v-model="product_promo.status"
+                                                type="checkbox"
+                                                id="product_promo" />
+                                            <label
+                                                for="product_promo"
+                                                :class="
+                                                    !product_price
+                                                        ? '!text-typography-2'
+                                                        : ''
+                                                "
+                                                class="dark:text-typography-1">
+                                                Add Promo Price
+                                            </label>
+                                        </div>
+                                    </div>
                                     <input
                                         class="text-sm rounded-lg bg-light-primary-1 w-full dark:bg-dark-primary-1 dark:text-light-primary-1 border !border-gray-500 dark:!border-typography-3"
                                         type="number"
+                                        @change="inputProductPrice()"
                                         v-model="product_price"
                                         id="product_price"
                                         placeholder="Enter Product Price"
                                         required />
+                                </div>
+                                <div
+                                    class="grid grid-cols-2 gap-3 col-span-2"
+                                    v-if="product_promo.status">
+                                    <div class="flex flex-col gap-2 text-sm">
+                                        <div
+                                            class="flex justify-between items-center">
+                                            <label
+                                                class="dark:text-light-primary-1"
+                                                for="product_promo_price"
+                                                >Promo Price From</label
+                                            >
+                                        </div>
+                                        <input
+                                            class="text-sm rounded-lg bg-light-primary-1 w-full dark:bg-dark-primary-1 dark:text-light-primary-1 border !border-gray-500 dark:!border-typography-3"
+                                            v-model="product_promo.price"
+                                            type="number"
+                                            @change="inputPromoPrice()"
+                                            id="product_promo_price"
+                                            placeholder="Enter Promo Price Value"
+                                            required />
+                                    </div>
+                                    <div class="flex flex-col gap-2 text-sm">
+                                        <div
+                                            class="flex justify-between items-center">
+                                            <label
+                                                class="dark:text-light-primary-1"
+                                                for="product_promo_percentage"
+                                                >Percentage Value</label
+                                            >
+                                        </div>
+                                        <input
+                                            class="text-sm rounded-lg bg-light-primary-1 w-full dark:bg-dark-primary-1 dark:text-light-primary-1 border !border-gray-500 dark:!border-typography-3"
+                                            type="text"
+                                            v-maska="'##'"
+                                            @change="inputPromoPercentage()"
+                                            v-model="product_promo.percentage"
+                                            id="product_promo_percentage"
+                                            placeholder="Enter Promo Price Percentage"
+                                            required />
+                                    </div>
                                 </div>
                                 <div class="flex flex-col gap-2 text-sm">
                                     <div class="flex justify-between">

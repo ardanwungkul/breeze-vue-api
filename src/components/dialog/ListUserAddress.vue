@@ -91,29 +91,27 @@ watchEffect(() => {
                                         <p
                                             v-if="item.isDefault"
                                             class="px-3 py-1 rounded-lg bg-ezzora-100 text-typography-2 text-sm shadow-lg border">
-                                            Default Address
+                                            Used Address
                                         </p>
                                     </div>
                                 </div>
                                 <div class="text-sm text-typography-2">
                                     <p>{{ item.detail }}</p>
                                     <p>
-                                        {{ item.province.name }},
-                                        {{ item.city.name }},
-                                        {{ item.subdistrict.name }},
-                                        {{ item.village.name }},
-                                        {{ item.post_code.post_code }}
+                                        {{ item.province }}, {{ item.city }},
+                                        {{ item.subdistrict }},
+                                        {{ item.post_code }}
                                     </p>
                                     <div
                                         class="pt-2 flex items-center !divide-x-2 divide-black mt-2">
                                         <div
                                             class="divide-x divide-typography-2 flex">
-                                            <div class="">
+                                            <!-- <div class="">
                                                 <button
                                                     class="pr-3 hover:underline py-1 hover:text-secondary-3">
                                                     Use Address
                                                 </button>
-                                            </div>
+                                            </div> -->
                                             <div class="">
                                                 <EditAddress :item="item" />
                                             </div>
@@ -136,7 +134,7 @@ watchEffect(() => {
                                                         setDefaultAddress(item)
                                                     "
                                                     class="px-3 hover:underline py-1 hover:text-typography-2">
-                                                    Set as Default Address
+                                                    Use Address
                                                 </button>
                                             </div>
                                         </div>

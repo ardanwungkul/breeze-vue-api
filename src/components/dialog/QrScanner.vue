@@ -40,6 +40,7 @@ const onError = async error => {
 }
 const onDetect = async detectedCodes => {
     const detectedResult = detectedCodes.map(code => code.rawValue)
+    console.log(detectedCodes)
 
     emit('update:result', detectedResult)
     props.qr.paused = true

@@ -73,8 +73,6 @@ const selectAll = async () => {
     })
 }
 const editQuantity = async cart => {
-    console.log(cart)
-
     processing.value = true
     await nextTick()
     const formData = new FormData()
@@ -125,6 +123,20 @@ const deleteSelectedCart = async id => {
             'You must select at least 1 product.',
         ]).flat()
     }
+}
+function productStock(item) {
+    let minValue = Infinity
+
+    item.item.forEach(v => {
+        const values = v.product.stock.filter(p => {
+            return p.product_stock_status == 'warehouse'
+        }).length
+        if (values < minValue) {
+            minValue = values
+        }
+    })
+    minValue = minValue === Infinity ? 0 : minValue
+    return minValue
 }
 </script>
 <template>
@@ -295,19 +307,55 @@ const deleteSelectedCart = async id => {
                                         </p>
                                     </div>
                                     <div
-                                        class="flex items-center justify-center">
-                                        <v-number-input
-                                            :density="'compact'"
-                                            @update:modelValue="
-                                                editQuantity(item)
-                                            "
-                                            v-model="item.quantity"
-                                            class="border rounded-lg overflow-hidden"
-                                            hide-details
-                                            :single-line="false"
-                                            variant="solo-filled"
-                                            :min="1"
-                                            control-variant="split"></v-number-input>
+                                        class="flex flex-col items-center justify-center gap-2">
+                                        <div>
+                                            <v-number-input
+                                                :density="'compact'"
+                                                @update:modelValue="
+                                                    editQuantity(item)
+                                                "
+                                                :max="
+                                                    item.bundling
+                                                        ? productStock(
+                                                              item.bundling,
+                                                          )
+                                                        : item?.product?.stock.filter(
+                                                              s => {
+                                                                  return (
+                                                                      s.product_stock_status ==
+                                                                      'warehouse'
+                                                                  )
+                                                              },
+                                                          ).length
+                                                "
+                                                v-model="item.quantity"
+                                                class="border rounded-lg overflow-hidden"
+                                                hide-details
+                                                :single-line="false"
+                                                variant="solo-filled"
+                                                :min="1"
+                                                control-variant="split"></v-number-input>
+                                        </div>
+                                        <p class="!text-xs text-typography-2">
+                                            Available
+                                            <span>
+                                                {{
+                                                    item.bundling
+                                                        ? productStock(
+                                                              item.bundling,
+                                                          )
+                                                        : item?.product?.stock.filter(
+                                                              s => {
+                                                                  return (
+                                                                      s.product_stock_status ==
+                                                                      'warehouse'
+                                                                  )
+                                                              },
+                                                          ).length
+                                                }}
+                                            </span>
+                                            Stock
+                                        </p>
                                     </div>
                                     <div
                                         class="flex items-center justify-center">

@@ -16,6 +16,18 @@ import VerifyEmail from '@/pages/auth/VerifyEmail.vue'
 const APP_NAME = import.meta.env.VITE_APP_NAME
 
 const routes = [
+    // Dashboard
+    {
+        path: '/dashboard',
+        name: 'dashboard',
+        component: Dashboard,
+        meta: {
+            title: 'Dashboard',
+            guard: 'auth',
+            role: 'admin',
+        },
+    },
+    // MARK:Guest
     {
         path: '/',
         name: 'welcome',
@@ -32,7 +44,49 @@ const routes = [
             ],
         },
     },
-    // Admin
+    {
+        path: '/article/:slug',
+        name: 'user.article.show',
+        component: () => import('@/pages/guest/article/Show.vue'),
+        query: {
+            verified: 'verified',
+        },
+    },
+    {
+        path: '/shop',
+        name: 'shop',
+        component: () => import('@/pages/guest/Shop.vue'),
+        meta: {
+            title: 'Shop',
+        },
+    },
+    {
+        path: '/article',
+        name: 'article',
+        component: Article,
+        meta: {
+            title: 'Article',
+        },
+    },
+    {
+        path: '/official-agent',
+        name: 'officialAgent',
+        component: OfficialAgent,
+        meta: {
+            title: 'Official Agent',
+        },
+    },
+    {
+        path: '/about-us',
+        name: 'aboutUs',
+        component: AboutUs,
+        meta: {
+            title: 'About Us',
+        },
+    },
+
+    // MARK:Admin
+    // Admin Dashboard
     {
         path: '/admin/dashboard/',
         name: 'admin.dashboard',
@@ -45,8 +99,7 @@ const routes = [
             role: 'admin',
         },
     },
-
-    // User
+    // Admin Users
     {
         path: '/admin/user',
         name: 'admin.user.index',
@@ -59,7 +112,7 @@ const routes = [
             role: 'admin',
         },
     },
-    // Stock
+    // Admin Stocks
     {
         path: '/admin/stock',
         name: 'admin.stock.index',
@@ -84,7 +137,7 @@ const routes = [
             role: 'admin',
         },
     },
-    // Product
+    // Admin Product
     {
         path: '/admin/product',
         name: 'admin.product.index',
@@ -97,7 +150,6 @@ const routes = [
             role: 'admin',
         },
     },
-    // Product Create
     {
         path: '/admin/product/create',
         name: 'admin.product.create',
@@ -110,7 +162,6 @@ const routes = [
             role: 'admin',
         },
     },
-    // Product Edit
     {
         path: '/admin/product/:id/edit',
         name: 'admin.product.edit',
@@ -122,7 +173,7 @@ const routes = [
             role: 'admin',
         },
     },
-    // Category
+    // Admin Category
     {
         path: '/admin/category',
         name: 'admin.category.index',
@@ -291,17 +342,6 @@ const routes = [
             role: 'admin',
         },
     },
-    {
-        path: '/article/:slug',
-        name: 'user.article.show',
-        component: () => import('@/pages/guest/article/Show.vue'),
-        query: {
-            verified: 'verified',
-        },
-        meta: {
-            // guard: 'auth',
-        },
-    },
     // Payment
     {
         path: '/admin/payments',
@@ -366,7 +406,7 @@ const routes = [
             role: 'admin',
         },
     },
-
+    // MARK: User
     // Product Detail
     {
         path: '/product/detail/:slug/:id',
@@ -378,7 +418,6 @@ const routes = [
             guard: 'auth',
         },
     },
-
     // Cart
     {
         path: '/cart/',
@@ -413,55 +452,36 @@ const routes = [
             guard: 'auth',
         },
     },
-
-    // shop
     {
-        path: '/shop',
-        name: 'shop',
-        component: () => import('@/pages/guest/Shop.vue'),
+        path: '/purchase/:id',
+        name: 'purchase.detail',
+        component: () => import('@/pages/guest/order/PurchaseDetail.vue'),
+        props: true,
         meta: {
-            title: 'Shop',
-        },
-    },
-
-    // Article
-    {
-        path: '/article',
-        name: 'article',
-        component: Article,
-        meta: {
-            title: 'Article',
-        },
-    },
-    // Official Agent
-    {
-        path: '/official-agent',
-        name: 'officialAgent',
-        component: OfficialAgent,
-        meta: {
-            title: 'Official Agent',
-        },
-    },
-    // About Us
-    {
-        path: '/about-us',
-        name: 'aboutUs',
-        component: AboutUs,
-        meta: {
-            title: 'About Us',
-        },
-    },
-    // Dashboard
-    {
-        path: '/dashboard',
-        name: 'dashboard',
-        component: Dashboard,
-        meta: {
-            title: 'Dashboard',
+            title: 'Purchase',
             guard: 'auth',
-            role: 'admin',
         },
     },
+    // MARK:Packing
+    {
+        path: '/packing/dashboard',
+        name: 'packing.dashboard',
+        component: () => import('@/pages/packing/Dashboard.vue'),
+        meta: {
+            guard: 'auth',
+            role: 'packing',
+        },
+    },
+    {
+        path: '/packing/scan/:invoice',
+        name: 'packing.scan',
+        component: () => import('@/pages/packing/Scan.vue'),
+        meta: {
+            guard: 'auth',
+            role: 'packing',
+        },
+    },
+    // MARK: Report
     // Report Dashboard
     {
         path: '/report/dashboard',
@@ -512,6 +532,7 @@ const routes = [
             role: 'report',
         },
     },
+    // MARK:Auth
     // Login
     {
         path: '/login',
@@ -626,14 +647,14 @@ router.beforeEach(async (to, from, next) => {
                 ? next({ name: 'admin.dashboard' })
                 : role === 'report'
                 ? next({ name: 'report.dashboard' })
+                : role === 'packing'
+                ? next({ name: 'packing.dashboard' })
                 : next({ name: 'welcome' })
         }
     } else {
         next()
     }
 })
-
-// Page Title and Metadata
 
 router.beforeEach((to, from, next) => {
     const nearestWithTitle = to.matched

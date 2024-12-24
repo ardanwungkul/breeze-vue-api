@@ -236,7 +236,7 @@ export const useStockStore = defineStore({
                     console.log(response.data)
                     data = []
                     // this.stocks.push(response.data)
-                    // this.router.push({ name: 'admin.stock.index' })
+                    this.router.push({ name: 'admin.stock.index' })
                 })
                 .catch(error => {
                     console.log(error)

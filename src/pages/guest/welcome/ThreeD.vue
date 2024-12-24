@@ -23,35 +23,20 @@ onMounted(async () => {
 
     const ongoingSales = props.flash_sale
         .filter(sale => {
-            const saleFrom = DateTime.fromFormat(
-                sale.flash_sale_from,
-                'yyyy-MM-dd HH:mm:ss',
-            )
-            const saleUntil = DateTime.fromFormat(
-                sale.flash_sale_until,
-                'yyyy-MM-dd HH:mm:ss',
-            )
+            const saleFrom = DateTime.fromISO(sale.flash_sale_from)
+            const saleUntil = DateTime.fromISO(sale.flash_sale_until)
             const isOngoing = saleFrom <= now && saleUntil >= now
 
             return isOngoing
         })
         .sort(
             (a, b) =>
-                DateTime.fromFormat(
-                    a.flash_sale_from,
-                    'yyyy-MM-dd HH:mm:ss',
-                ).toMillis() -
-                DateTime.fromFormat(
-                    b.flash_sale_from,
-                    'yyyy-MM-dd HH:mm:ss',
-                ).toMillis(),
+                DateTime.fromISO(a.flash_sale_from).toMillis() -
+                DateTime.fromISO(b.flash_sale_from).toMillis(),
         )
     flashSaleNow.value = ongoingSales.length > 0 ? ongoingSales[0] : null
     if (flashSaleNow.value) {
-        const endTime = DateTime.fromFormat(
-            flashSaleNow.value.flash_sale_until,
-            'yyyy-MM-dd HH:mm:ss',
-        )
+        const endTime = DateTime.fromISO(flashSaleNow.value.flash_sale_until)
 
         const updateTimeLeft = () => {
             const now = DateTime.now()
@@ -96,7 +81,7 @@ onMounted(async () => {
 <template>
     <div class="md:grid md:grid-cols-2 gap-3" v-if="flashSaleNow">
         <div
-            class="bg-[#f1eee9] rounded-md p-2 max-h-[400px] flex items-center justify-center">
+            class="bg-[#f1eee9] rounded-md p-2 flex items-center justify-center">
             <div
                 ref="element"
                 class="object-contain w-full h-full"
@@ -114,7 +99,7 @@ onMounted(async () => {
                         products[0]?.product.product_image_3d
                     "
                     aspect-ratio="1"
-                    class="min-h-full max-w-[50%]">
+                    class="min-h-full !max-w-[50%] mx-auto">
                     <template v-slot:placeholder>
                         <div
                             class="w-full h-full flex justify-center items-center">
@@ -126,7 +111,7 @@ onMounted(async () => {
                 </v-img>
             </div>
         </div>
-        <div class="bg-[#f1eee9] rounded-md p-2 max-h-[400px]">
+        <div class="bg-[#f1eee9] rounded-md p-2">
             <div class="bg-white w-full p-12 h-full">
                 <p
                     class="text-center text-[28px] font-medium mb-3 line-clamp-2">
@@ -142,9 +127,9 @@ onMounted(async () => {
                     Rp.
                     {{ products[0]?.product.product_price }}
                 </p>
-                <p class="text-xs text-center mb-6">
-                    {{ products[0]?.product.product_description }}
-                </p>
+                <p
+                    class="text-xs mb-6 line-clamp-4"
+                    v-html="products[0]?.product.product_description"></p>
                 <div class="flex w-full gap-[10px] justify-center">
                     <div
                         v-for="(index, item) in timeLeft"
@@ -160,6 +145,18 @@ onMounted(async () => {
                         </div>
                     </div>
                 </div>
+                <router-link
+                    :to="{
+                        name: 'product.detail',
+                        params: {
+                            slug: products[0]?.product?.product_slug,
+                            id: products[0]?.product?.id,
+                        },
+                    }"
+                    class="w-full flex items-center gap-3 justify-center bg-ezzora-100 mt-5 rounded-lg py-2 px-3 shadow-lg text-sm text-typography-2 hover:!text-typography-3 hover:!bg-ezzora-50 transition-colors duration-200 font-medium">
+                    <i class="fa-solid fa-cart-shopping"></i>
+                    <p>Buy Now</p>
+                </router-link>
             </div>
         </div>
     </div>

@@ -14,6 +14,7 @@ export const useAddressStore = defineStore({
         village: [],
         post_code: [],
         address: [],
+        couriers: {},
     }),
     getters: {
         isLoading: state => state.loading,
@@ -34,69 +35,15 @@ export const useAddressStore = defineStore({
                 this.loading = false
             }
         },
-        async getProvince() {
+        async searchAddress(form, options) {
             this.loading = true
             try {
                 const response = await axios
-                    .get(`/api/address/province/`)
+                    .post(`/api/biteship/map/`, form)
                     .then(response => {
-                        this.province = response.data
-                    })
-            } catch (error) {
-                this.error = error
-            } finally {
-                this.loading = false
-            }
-        },
-        async getCitiesByProvince(id) {
-            this.loading = true
-            try {
-                const response = await axios
-                    .get(`/api/address/cities/${id}`)
-                    .then(response => {
-                        this.city = response.data
-                    })
-            } catch (error) {
-                this.error = error
-            } finally {
-                this.loading = false
-            }
-        },
-        async getSubdistrictsByCity(id) {
-            this.loading = true
-            try {
-                const response = await axios
-                    .get(`/api/address/subdistrict/${id}`)
-                    .then(response => {
-                        this.subdistrict = response.data
-                    })
-            } catch (error) {
-                this.error = error
-            } finally {
-                this.loading = false
-            }
-        },
-        async getVillagesBySubdistrict(id) {
-            this.loading = true
-            try {
-                const response = await axios
-                    .get(`/api/address/village/${id}`)
-                    .then(response => {
-                        this.village = response.data
-                    })
-            } catch (error) {
-                this.error = error
-            } finally {
-                this.loading = false
-            }
-        },
-        async getPostCodeByVillage(id) {
-            this.loading = true
-            try {
-                const response = await axios
-                    .get(`/api/address/post-code/${id}`)
-                    .then(response => {
-                        this.post_code = response.data
+                        console.log(response)
+
+                        options.value = response.data.areas
                     })
             } catch (error) {
                 this.error = error
@@ -111,6 +58,7 @@ export const useAddressStore = defineStore({
                 .post('/api/address', form)
                 .then(response => {
                     processing.value = false
+                    console.log(response)
 
                     this.address.push(response.data)
                 })
@@ -183,6 +131,26 @@ export const useAddressStore = defineStore({
             } finally {
                 processing.value = false
             }
+        },
+        async getRate(form, processing, couriers) {
+            await csrf()
+            processing.value = true
+            axios
+                .post('/api/biteship/rates', form)
+                .then(response => {
+                    processing.value = false
+                    console.log(response)
+                    couriers.value = response.data.pricing
+                })
+                .catch(error => {
+                    console.log(error)
+                    if (error.response.status !== 422) throw error
+
+                    setErrors.value = Object.values(
+                        error.response.data.errors,
+                    ).flat()
+                    processing.value = false
+                })
         },
     },
 })

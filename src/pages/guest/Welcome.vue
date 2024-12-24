@@ -18,6 +18,20 @@ onMounted(async () => {
     data.value = store.data
 })
 const tab = ref(null)
+const tabs = ref([
+    {
+        text: 'New Products',
+        value: 'new_product',
+    },
+    {
+        text: 'On Sale',
+        value: 'on_sale',
+    },
+    {
+        text: 'Featured Products',
+        value: 'featured_product',
+    },
+])
 </script>
 <template>
     <AppLayout>
@@ -37,40 +51,30 @@ const tab = ref(null)
                         hide-slider
                         bg-color="transparent"
                         selected-class="hover:!text-black">
-                        <v-tab :base-color="'#9ca3af'" :value="1">
+                        <v-tab
+                            :base-color="'#9ca3af'"
+                            :value="productTab.value"
+                            v-for="(productTab, index) in tabs"
+                            :key="index">
                             <p
                                 class="!text-lg hover:!bg-transparent hover:text-gray-600">
-                                New Products
+                                {{ productTab.text }}
                             </p></v-tab
                         >
-                        <v-tab :base-color="'#9ca3af'" :value="2">
-                            <p
-                                class="!text-lg hover:!bg-transparent hover:text-gray-600">
-                                On Sale
-                            </p>
-                        </v-tab>
-                        <v-tab :base-color="'#9ca3af'" :value="3">
-                            <p
-                                class="!text-lg hover:!bg-transparent hover:text-gray-600">
-                                Feature Products
-                            </p>
-                        </v-tab>
                     </v-tabs>
 
                     <v-tabs-window v-model="tab">
                         <div class="py-3">
                             <v-tabs-window-item
-                                v-for="n in 3"
-                                :key="n"
-                                :value="n">
-                                <ProductTab />
+                                :value="productTab.value"
+                                v-for="(productTab, index) in tabs">
+                                <ProductTab :value="productTab.value" />
                             </v-tabs-window-item>
                         </div>
                     </v-tabs-window>
                 </div>
 
                 <!-- 3D Products -->
-                <!-- {{ data?.flash_sale }} -->
                 <ThreeD v-if="data?.flash_sale" :flash_sale="data.flash_sale" />
             </div>
 

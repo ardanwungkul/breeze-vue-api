@@ -4,12 +4,15 @@ import { onBeforeMount, onMounted, ref } from 'vue'
 import { usePaymentStore } from '@/stores/payment'
 import { useUsers } from '@/stores/user'
 import Loading from '@/components/Loading.vue'
+import CryptoJS from 'crypto-js'
+import ProductList from '@/components/purchase/ProductList.vue'
 
 const storePayment = usePaymentStore()
 const storeUser = useUsers()
 const isLoading = ref(true)
 const tab = ref(null)
 const payments = ref([])
+const secretKey = 'ezzorasecretkey'
 onBeforeMount(async () => {
     if (storeUser.authUser) {
         if (!storeUser.hasUserData) {
@@ -26,6 +29,12 @@ const fetchData = async () => {
     payments.value = storePayment.payments
 }
 
+function urlSafeData(url) {
+    return url.replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '')
+}
+function formatPrice(price) {
+    return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')
+}
 const tabs = [
     {
         value: 'all',
@@ -84,31 +93,201 @@ const tabs = [
 
                 <v-tabs-window v-model="tab">
                     <div class="py-3">
-                        <v-tabs-window-item
-                            v-for="(item, index) in tabs"
-                            :key="n"
-                            :value="item.value">
+                        <v-tabs-window-item :value="'all'">
                             <div
-                                class="bg-light-primary-1 rounded-lg p-5 shadow">
+                                class="bg-light-primary-1 rounded-lg p-5 shadow-lg">
                                 <div>
-                                    <ul class="space-y-3">
+                                    <ul class="space-y-5">
                                         <li
                                             v-for="(order, indexs) in payments"
                                             :key="index">
-                                            <div class="border rounded-lg p-3">
-                                                <div class="border-b pb-3">
-                                                    {{ order.invoice_code }}
+                                            <div
+                                                class="border rounded-lg p-3 bg-ezzora-50 shadow-lg">
+                                                <div class="flex">
+                                                    <router-link
+                                                        :to="{
+                                                            name: 'purchase.detail',
+                                                            params: {
+                                                                id: CryptoJS.AES.encrypt(
+                                                                    order.id.toString(),
+                                                                    secretKey,
+                                                                ).toString(),
+                                                            },
+                                                        }"
+                                                        class="pb-3 w-full font-medium text-lg">
+                                                        {{ order.invoice_code }}
+                                                    </router-link>
+                                                    <div>
+                                                        <p
+                                                            class="whitespace-nowrap">
+                                                            {{
+                                                                order.status_proccess ==
+                                                                'BEING_PACKED'
+                                                                    ? 'BEING PACKED'
+                                                                    : ''
+                                                            }}
+                                                        </p>
+                                                    </div>
                                                 </div>
-                                                <div class="py-3 space-y-3">
+                                                <div
+                                                    class="!divide-y divide-typography-2 divide-opacity-50 border-y border-y-typography-2 border-opacity-50">
                                                     <div
-                                                        class="border rounded-lg p-3"
                                                         v-for="(
                                                             items, i
-                                                        ) in order.items">
-                                                        {{
-                                                            items.product
-                                                                .product_name
-                                                        }}
+                                                        ) in order.items"
+                                                        :key="i">
+                                                        <ProductList
+                                                            :data="items" />
+                                                    </div>
+                                                    <div>
+                                                        <p
+                                                            class="text-end p-3 text-sm">
+                                                            Total Orders :
+                                                            <span
+                                                                class="text-lg">
+                                                                Rp.
+                                                                {{
+                                                                    formatPrice(
+                                                                        order.amount,
+                                                                    )
+                                                                }}</span
+                                                            >
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </v-tabs-window-item>
+                        <v-tabs-window-item :value="'unpaid'">
+                            <div
+                                class="bg-light-primary-1 rounded-lg p-5 shadow-lg">
+                                <div>
+                                    <ul class="space-y-5">
+                                        <li
+                                            v-for="(order, indexs) in payments"
+                                            :key="index">
+                                            <div
+                                                class="border rounded-lg p-3 bg-ezzora-50 shadow-lg"
+                                                v-if="
+                                                    order.status_payment ==
+                                                    'PENDING'
+                                                ">
+                                                <div class="flex">
+                                                    <router-link
+                                                        :to="{
+                                                            name: 'purchase.detail',
+                                                            params: {
+                                                                id: CryptoJS.AES.encrypt(
+                                                                    order.id.toString(),
+                                                                    secretKey,
+                                                                ).toString(),
+                                                            },
+                                                        }"
+                                                        class="pb-3 w-full font-medium text-lg">
+                                                        {{ order.invoice_code }}
+                                                    </router-link>
+                                                    <div>
+                                                        <p>
+                                                            {{
+                                                                order.status_payment
+                                                            }}
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                                <div
+                                                    class="!divide-y divide-typography-2 divide-opacity-50 border-y border-y-typography-2 border-opacity-50">
+                                                    <div
+                                                        v-for="(
+                                                            items, i
+                                                        ) in order.items"
+                                                        :key="i">
+                                                        <ProductList
+                                                            :data="items" />
+                                                    </div>
+                                                    <div>
+                                                        <p
+                                                            class="text-end p-3 text-sm">
+                                                            Total Orders :
+                                                            <span
+                                                                class="text-lg">
+                                                                Rp.
+                                                                {{
+                                                                    formatPrice(
+                                                                        order.amount,
+                                                                    )
+                                                                }}</span
+                                                            >
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </v-tabs-window-item>
+                        <v-tabs-window-item :value="'packing'">
+                            <div
+                                class="bg-light-primary-1 rounded-lg p-5 shadow-lg">
+                                <div>
+                                    <ul class="space-y-5">
+                                        <li
+                                            v-for="(order, indexs) in payments"
+                                            :key="index">
+                                            <div
+                                                class="border rounded-lg p-3 bg-ezzora-50 shadow-lg"
+                                                v-if="
+                                                    order.status_proccess ==
+                                                    'BEING_PACKED'
+                                                ">
+                                                <div class="flex">
+                                                    <router-link
+                                                        :to="{
+                                                            name: 'purchase.detail',
+                                                            params: {
+                                                                id: CryptoJS.AES.encrypt(
+                                                                    order.id.toString(),
+                                                                    secretKey,
+                                                                ).toString(),
+                                                            },
+                                                        }"
+                                                        class="pb-3 w-full font-medium text-lg">
+                                                        {{ order.invoice_code }}
+                                                    </router-link>
+                                                    <div>
+                                                        <p
+                                                            class="whitespace-nowrap">
+                                                            BEING PACKED
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                                <div
+                                                    class="!divide-y divide-typography-2 divide-opacity-50 border-y border-y-typography-2 border-opacity-50">
+                                                    <div
+                                                        v-for="(
+                                                            items, i
+                                                        ) in order.items"
+                                                        :key="i">
+                                                        <ProductList
+                                                            :data="items" />
+                                                    </div>
+                                                    <div>
+                                                        <p
+                                                            class="text-end p-3 text-sm">
+                                                            Total Orders :
+                                                            <span
+                                                                class="text-lg">
+                                                                Rp.
+                                                                {{
+                                                                    formatPrice(
+                                                                        order.amount,
+                                                                    )
+                                                                }}</span
+                                                            >
+                                                        </p>
                                                     </div>
                                                 </div>
                                             </div>

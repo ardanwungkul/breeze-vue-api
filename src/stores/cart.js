@@ -96,7 +96,7 @@ export const useCartStore = defineStore({
                     processing.value = false
                 })
         },
-        async addCart(form, processing) {
+        async addCart(form, setErrors, processing) {
             await csrf()
             processing.value = true
             axios

@@ -13,11 +13,9 @@ onMounted(async () => {
 })
 async function fetchUsers() {
     await storeUser.userAll()
-    users.value = storeUser.allUser.map(user => ({
-        id: user.id,
-        name: user.name,
-        email: user.email,
-    }))
+    users.value = storeUser.allUser.filter(user => {
+        return user.role !== 'admin'
+    })
 }
 </script>
 <template>

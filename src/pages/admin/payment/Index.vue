@@ -8,10 +8,10 @@ const store = usePaymentStore()
 
 const payments = ref([])
 onMounted(async () => {
+    await store.paymentAll()
     await fetchData()
 })
 async function fetchData() {
-    await store.paymentAll()
     payments.value = store.payments
 }
 
@@ -29,12 +29,12 @@ const pageData = ref(1)
 const itemsPerPageData = ref(10)
 
 const headersData = [
-    { key: 'id', title: 'Invoice' },
-    { key: 'id', title: 'Name' },
-    { key: 'id', title: 'Billing Date' },
-    { key: 'id', title: 'Status Payment' },
-    { key: 'id', title: 'Status Proccess' },
-    { key: 'id', title: 'Amount' },
+    { key: 'invoice_code', title: 'Invoice' },
+    { key: 'user.name', title: 'Name' },
+    { key: 'created_at', title: 'Billing Date' },
+    { key: 'status_payment', title: 'Status Payment', align: 'center' },
+    { key: 'status_proccess', title: 'Status Proccess', align: 'center' },
+    { key: 'amount', title: 'Amount' },
     { key: 'id', title: 'Action', align: 'center' },
 ]
 const pageCount = computed(() => {
@@ -43,9 +43,16 @@ const pageCount = computed(() => {
 
 const filteredData = computed(() => {
     return payments.value.filter(payment => {
-        return payment.name.toLowerCase().includes(searchData.value)
+        return payment.invoice_code.toLowerCase().includes(searchData.value)
     })
 })
+function formatDate(dateString) {
+    const options = { year: 'numeric', month: 'long', day: 'numeric' }
+    return new Date(dateString).toLocaleDateString('en-US', options)
+}
+function formatPrice(price) {
+    return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')
+}
 </script>
 <template>
     <AdminLayout title="List Payment">
@@ -72,6 +79,9 @@ const filteredData = computed(() => {
                         }"
                         item-key="id"
                         class="border dark:!border-typography-2/20 shadow-lg dark:!bg-dark-primary-1 !bg-light-primary-2 dark:!text-typography-1">
+                        <template v-slot:item.user.name="{ item }">
+                            <p class="capitalize">{{ item.user.name }}</p>
+                        </template>
                         <template v-slot:item.id="{ item }">
                             <div
                                 class="flex gap-3 items-center justify-center text-xs">
@@ -80,6 +90,51 @@ const filteredData = computed(() => {
                                     :type="'User'"
                                     :id="item.id"
                                     :method="deleteUser"></ConfirmDelete>
+                            </div>
+                        </template>
+                        <template v-slot:item.status_payment="{ item }">
+                            <div class="flex justify-center">
+                                <div
+                                    class="rounded-full text-center text-xs py-1 px-3 items-center inline-flex text-typography-1 font-medium"
+                                    :class="
+                                        item.status_payment == 'SUCCESS'
+                                            ? 'bg-gradient-to-r from-secondary-3 to-secondary-3/60'
+                                            : item.status_payment == 'PENDING'
+                                            ? 'bg-gradient-to-r from-purple-600 to-indigo-800'
+                                            : item.status_payment == 'EXPIRED'
+                                            ? 'bg-secondary-1'
+                                            : ''
+                                    ">
+                                    {{ item.status_payment }}
+                                </div>
+                            </div>
+                        </template>
+                        <template v-slot:item.status_proccess="{ item }">
+                            <div class="flex justify-center">
+                                <div
+                                    class="rounded-full text-center text-xs py-1 px-3 items-center inline-flex text-typography-1 font-medium"
+                                    :class="
+                                        item.status_proccess == 'DONE'
+                                            ? 'bg-gradient-to-r from-secondary-3 to-secondary-3/60'
+                                            : item.status_payment == 'PENDING'
+                                            ? 'bg-gradient-to-r from-purple-600 to-indigo-800'
+                                            : item.status_proccess ==
+                                              'BEING_PACKED'
+                                            ? 'bg-gradient-to-r from-blue-500 to-blue-500/60'
+                                            : ''
+                                    ">
+                                    {{ item.status_proccess }}
+                                </div>
+                            </div>
+                        </template>
+                        <template v-slot:item.created_at="{ item }">
+                            <div class="">
+                                {{ formatDate(item.created_at) }}
+                            </div>
+                        </template>
+                        <template v-slot:item.amount="{ item }">
+                            <div class="">
+                                Rp. {{ formatPrice(item.amount) }}
                             </div>
                         </template>
                     </v-data-table>

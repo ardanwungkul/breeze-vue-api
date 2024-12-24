@@ -145,6 +145,8 @@ export const useUsers = defineStore('users', {
                         this.router.push({ name: 'admin.dashboard' })
                     } else if (dataResponse.data.role == 'report') {
                         this.router.push({ name: 'report.dashboard' })
+                    } else if (dataResponse.data.role == 'packing') {
+                        this.router.push({ name: 'packing.dashboard' })
                     } else {
                         this.router.push({ name: 'welcome' })
                     }

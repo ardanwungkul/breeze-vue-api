@@ -12,6 +12,7 @@ export const usePaymentStore = defineStore({
         create: {},
         edit: [],
         singlePayment: {},
+        product: {},
     }),
     getters: {
         allPayment: state => state.payments,
@@ -61,10 +62,10 @@ export const usePaymentStore = defineStore({
                 this.loading = false
             }
         },
-        async paymentById(id) {
-            this.loading = true
+        async paymentById(id, loading) {
+            loading.value = true
             try {
-                const response = await axios.get(`/api/payment/${id}`)
+                const response = await axios.get(`/api/payment-by-id/${id}`)
                 if (response.status === 200) {
                     this.singlePayment = response.data
                 } else {
@@ -77,7 +78,28 @@ export const usePaymentStore = defineStore({
                     this.error = error
                 }
             } finally {
-                this.loading = false
+                loading.value = false
+            }
+        },
+        async paymentByInvoiceCode(invoice, loading) {
+            loading.value = true
+            try {
+                const response = await axios.get(
+                    `/api/payment-by-invoice-code/${invoice}`,
+                )
+                if (response.status === 200) {
+                    this.singlePayment = response.data
+                } else {
+                    this.singlePayment = {}
+                }
+            } catch (error) {
+                if (error.response && error.response.status === 404) {
+                    this.singlePayment = {}
+                } else {
+                    this.error = error
+                }
+            } finally {
+                loading.value = false
             }
         },
         async getDataEdit(id) {
@@ -95,7 +117,68 @@ export const usePaymentStore = defineStore({
                 this.loading = false
             }
         },
+        async checkQrPacking(
+            form,
+            setErrors,
+            processing,
+            invoice,
+            qr,
+            setSuccess,
+            payment,
+        ) {
+            await csrf()
+            processing.value = true
+            qr.value.paused = true
+            axios
+                .post(`/api/scan-product-by-invoice-code/${invoice}`, form)
+                .then(response => {
+                    payment.value.forEach(item => {
+                        if (item.product.id === response.data.product.id) {
+                            if (item.scanned < item.quantity) {
+                                if (
+                                    response.data.product.product_code_type ==
+                                    'common_code'
+                                ) {
+                                    if (
+                                        !item.code.includes(response.data.code)
+                                    ) {
+                                        item.code.push(response.data.code)
+                                    }
 
+                                    item.scanned += 1
+                                } else {
+                                    if (
+                                        !item.code.includes(response.data.code)
+                                    ) {
+                                        item.code.push(response.data.code)
+                                        item.scanned += 1
+                                    } else {
+                                        setErrors.value = Object.values([
+                                            'Product Already Packed',
+                                        ]).flat()
+                                    }
+                                }
+                            } else {
+                                setErrors.value = Object.values([
+                                    'Product Already Packed',
+                                ]).flat()
+                            }
+                        }
+                    })
+                    processing.value = false
+                    qr.value.paused = false
+                })
+                .catch(error => {
+                    console.log(error)
+                    if (error.response.status !== 422) throw error
+
+                    setErrors.value = Object.values(
+                        error.response.data.errors,
+                    ).flat()
+                    processing.value = false
+                    qr.value.paused = false
+                })
+        },
         async addPayment(form, setErrors, processing) {
             await csrf()
             processing.value = true

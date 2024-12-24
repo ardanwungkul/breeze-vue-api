@@ -6,6 +6,9 @@ import { ref, onMounted } from 'vue'
 
 const storeProduct = useProductStore()
 const products = ref([])
+const props = defineProps({
+    value: String,
+})
 
 onMounted(async () => {
     await fetchProducts()
@@ -31,7 +34,13 @@ async function fetchProducts() {
             '/storage/images/product/' +
             product.product_image,
         subcategory_id: product.subcategory_id,
+        product_promo_price: product.product_promo_price,
     }))
+    if (props.value == 'on_sale') {
+        products.value = products.value.filter(product => {
+            return product.product_promo_price
+        })
+    }
 }
 
 const swiperModules = [Navigation, Autoplay]
@@ -76,7 +85,7 @@ const swiperConfig = {
                 class="flex flex-col items-center bg-[#f4f0ed] rounded-lg overflow-hidden shadow-lg h-full">
                 <div class="w-full">
                     <v-img
-                        :src="item.product_image"
+                        :src="item?.product_image"
                         class="!w-full"
                         cover
                         aspect-ratio="1">
@@ -90,30 +99,63 @@ const swiperConfig = {
                         </template>
                     </v-img>
                 </div>
-                <div class="p-3 w-full space-y-1">
+                <div
+                    class="p-3 w-full flex flex-col gap-1 justify-between h-full">
                     <div class="flex justify-between items-center w-full gap-2">
                         <router-link
                             :to="{
                                 name: 'product.detail',
                                 params: {
-                                    slug: item.product_slug,
-                                    id: item.id,
+                                    slug: item?.product_slug,
+                                    id: item?.id,
                                 },
                             }">
                             <p
                                 class="font-normal line-clamp-2 leading-4 text-sm">
-                                {{ item.product_name }}
+                                {{ item?.product_name }}
                             </p>
                         </router-link>
                     </div>
-                    <p class="text-base font-semibold whitespace-nowrap">
-                        Rp. {{ formatPrice(item.product_price) }}
-                    </p>
-                    <p class="text-xs text-start w-full text-gray-600 mt-2">
-                        for
-                        {{ item.product_type == 'day' ? 'daily' : 'night' }}
-                        skin
-                    </p>
+                    <div>
+                        <div
+                            v-if="item?.product_promo_price"
+                            class="flex items-center justify-between gap-2">
+                            <p
+                                class="text-xs !leading-none pt-1 line-through text-typography-2">
+                                Rp. {{ formatPrice(item?.product_promo_price) }}
+                            </p>
+                            <div class="flex items-center gap-1">
+                                <p class="text-xs text-typography-2">
+                                    -
+                                    {{
+                                        parseInt(
+                                            ((parseInt(
+                                                item?.product_promo_price,
+                                            ) -
+                                                parseInt(item?.product_price)) /
+                                                parseInt(
+                                                    item?.product_promo_price,
+                                                )) *
+                                                100,
+                                        )
+                                    }}%
+                                </p>
+                                <i
+                                    class="fa-solid fa-tags text-xs text-typography-2"></i>
+                            </div>
+                        </div>
+                        <p class="text-base font-semibold whitespace-nowrap">
+                            Rp.
+                            {{ formatPrice(item?.product_price) }}
+                        </p>
+                        <p class="text-xs text-start w-full text-gray-600">
+                            for
+                            {{
+                                item?.product_type == 'day' ? 'daily' : 'night'
+                            }}
+                            skin
+                        </p>
+                    </div>
                 </div>
             </div>
         </swiper-slide>

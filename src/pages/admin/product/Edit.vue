@@ -16,6 +16,7 @@ import QrScanner from '@/components/dialog/QrScanner.vue'
 import { QuillEditor } from '@vueup/vue-quill'
 import '@/assets/css/quill.css'
 import ConfirmDelete from '@/components/dialog/ConfirmDelete.vue'
+import { vMaska } from 'maska/vue'
 
 const storeProduct = useProductStore()
 const storeSubCategory = useSubCategoryStore()
@@ -31,7 +32,9 @@ onMounted(async () => {
     fetchProduct()
 })
 async function fetchProduct() {
-    allProduct.value = storeProduct.products
+    allProduct.value = storeProduct.products.filter(p => {
+        return p.id !== product.value.id
+    })
 }
 const isLoading = ref(true)
 const product = ref(null)
@@ -59,6 +62,11 @@ const product_image_3d = ref('')
 const imageSrc = ref()
 const imageGallery = ref([])
 const img3D = ref()
+const product_promo = ref({
+    status: false,
+    price: null,
+    percentage: null,
+})
 
 onBeforeMount(async () => {
     await storeProduct.productById(productId.value)
@@ -74,6 +82,12 @@ onBeforeMount(async () => {
         product_code_type.value = product.value.product_code_type
         product_code.value = product.value.product_code
         product_description.value = product.value.product_description
+        product_promo.value.price = product.value.product_promo_price
+        product_promo.value.percentage =
+            ((parseInt(product_promo.value.price) -
+                parseInt(product_price.value)) /
+                parseInt(product_promo.value.price)) *
+            100
         bundlings.value = product.value.bundling.map(p => ({
             id: p.id,
             name: p.name,
@@ -200,6 +214,9 @@ const editProduct = async () => {
             formData.append(`newBundlings[${index}][name]`, bundling.name)
             formData.append(`newBundlings[${index}][price]`, bundling.price)
 
+            if (bundling.image !== null && bundling.image) {
+                formData.append(`newBundlings[${index}][image]`, bundling.image)
+            }
             bundling.items.forEach((item, itemIndex) => {
                 formData.append(
                     `newBundlings[${index}][items][${itemIndex}]`,
@@ -208,6 +225,26 @@ const editProduct = async () => {
             })
         })
     }
+    if (bundlings.value.length > 0) {
+        bundlings.value.forEach((bundling, index) => {
+            formData.append(`bundlings[${index}][id]`, bundling.id)
+            formData.append(`bundlings[${index}][name]`, bundling.name)
+            formData.append(`bundlings[${index}][price]`, bundling.price)
+
+            if (bundling.image !== null && bundling.image) {
+                formData.append(`bundlings[${index}][image]`, bundling.image)
+            }
+            bundling.product.forEach((item, itemIndex) => {
+                if (item.id !== product.value.id) {
+                    formData.append(
+                        `bundlings[${index}][items][${itemIndex}]`,
+                        item.id,
+                    )
+                }
+            })
+        })
+    }
+    formData.append('product_promo_price', product_promo.value.price)
     await storeProduct.editProduct(
         formData,
         setErrors,
@@ -279,6 +316,51 @@ function removeGallery(index) {
 function removeBundling(index) {
     this.newBundlings.splice(index, 1)
 }
+function handleUploadBundlingImage(item, event) {
+    console.log(item)
+
+    const files = event.target.files[0]
+    if (files) {
+        item.imageSrc = URL.createObjectURL(files)
+        item.image = files
+    }
+}
+async function inputPromoPrice() {
+    if (product_promo.value.price > product_price.value) {
+        const price = parseInt(product_promo.value.price)
+        const normal = parseInt(product_price.value)
+        const profit = parseInt(price - normal)
+        const value = (profit / price) * 100
+        product_promo.value.percentage = value
+    } else {
+        product_promo.value.price = null
+    }
+}
+async function inputPromoPercentage() {
+    if (product_promo.value.percentage > 0) {
+        const percentage = parseFloat(product_promo.value.percentage)
+        const price = parseInt(product_price.value)
+        const normal = price / (1 - percentage / 100)
+        product_promo.value.price = Math.round(normal)
+    } else {
+        product_promo.value.percentage = null
+    }
+}
+async function inputProductPrice() {
+    if (product_promo.value.price) {
+        const percentage = parseFloat(product_promo.value.percentage)
+        const price = parseInt(product_price.value)
+        const normal = price / (1 - percentage / 100)
+        product_promo.value.price = Math.round(normal)
+    }
+}
+const optionsMoney = {
+    mask: '9.99#',
+    tokens: {
+        9: { pattern: /[0-9]/, repeated: true },
+    },
+    reversed: true,
+}
 </script>
 <template>
     <AdminLayout title="Edit Products">
@@ -327,10 +409,48 @@ function removeBundling(index) {
                                     <input
                                         class="text-sm rounded-lg bg-light-primary-1 w-full dark:bg-dark-primary-1 dark:text-light-primary-1 border !border-gray-500 dark:!border-typography-3"
                                         type="number"
+                                        @change="inputProductPrice()"
                                         v-model="product_price"
                                         id="product_price"
                                         placeholder="Enter Product Price"
                                         required />
+                                </div>
+                                <div class="grid grid-cols-2 gap-3 col-span-2">
+                                    <div class="flex flex-col gap-2 text-sm">
+                                        <div
+                                            class="flex justify-between items-center">
+                                            <label
+                                                class="dark:text-light-primary-1"
+                                                for="product_promo_price"
+                                                >Promo Price From</label
+                                            >
+                                        </div>
+                                        <input
+                                            class="text-sm rounded-lg bg-light-primary-1 w-full dark:bg-dark-primary-1 dark:text-light-primary-1 border !border-gray-500 dark:!border-typography-3"
+                                            v-model="product_promo.price"
+                                            type="number"
+                                            @change="inputPromoPrice()"
+                                            id="product_promo_price"
+                                            placeholder="Enter Promo Price Value" />
+                                    </div>
+                                    <div class="flex flex-col gap-2 text-sm">
+                                        <div
+                                            class="flex justify-between items-center">
+                                            <label
+                                                class="dark:text-light-primary-1"
+                                                for="product_promo_percentage"
+                                                >Promo Percentage Value</label
+                                            >
+                                        </div>
+                                        <input
+                                            class="text-sm rounded-lg bg-light-primary-1 w-full dark:bg-dark-primary-1 dark:text-light-primary-1 border !border-gray-500 dark:!border-typography-3"
+                                            type="text"
+                                            v-maska="'##'"
+                                            @change="inputPromoPercentage()"
+                                            v-model="product_promo.percentage"
+                                            id="product_promo_percentage"
+                                            placeholder="Enter Promo Price Percentage" />
+                                    </div>
                                 </div>
                                 <div class="flex flex-col gap-2 text-sm">
                                     <div class="flex justify-between">
@@ -567,6 +687,7 @@ function removeBundling(index) {
                                     type="button"
                                     @click="
                                         newBundlings.push({
+                                            image: null,
                                             name: null,
                                             price: null,
                                             items: [],
@@ -584,6 +705,7 @@ function removeBundling(index) {
                                 ">
                                 <div
                                     class="w-full dark:text-typography-1 text-sm">
+                                    <!-- {{ newBundlings }} -->
                                     <div
                                         class="divide-y divide-typography-2 w-full">
                                         <div
@@ -660,7 +782,7 @@ function removeBundling(index) {
                                                         type="number"
                                                         v-model="item.price" />
                                                     <multiselect
-                                                        v-model="item.items"
+                                                        v-model="item.product"
                                                         :options="allProduct"
                                                         :searchable="true"
                                                         :close-on-select="false"
@@ -693,7 +815,7 @@ function removeBundling(index) {
                                         </div>
                                         <div
                                             v-for="(
-                                                item, index
+                                                newBundling, index
                                             ) in newBundlings"
                                             :key="index">
                                             <div class="px-3 py-2">
@@ -712,14 +834,13 @@ function removeBundling(index) {
                                                     <div>
                                                         <label
                                                             :for="
-                                                                imageBundling +
-                                                                '-' +
+                                                                'bundling-new-' +
                                                                 index
                                                             "
                                                             class="w-32 h-32 border-dashed border !border-typography-2 rounded-lg flex-none flex justify-center items-center dark:hover:bg-dark-primary-1 hover:bg-light-primary-2 cursor-pointer overflow-hidden">
                                                             <div
                                                                 v-if="
-                                                                    !item.imageSrc
+                                                                    !newBundling.imageSrc
                                                                 "
                                                                 class="flex items-center justify-center flex-col">
                                                                 <i
@@ -732,10 +853,10 @@ function removeBundling(index) {
                                                             </div>
                                                             <img
                                                                 :src="
-                                                                    item.imageSrc
+                                                                    newBundling.imageSrc
                                                                 "
                                                                 v-if="
-                                                                    item.imageSrc
+                                                                    newBundling.imageSrc
                                                                 "
                                                                 alt="" />
                                                             <input
@@ -744,13 +865,12 @@ function removeBundling(index) {
                                                                 class="hidden"
                                                                 @change="
                                                                     handleUploadBundlingImage(
-                                                                        item,
+                                                                        newBundling,
                                                                         $event,
                                                                     )
                                                                 "
                                                                 :id="
-                                                                    imageBundling +
-                                                                    '-' +
+                                                                    'bundling-new-' +
                                                                     index
                                                                 " />
                                                         </label>
@@ -760,15 +880,21 @@ function removeBundling(index) {
                                                         required
                                                         class="text-sm rounded-lg bg-light-primary-1 w-full dark:bg-dark-primary-1 dark:text-light-primary-1 border !border-gray-500 dark:!border-typography-3"
                                                         type="text"
-                                                        v-model="item.name" />
+                                                        v-model="
+                                                            newBundling.name
+                                                        " />
                                                     <input
                                                         placeholder="Enter Bundling Price"
                                                         required
                                                         class="text-sm rounded-lg bg-light-primary-1 w-full dark:bg-dark-primary-1 dark:text-light-primary-1 border !border-gray-500 dark:!border-typography-3"
                                                         type="number"
-                                                        v-model="item.price" />
+                                                        v-model="
+                                                            newBundling.price
+                                                        " />
                                                     <multiselect
-                                                        v-model="item.items"
+                                                        v-model="
+                                                            newBundling.items
+                                                        "
                                                         :options="allProduct"
                                                         :searchable="true"
                                                         :close-on-select="false"

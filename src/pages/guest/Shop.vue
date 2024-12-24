@@ -89,7 +89,7 @@ const togglefilter = async i => {
                             <div class="mt-2 mb-6">
                                 Rp. {{ formatPrice(filter.price) }}
                             </div>
-                            <div class="font-medium mb-2">Filter By Rating</div>
+                            <!-- <div class="font-medium mb-2">Filter By Rating</div>
                             <select
                                 v-model.number="rating"
                                 name=""
@@ -126,7 +126,7 @@ const togglefilter = async i => {
                                         </g>
                                     </svg>
                                 </div>
-                            </div>
+                            </div> -->
                         </div>
                         <FilterCategories />
                         <div class="w-full mt-5 md:h-[500px] lg:h-[700px]">
@@ -185,9 +185,32 @@ const togglefilter = async i => {
                                 v-if="products.length > 0 && products"
                                 class="grid duration-300 px-4 md:px-5 grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-8 lg:mb-10">
                                 <div
-                                    class="flex flex-col min-w-[32.2%] rounded-3xl overflow-hidden w-full shadow-lg shadow-black/20"
+                                    class="flex flex-col rounded-xl overflow-hidden w-full shadow-lg shadow-black/15 relative"
                                     v-for="(item, index) in products"
                                     :key="index">
+                                    <div
+                                        v-if="item.product_promo_price"
+                                        class="absolute top-3 right-3 z-10 bg-ezzora-500 rounded-xl px-3 py-1 text-sm flex items-center gap-1 shadow-lg border !border-typography-2">
+                                        <p class="text-xs text-typography-1">
+                                            -
+                                            {{
+                                                parseInt(
+                                                    ((parseInt(
+                                                        item.product_promo_price,
+                                                    ) -
+                                                        parseInt(
+                                                            item.product_price,
+                                                        )) /
+                                                        parseInt(
+                                                            item.product_promo_price,
+                                                        )) *
+                                                        100,
+                                                )
+                                            }}%
+                                        </p>
+                                        <i
+                                            class="fa-solid fa-tags text-xs text-typography-1"></i>
+                                    </div>
                                     <div class="w-full">
                                         <v-img
                                             :src="
@@ -214,8 +237,8 @@ const togglefilter = async i => {
                                             {{ item.product_name }}
                                         </div>
                                         <div
-                                            class="flex flex-row justify-between">
-                                            <div class="mt-3">
+                                            class="flex justify-between items-end">
+                                            <div class="">
                                                 <router-link
                                                     :to="{
                                                         name: 'product.detail',
@@ -224,13 +247,16 @@ const togglefilter = async i => {
                                                             id: item.id,
                                                         },
                                                     }"
-                                                    class="text-base bg-semupink text-white p-2 px-3 duration-300 hover:border-transparent rounded-xl hover:text-gray-500">
-                                                    Buy
+                                                    class="">
+                                                    <button
+                                                        class="text-sm bg-secondary-3 hover:bg-opacity-80 text-typography-1 font-medium p-2 px-3 duration-300 hover:border-transparent rounded-xl">
+                                                        Buy
+                                                    </button>
                                                 </router-link>
                                             </div>
                                             <div
                                                 class="text-slate-500 text-xs md:text-normal flex flex-col">
-                                                <div
+                                                <!-- <div
                                                     class="mb-2 flex flex-row justify-between">
                                                     <div
                                                         class="w-4 h-4"
@@ -255,16 +281,31 @@ const togglefilter = async i => {
                                                             </g>
                                                         </svg>
                                                     </div>
-                                                </div>
+                                                </div> -->
                                                 <div
-                                                    class="text-right lg:text-sm">
+                                                    v-if="
+                                                        item?.product_promo_price
+                                                    "
+                                                    class="">
+                                                    <p
+                                                        class="text-xs !leading-none pt-1 line-through text-typography-2 !text-end">
+                                                        Rp.
+                                                        {{
+                                                            formatPrice(
+                                                                item?.product_promo_price,
+                                                            )
+                                                        }}
+                                                    </p>
+                                                </div>
+                                                <p
+                                                    class="text-sm font-semibold whitespace-nowrap text-typography-3">
                                                     Rp.
                                                     {{
                                                         formatPrice(
                                                             item.product_price,
                                                         )
                                                     }}
-                                                </div>
+                                                </p>
                                             </div>
                                         </div>
                                     </div>
@@ -331,7 +372,7 @@ const togglefilter = async i => {
                                     value="0"
                                     class="w-full h-1 bg-gray-400 border-none accent-slate-700 rounded-lg cursor-pointer" />
                                 <div class="mt-2 mb-6">Rp.</div>
-                                <div class="font-medium mb-2">
+                                <!-- <div class="font-medium mb-2">
                                     Filter By Rating
                                 </div>
                                 <select
@@ -344,7 +385,7 @@ const togglefilter = async i => {
                                     <option value="3star">***</option>
                                     <option value="4star">****</option>
                                     <option value="5star">*****</option>
-                                </select>
+                                </select> -->
                             </div>
                             <div class="border border-t-transparent py-4 mb-4">
                                 <div class="font-medium mb-4 px-4">

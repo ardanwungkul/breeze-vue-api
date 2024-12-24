@@ -18,6 +18,7 @@ const itemsPerPageUser = ref(10)
 const headersUser = [
     { key: 'name', title: 'User Name' },
     { key: 'email', title: 'Email' },
+    { key: 'role', title: 'Role' },
     { key: 'id', title: 'Action', align: 'center' },
 ]
 const pageCount = computed(() => {

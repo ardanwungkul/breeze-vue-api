@@ -10,7 +10,10 @@ import { VNumberInput } from 'vuetify/labs/VNumberInput'
 import '@/assets/css/vuetify.css'
 import { useCartStore } from '@/stores/cart'
 import { useUsers } from '@/stores/user'
+import ValidationErrors from '@/components/ValidationErrors.vue'
 
+const setErrors = ref([])
+const errors = computed(() => setErrors.value)
 const variant = ref(null)
 const isLoading = ref(true)
 const storeProduct = useProductStore()
@@ -24,7 +27,28 @@ const defaultPrice = ref()
 const form = ref({
     quantity: 1,
 })
+const productStock = computed(() => {
+    if (variant.value !== null && variant.value) {
+        let minValue = Infinity
 
+        variant.value.item.forEach(v => {
+            const values = v.product.stock.filter(p => {
+                return p.product_stock_status == 'warehouse'
+            }).length
+            console.log(values)
+
+            if (values < minValue) {
+                minValue = values
+            }
+        })
+        minValue = minValue === Infinity ? 0 : minValue
+        return minValue
+    } else {
+        return product.value.stock.filter(p => {
+            return p.product_stock_status == 'warehouse'
+        }).length
+    }
+})
 function formatPrice(price) {
     return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')
 }
@@ -47,6 +71,7 @@ onBeforeMount(async () => {
     }
     await fetchProduct()
 })
+
 const mainImage = ref()
 const mainImageDefault = ref()
 
@@ -62,6 +87,7 @@ async function fetchProduct() {
         router.replace('/404')
     } else {
         product.value = storeProduct.singleProduct
+
         mainImage.value =
             import.meta.env.VITE_PUBLIC_BACKEND_URL +
             '/storage/images/product/' +
@@ -80,7 +106,8 @@ const addToCart = async () => {
     if (variant.value && variant.value !== null) {
         formData.append('bundling_id', variant.value.id)
     }
-    await storeCart.addCart(formData, isLoading)
+
+    await storeCart.addCart(formData, setErrors, isLoading)
 }
 
 const swiperJs = swiper => {}
@@ -88,6 +115,7 @@ const swiperJs = swiper => {}
 <template>
     <AppLayout>
         <Loading :isLoading="isLoading" />
+        <ValidationErrors class="w-full" :errors="errors" />
         <div class="px-10 py-5" v-if="product">
             <div
                 class="flex flex-row bg-white mx-auto rounded-lg shadow-lg gap-3 w-full relative">
@@ -170,7 +198,9 @@ const swiperJs = swiper => {}
                         <swiper-slide
                             v-for="(bundling, index) in product?.bundling"
                             :key="index"
-                            v-if="product?.bundling?.length > 0"
+                            v-if="
+                                product?.bundling?.length > 0 && bundling?.image
+                            "
                             class="cursor-pointer flex items-center justify-center">
                             <v-img
                                 @click="
@@ -223,20 +253,30 @@ const swiperJs = swiper => {}
                             </p>
                         </div>
                     </div>
-                    <div class="flex w-full flex-row gap-3">
+                    <div
+                        class="flex flex-col w-full border-b !border-typography-2 !border-opacity-20 pb-2">
                         <p class="text-2xl font-medium">
                             Rp.
                             {{
                                 variant
                                     ? formatPrice(variant.price)
-                                    : product
-                                    ? formatPrice(product.product_price)
-                                    : ''
+                                    : formatPrice(product.product_price)
                             }}
+                        </p>
+                        <p
+                            v-if="product.product_promo_price && !variant"
+                            class="line-through text-sm text-typography-2">
+                            Rp. {{ formatPrice(product.product_promo_price) }}
                         </p>
                     </div>
 
                     <div v-if="product?.bundling?.length > 0">
+                        <p class="text-sm font-medium">
+                            Select Bundlings Item:
+                            <span class="text-typography-2">
+                                {{ variant ? variant.name : 'None' }}
+                            </span>
+                        </p>
                         <div class="flex flex-wrap gap-2 text-xs py-3">
                             <div>
                                 <input
@@ -323,14 +363,14 @@ const swiperJs = swiper => {}
                     <fieldset
                         class="p-5 bg-ezzora-50 rounded-lg !text-sm border">
                         <legend
-                            class="bg-ezzora-200 rounded-lg px-5 py-1 font-semibold border text-xs">
+                            class="bg-ezzora-100 rounded-lg px-5 py-1 font-semibold border text-xs">
                             Details
                         </legend>
 
                         <p v-html="product.product_description"></p>
                     </fieldset>
                 </div>
-                <div class="w-full sticky top-20 py-6 px-4 h-full max-w-sm">
+                <div class="w-full sticky top-20 py-6 px-4 h-full max-w-xs">
                     <div class="border rounded-lg p-3 space-y-3">
                         <p class="font-semibold">Set quantity and notes</p>
                         <div>
@@ -341,8 +381,19 @@ const swiperJs = swiper => {}
                                 hide-details
                                 :single-line="false"
                                 variant="solo-filled"
-                                :min="1"
+                                :min="productStock > 0 ? 1 : 0"
+                                :max="productStock"
                                 control-variant="split"></v-number-input>
+                        </div>
+                        <div>
+                            <p class="text-typography-2 text-xs text-center">
+                                Available
+                                <span
+                                    class="text-base font-medium text-typography-3"
+                                    >{{ productStock }}</span
+                                >
+                                Stock
+                            </p>
                         </div>
                         <div class="flex justify-between">
                             <p class="text-sm">Subtotal</p>
@@ -351,7 +402,7 @@ const swiperJs = swiper => {}
                             </p>
                         </div>
                         <div
-                            class="flex flex-row justify-between text-[13px] gap-2">
+                            class="flex flex-col justify-between text-[13px] gap-2">
                             <form @submit.prevent="addToCart()" class="w-full">
                                 <button
                                     class="py-2 px-4 duration-300 flex items-center gap-2 w-full justify-center bg-ezzora-100 rounded-lg hover:bg-opacity-80">
