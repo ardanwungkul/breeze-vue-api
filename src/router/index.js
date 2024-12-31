@@ -550,6 +550,17 @@ const routes = [
             role: 'report',
         },
     },
+    //  couriers
+    {
+        path: '/couriers',
+        name: 'admin.couriers.index',
+        component: () => import('@/pages/admin/couriers/index.vue'),
+        meta: {
+            guard: 'auth',
+            role: 'admin',
+        },
+    },
+
     // MARK:Auth
     // Login
     {
