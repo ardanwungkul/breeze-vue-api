@@ -30,7 +30,7 @@ export const useCouriers = defineStore({
                 this.loading = false
             }
         },
-        async changeStatus(id) {
+        async changeStatus(id, status) {
             this.loading = true
             console.log(id)
 
