@@ -21,15 +21,15 @@ const tab = ref(null)
 const tabs = ref([
     {
         text: 'New Products',
-        value: 'new_product',
+        value: 'new',
     },
     {
         text: 'On Sale',
-        value: 'on_sale',
+        value: 'sale',
     },
     {
         text: 'Featured Products',
-        value: 'featured_product',
+        value: 'featured',
     },
 ])
 </script>
@@ -44,30 +44,19 @@ const tabs = ref([
 
                 <!-- Flash Sale -->
                 <div class="min-h-[144px]">
-                    <v-tabs
-                        v-model="tab"
-                        align-tabs="start"
-                        :color="'#000000'"
-                        hide-slider
-                        bg-color="transparent"
+                    <v-tabs v-model="tab" align-tabs="start" :color="'#000000'" hide-slider bg-color="transparent"
                         selected-class="hover:!text-black">
-                        <v-tab
-                            :base-color="'#9ca3af'"
-                            :value="productTab.value"
-                            v-for="(productTab, index) in tabs"
+                        <v-tab :base-color="'#9ca3af'" :value="productTab.value" v-for="(productTab, index) in tabs"
                             :key="index">
-                            <p
-                                class="!text-lg hover:!bg-transparent hover:text-gray-600">
+                            <p class="!text-lg hover:!bg-transparent hover:text-gray-600">
                                 {{ productTab.text }}
-                            </p></v-tab
-                        >
+                            </p>
+                        </v-tab>
                     </v-tabs>
 
                     <v-tabs-window v-model="tab">
                         <div class="py-3">
-                            <v-tabs-window-item
-                                :value="productTab.value"
-                                v-for="(productTab, index) in tabs">
+                            <v-tabs-window-item :value="productTab.value" v-for="(productTab, index) in tabs">
                                 <ProductTab :value="productTab.value" />
                             </v-tabs-window-item>
                         </div>
@@ -79,8 +68,7 @@ const tabs = ref([
             </div>
 
             <!-- Discount -->
-            <div
-                class="w-full bg-[#f1eee9] min-h-[47vh] mt-10 flex-col flex justify-center items-center gap-3">
+            <div class="w-full bg-[#f1eee9] min-h-[47vh] mt-10 flex-col flex justify-center items-center gap-3">
                 <p class="text-[28px] font-extralight">
                     GET <span class="text-gray-400">10%</span> DISCOUNT
                 </p>
@@ -89,8 +77,7 @@ const tabs = ref([
                     mnew arrivals, special offers and other discount
                     information.
                 </p>
-                <RouterLink
-                    to="#"
+                <RouterLink to="#"
                     class="py-[6px] px-3 border text-base duration-300 border-gray-300 hover:border-transparent">
                     Subscribe
                 </RouterLink>
@@ -101,8 +88,7 @@ const tabs = ref([
                 <div class="py-10 lg:!flex">
                     <div
                         class="bg-[#f1f0ec] lg:!h-[500px] lg:!w-1/2 flex-col flex justify-center py-28 lg:!px-24 px-3 relative">
-                        <p
-                            class="text-[28px] font-extralight mb-3 text-center lg:!text-start">
+                        <p class="text-[28px] font-extralight mb-3 text-center lg:!text-start">
                             Individual care
                         </p>
                         <p class="mb-10 text-center lg:!text-start">
@@ -113,28 +99,18 @@ const tabs = ref([
                             exercitationem natus suscipit vero et.
                         </p>
                         <div class="flex justify-center lg:!justify-start">
-                            <RouterLink
-                                to="#"
+                            <RouterLink to="#"
                                 class="py-[6px] px-3 border text-base duration-300 border-gray-300 hover:border-transparent w-min whitespace-nowrap">
                                 View More
                             </RouterLink>
                         </div>
                     </div>
-                    <div
-                        class="top-0 w-1/2 h-[500px] relative lg:!flex items-center hidden">
-                        <div
-                            class="h-80 w-full object-cover z-10 -translate-x-20">
-                            <v-img
-                                :src="individualcare"
-                                aspect-ratio="1"
-                                class="min-h-full"
-                                cover>
+                    <div class="top-0 w-1/2 h-[500px] relative lg:!flex items-center hidden">
+                        <div class="h-80 w-full object-cover z-10 -translate-x-20">
+                            <v-img :src="individualcare" aspect-ratio="1" class="min-h-full" cover>
                                 <template v-slot:placeholder>
-                                    <div
-                                        class="w-full h-full flex justify-center items-center">
-                                        <v-progress-circular
-                                            color=""
-                                            indeterminate></v-progress-circular>
+                                    <div class="w-full h-full flex justify-center items-center">
+                                        <v-progress-circular color="" indeterminate></v-progress-circular>
                                     </div>
                                 </template>
                             </v-img>

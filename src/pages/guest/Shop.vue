@@ -61,30 +61,20 @@ const togglefilter = async i => {
         <MainBanner :main_banner="data.main_banner" v-if="!isLoading" />
         <!-- Banner -->
         <div class="w-full py-8 px-4 md:px-8 lg:px-0 md:py-16">
-            <div
-                class="flex flex-col mx-auto w-full max-w-[100vw] md:max-w-[1320px] relative">
-                <SecondaryBanner
-                    :secondary_banner="data.secondary_banner"
-                    v-if="!isLoading" />
+            <div class="flex flex-col mx-auto w-full max-w-[100vw] md:max-w-[1320px] relative">
+                <SecondaryBanner :secondary_banner="data.secondary_banner" v-if="!isLoading" />
             </div>
         </div>
         <FlashSale :flash_sale="data.flash_sale" v-if="data.flash_sale" />
         <!-- Search Item -->
         <div class="w-full px-0 md:px-8 lg:px-0 pb-16">
-            <div
-                class="flex flex-col justify-center mx-auto w-full max-w-[1320px] relative">
+            <div class="flex flex-col justify-center mx-auto w-full max-w-[1320px] relative">
                 <div class="w-full flex flex-col md:flex-row gap-5 sm:gap-0">
                     <!-- filter desktop -->
                     <div class="hidden md:block w-1/4 md:pl-4 2xl:pl-0">
                         <div class="border p-4">
                             <div class="font-medium mb-2">Filter by Price</div>
-                            <input
-                                v-model="filter.price"
-                                id="medium-range"
-                                type="range"
-                                min="0"
-                                max="300000"
-                                value="0"
+                            <input v-model="filter.price" id="medium-range" type="range" min="0" max="300000" value="0"
                                 class="w-full h-1 bg-gray-400 border-none accent-slate-700 rounded-lg cursor-pointer" />
                             <div class="mt-2 mb-6">
                                 Rp. {{ formatPrice(filter.price) }}
@@ -130,9 +120,7 @@ const togglefilter = async i => {
                         </div>
                         <FilterCategories />
                         <div class="w-full mt-5 md:h-[500px] lg:h-[700px]">
-                            <SideBanner
-                                :side_banner="data.side_banner"
-                                v-if="data.side_banner" />
+                            <SideBanner :side_banner="data.side_banner" v-if="data.side_banner" />
                         </div>
                     </div>
                     <!-- Product -->
@@ -141,38 +129,24 @@ const togglefilter = async i => {
                             class="sticky top-14 bg-[#f8f8f6] flex p-4 md:px-5 md:py-2 flex-col md:flex-row md:gap-5 justify-between md:items-center mb-5 z-30">
                             <div class="mb-2 md:mb-0 flex max-h-10">
                                 <div class="flex">
-                                    <input
-                                        v-model="filter.search"
-                                        type="text"
+                                    <input v-model="filter.search" type="text"
                                         class="text-gray-600 border bg-transparent border-gray-200 focus:ring-transparent focus:border-gray-200"
                                         placeholder="Search by name" />
-                                    <div
-                                        class="min-w-10 border flex justify-center items-center border-gray-200">
-                                        <svg
-                                            height="20"
-                                            viewBox="0 0 24 24"
-                                            width="20"
+                                    <div class="min-w-10 border flex justify-center items-center border-gray-200">
+                                        <svg height="20" viewBox="0 0 24 24" width="20"
                                             xmlns="http://www.w3.org/2000/svg">
-                                            <path
-                                                fill="#D19C97"
+                                            <path fill="#D19C97"
                                                 d="M10 18a7.952 7.952 0 0 0 4.897-1.688l4.396 4.396 1.414-1.414-4.396-4.396A7.952 7.952 0 0 0 18 10c0-4.411-3.589-8-8-8s-8 3.589-8 8 3.589 8 8 8zm0-14c3.309 0 6 2.691 6 6s-2.691 6-6 6-6-2.691-6-6 2.691-6 6-6z" />
                                         </svg>
                                     </div>
                                 </div>
                                 <div class="flex w-full justify-end md:hidden">
-                                    <button
-                                        @click="togglefilter('yes')"
+                                    <button @click="togglefilter('yes')"
                                         class="flex w-6 h-6 justify-end md:hidden hover:scale-110 duration-200">
-                                        <svg
-                                            enable-background="new 0 0 32 32"
-                                            id="Glyph"
-                                            version="1.1"
-                                            viewBox="0 0 32 32"
-                                            xml:space="preserve"
-                                            xmlns="http://www.w3.org/2000/svg"
+                                        <svg enable-background="new 0 0 32 32" id="Glyph" version="1.1"
+                                            viewBox="0 0 32 32" xml:space="preserve" xmlns="http://www.w3.org/2000/svg"
                                             xmlns:xlink="http://www.w3.org/1999/xlink">
-                                            <path
-                                                fill="#D19C97"
+                                            <path fill="#D19C97"
                                                 d="M29.815,6.168C29.484,5.448,28.783,5,27.986,5H4.014c-0.797,0-1.498,0.448-1.83,1.168  c-0.329,0.714-0.215,1.53,0.297,2.128c0,0,0.001,0.001,0.001,0.001L12,19.371V28c0,0.369,0.203,0.708,0.528,0.882  C12.676,28.961,12.838,29,13,29c0.194,0,0.387-0.057,0.555-0.168l6-4C19.833,24.646,20,24.334,20,24v-4.629l9.519-11.074  C30.031,7.698,30.145,6.882,29.815,6.168z"
                                                 id="XMLID_276_" />
                                         </svg>
@@ -181,15 +155,11 @@ const togglefilter = async i => {
                             </div>
                         </div>
                         <div>
-                            <div
-                                v-if="products.length > 0 && products"
+                            <div v-if="products.length > 0 && products"
                                 class="grid duration-300 px-4 md:px-5 grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-8 lg:mb-10">
-                                <div
-                                    class="flex flex-col rounded-xl overflow-hidden w-full shadow-lg shadow-black/15 relative"
-                                    v-for="(item, index) in products"
-                                    :key="index">
-                                    <div
-                                        v-if="item.product_promo_price"
+                                <div class="flex flex-col rounded-xl overflow-hidden w-full shadow-lg shadow-black/15 relative"
+                                    v-for="(item, index) in products" :key="index">
+                                    <div v-if="item.product_promo_price"
                                         class="absolute top-3 right-3 z-10 bg-ezzora-500 rounded-xl px-3 py-1 text-sm flex items-center gap-1 shadow-lg border !border-typography-2">
                                         <p class="text-xs text-typography-1">
                                             -
@@ -204,58 +174,51 @@ const togglefilter = async i => {
                                                         parseInt(
                                                             item.product_promo_price,
                                                         )) *
-                                                        100,
+                                                    100,
                                                 )
                                             }}%
                                         </p>
-                                        <i
-                                            class="fa-solid fa-tags text-xs text-typography-1"></i>
+                                        <i class="fa-solid fa-tags text-xs text-typography-1"></i>
                                     </div>
-                                    <div class="w-full">
-                                        <v-img
-                                            :src="
-                                                backendUrl +
-                                                '/storage/images/product/' +
-                                                item.product_image
-                                            "
-                                            aspect-ratio="1"
-                                            cover
-                                            class="!w-full">
+                                    <div class="w-full relative">
+                                        <v-img :src="backendUrl +
+                                            '/storage/images/product/' +
+                                            item.product_image
+                                            " aspect-ratio="1" cover class="!w-full">
                                             <template v-slot:placeholder>
-                                                <div
-                                                    class="w-full h-full flex justify-center items-center">
-                                                    <v-progress-circular
-                                                        color=""
-                                                        indeterminate></v-progress-circular>
+                                                <div class="w-full h-full flex justify-center items-center">
+                                                    <v-progress-circular color="" indeterminate></v-progress-circular>
                                                 </div>
                                             </template>
                                         </v-img>
+                                        <div class="absolute top-3 right-3 px-2 bg-ezzora-50 rounded-lg text-sm">
+                                            {{
+                                                item.product_tags === 'new' ? 'new' :
+                                                    (item.product_tags === 'sale' ? 'sale' :
+                                                        (item.product_tags === 'featured' ? 'featured' : ''))
+                                            }}
+                                        </div>
                                     </div>
                                     <div class="p-4">
-                                        <div
-                                            class="text-sm font-medium mb-2 line-clamp-2">
+                                        <div class="text-sm font-medium mb-2 line-clamp-2">
                                             {{ item.product_name }}
                                         </div>
-                                        <div
-                                            class="flex justify-between items-end">
+                                        <div class="flex justify-between items-end">
                                             <div class="">
-                                                <router-link
-                                                    :to="{
-                                                        name: 'product.detail',
-                                                        params: {
-                                                            slug: item.product_slug,
-                                                            id: item.id,
-                                                        },
-                                                    }"
-                                                    class="">
+                                                <router-link :to="{
+                                                    name: 'product.detail',
+                                                    params: {
+                                                        slug: item.product_slug,
+                                                        id: item.id,
+                                                    },
+                                                }" class="">
                                                     <button
                                                         class="text-sm bg-secondary-3 hover:bg-opacity-80 text-typography-1 font-medium p-2 px-3 duration-300 hover:border-transparent rounded-xl">
                                                         Buy
                                                     </button>
                                                 </router-link>
                                             </div>
-                                            <div
-                                                class="text-slate-500 text-xs md:text-normal flex flex-col">
+                                            <div class="text-slate-500 text-xs md:text-normal flex flex-col">
                                                 <!-- <div
                                                     class="mb-2 flex flex-row justify-between">
                                                     <div
@@ -282,11 +245,9 @@ const togglefilter = async i => {
                                                         </svg>
                                                     </div>
                                                 </div> -->
-                                                <div
-                                                    v-if="
-                                                        item?.product_promo_price
-                                                    "
-                                                    class="">
+                                                <div v-if="
+                                                    item?.product_promo_price
+                                                " class="">
                                                     <p
                                                         class="text-xs !leading-none pt-1 line-through text-typography-2 !text-end">
                                                         Rp.
@@ -297,8 +258,7 @@ const togglefilter = async i => {
                                                         }}
                                                     </p>
                                                 </div>
-                                                <p
-                                                    class="text-sm font-semibold whitespace-nowrap text-typography-3">
+                                                <p class="text-sm font-semibold whitespace-nowrap text-typography-3">
                                                     Rp.
                                                     {{
                                                         formatPrice(
@@ -312,49 +272,32 @@ const togglefilter = async i => {
                                 </div>
                             </div>
                             <div v-else class="p-5">
-                                <div
-                                    class="w-full bg-ezzora-100 rounded-lg p-5">
-                                    <p
-                                        class="text-center font-bold text-typography-2">
+                                <div class="w-full bg-ezzora-100 rounded-lg p-5">
+                                    <p class="text-center font-bold text-typography-2">
                                         No Products Found
                                     </p>
                                 </div>
                             </div>
                         </div>
                         <!-- Compare -->
-                        <CompareProduct
-                            :products="data?.product"
-                            v-if="data.product" />
+                        <CompareProduct :products="data?.product" v-if="data.product" />
                     </div>
-                    <div
-                        :class="{
-                            block: activefilter === 'yes',
-                            ' hidden': activefilter !== 'yes',
-                        }"
-                        class="bg-black w-screen min-h-screen fixed top-0 left-0 z-30 opacity-40 duration-700"></div>
-                    <div
-                        :class="{
-                            '': activefilter === 'yes',
-                            'translate-y-full': activefilter !== 'yes',
-                        }"
+                    <div :class="{
+                        block: activefilter === 'yes',
+                        ' hidden': activefilter !== 'yes',
+                    }" class="bg-black w-screen min-h-screen fixed top-0 left-0 z-30 opacity-40 duration-700">
+                    </div>
+                    <div :class="{
+                        '': activefilter === 'yes',
+                        'translate-y-full': activefilter !== 'yes',
+                    }"
                         class="fixed bottom-0 left-0 border-t border-gray-500 rounded-t z-40 max-h-[70vh] p-4 md:p-0 md:hidden w-full duration-700 bg-[#f8f8f6]">
-                        <div
-                            class="w-full flex justify-center h-5 static top-0 mb-3">
-                            <button
-                                @click="togglefilter('no')"
-                                class="max-w-6 max-h-6 duration-200 hover:scale-110">
-                                <svg
-                                    height="24px"
-                                    id="Layer_1"
-                                    style="enable-background: new 0 0 512 512"
-                                    version="1.1"
-                                    viewBox="0 0 512 512"
-                                    width="24px"
-                                    xml:space="preserve"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    xmlns:xlink="http://www.w3.org/1999/xlink">
-                                    <path
-                                        fill="#D19C97"
+                        <div class="w-full flex justify-center h-5 static top-0 mb-3">
+                            <button @click="togglefilter('no')" class="max-w-6 max-h-6 duration-200 hover:scale-110">
+                                <svg height="24px" id="Layer_1" style="enable-background: new 0 0 512 512" version="1.1"
+                                    viewBox="0 0 512 512" width="24px" xml:space="preserve"
+                                    xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                                    <path fill="#D19C97"
                                         d="M98.9,184.7l1.8,2.1l136,156.5c4.6,5.3,11.5,8.6,19.2,8.6c7.7,0,14.6-3.4,19.2-8.6L411,187.1l2.3-2.6  c1.7-2.5,2.7-5.5,2.7-8.7c0-8.7-7.4-15.8-16.6-15.8v0H112.6v0c-9.2,0-16.6,7.1-16.6,15.8C96,179.1,97.1,182.2,98.9,184.7z" />
                                 </svg>
                             </button>
@@ -364,12 +307,7 @@ const togglefilter = async i => {
                                 <div class="font-medium mb-2">
                                     Filter by Price
                                 </div>
-                                <input
-                                    id="medium-range"
-                                    type="range"
-                                    min="0"
-                                    max="300000"
-                                    value="0"
+                                <input id="medium-range" type="range" min="0" max="300000" value="0"
                                     class="w-full h-1 bg-gray-400 border-none accent-slate-700 rounded-lg cursor-pointer" />
                                 <div class="mt-2 mb-6">Rp.</div>
                                 <!-- <div class="font-medium mb-2">
@@ -400,8 +338,7 @@ const togglefilter = async i => {
 
         <!-- Discount -->
         <div class="w-full pb-16">
-            <div
-                style="background-color: rgb(229, 231, 243)"
+            <div style="background-color: rgb(229, 231, 243)"
                 class="flex flex-row items-center justify-between mx-auto p-8 md:p-16 w-full max-w-[1320px] relative">
                 <div class="w-3/5 flex flex-col justify-start">
                     <div class="mb-5 text-sm md:text-base text-gray-500">
@@ -422,18 +359,11 @@ const togglefilter = async i => {
                         </button>
                     </div>
                 </div>
-                <div
-                    class="w-1/3 h-36 md:h-72 flex items-center justify-center">
-                    <v-img
-                        :src="skincare6"
-                        aspect-ratio="1"
-                        class="min-w-full min-h-full">
+                <div class="w-1/3 h-36 md:h-72 flex items-center justify-center">
+                    <v-img :src="skincare6" aspect-ratio="1" class="min-w-full min-h-full">
                         <template v-slot:placeholder>
-                            <div
-                                class="w-full h-full flex justify-center items-center">
-                                <v-progress-circular
-                                    color=""
-                                    indeterminate></v-progress-circular>
+                            <div class="w-full h-full flex justify-center items-center">
+                                <v-progress-circular color="" indeterminate></v-progress-circular>
                             </div>
                         </template>
                     </v-img>
@@ -447,6 +377,7 @@ const togglefilter = async i => {
 .curved-c {
     clip-path: circle(0% at 0 50%);
 }
+
 .active {
     z-index: 20;
     transition-duration: 2s;
