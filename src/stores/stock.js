@@ -248,6 +248,27 @@ export const useStockStore = defineStore({
                     processing.value = false
                 })
         },
+        async submitToPacked(form, setErrors, processing) {
+            await csrf()
+            processing.value = true
+            axios
+                .post('/api/stock-to-packed', form)
+                .then(response => {
+                    processing.value = false
+                    console.log(response.data)
+                    // this.stocks.push(response.data)
+                    this.router.push({ name: 'packing.dashboard' })
+                })
+                .catch(error => {
+                    console.log(error)
+                    if (error.response.status !== 422) throw error
+
+                    setErrors.value = Object.values(
+                        error.response.data.errors,
+                    ).flat()
+                    processing.value = false
+                })
+        },
     },
 })
 

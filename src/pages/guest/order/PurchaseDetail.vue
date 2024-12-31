@@ -211,11 +211,10 @@ function formatPrice(price) {
                             </p>
                             <p class="text-typography-2 text-sm">
                                 {{ payment.address.detail }},
-                                {{ payment.address.village.name }},
-                                {{ payment.address.subdistrict.name }},
-                                {{ payment.address.city.name }},
-                                {{ payment.address.province.name }},
-                                {{ payment.address.post_code.post_code }}
+                                {{ payment.address.subdistrict }},
+                                {{ payment.address.city }},
+                                {{ payment.address.province }},
+                                {{ payment.address.post_code }}
                             </p>
                         </div>
                         <div></div>

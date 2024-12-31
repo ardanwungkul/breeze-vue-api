@@ -118,8 +118,10 @@ const submitLogout = () => {
                                     <li></li>
                                     <li
                                         v-if="
-                                            store.authUser &&
-                                            store.userData.role == 'admin'
+                                            (store.authUser &&
+                                                store.userData.role ==
+                                                    'admin') ||
+                                            store.userData.role == 'packing'
                                         ">
                                         <router-link
                                             :to="{ name: 'admin.dashboard' }">

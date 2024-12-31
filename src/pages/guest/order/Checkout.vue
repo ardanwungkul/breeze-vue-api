@@ -33,6 +33,8 @@ const errors = computed(() => setErrors.value)
 const courierDialog = ref(false)
 
 const couriers = ref([])
+const tempSelectedCouriers = ref(null)
+const selectedCouriers = ref(null)
 const itemsCourierRates = ref([
     {
         name: 'Sample Item',
@@ -59,6 +61,13 @@ const subTotalPrice = computed(() => {
                     : cart.product.product_price)
         )
     }, 0)
+})
+const totalPrice = computed(() => {
+    return (
+        subTotalPrice.value +
+        1000 +
+        (selectedCouriers.value ? selectedCouriers.value.price : 0)
+    )
 })
 const isLoading = ref(true)
 const backendUrl = import.meta.env.VITE_PUBLIC_BACKEND_URL
@@ -100,12 +109,18 @@ const selectedAddress = computed(() => {
 watch(selectedAddress, (newAddress, oldAddress) => {
     if (newAddress !== oldAddress) {
         couriers.value = []
+        selectedCouriers.value = null
+        tempSelectedCouriers.value = null
     }
 })
 
 const checkout = async () => {
     if (!selectedAddress.value) {
         setErrors.value = Object.values(['Please Select Address First.']).flat()
+    } else if (!selectedCouriers.value) {
+        setErrors.value = Object.values([
+            'Please Select Couriers First.',
+        ]).flat()
     } else {
         const formData = new FormData()
         formData.append('user_id', storeUser.userData.id)
@@ -113,6 +128,17 @@ const checkout = async () => {
         carts.value.forEach(cart => {
             formData.append('carts[]', cart.id)
         })
+        formData.append('courier_name', selectedCouriers.value.courier_name)
+        formData.append('courier_code', selectedCouriers.value.courier_code)
+        formData.append(
+            'courier_service_name',
+            selectedCouriers.value.courier_service_name,
+        )
+        formData.append(
+            'courier_service_code',
+            selectedCouriers.value.courier_service_code,
+        )
+        formData.append('courier_price', selectedCouriers.value.courier_price)
         await storePayment.checkout(formData, processing)
     }
 }
@@ -155,6 +181,16 @@ const searchCourierRates = async () => {
         }
 
         courierDialog.value = true
+    }
+}
+async function onSelectCouriers() {
+    if (tempSelectedCouriers.value !== null) {
+        selectedCouriers.value = tempSelectedCouriers.value
+        courierDialog.value = false
+    } else {
+        setErrors.value = Object.values([
+            'Please Select Couriers First!.',
+        ]).flat()
     }
 }
 </script>
@@ -394,158 +430,230 @@ const searchCourierRates = async () => {
                         </div>
                         <div class="py-6">
                             <div class="flex justify-between">
-                                <p class="font-medium">Shipping options:</p>
-                                <div>
-                                    <v-dialog
-                                        v-model="courierDialog"
-                                        class="max-w-3xl">
-                                        <template
-                                            v-slot:activator="{
-                                                props: activatorProps,
-                                            }">
-                                            <button
-                                                v-bind="activatorProps"
-                                                @click="searchCourierRates()"
-                                                type="button"
-                                                class="text-blue-500 text-sm">
-                                                Change
-                                            </button>
-                                        </template>
-
-                                        <v-card
-                                            class="invisible-scrollbar relative">
-                                            <div
-                                                class="sticky top-0 p-5 border flex justify-between items-center bg-white">
-                                                <p class="text-lg font-medium">
-                                                    Shipping Options
-                                                </p>
+                                <div class="flex gap-5">
+                                    <p class="font-medium">Shipping options:</p>
+                                    <div>
+                                        <p class="font-medium text-xl">
+                                            {{ selectedCouriers?.courier_name }}
+                                        </p>
+                                        <p class="text-sm">
+                                            {{
+                                                selectedCouriers?.courier_service_name
+                                            }}
+                                        </p>
+                                        <p
+                                            class="text-xs text-gray-400"
+                                            v-if="selectedCouriers">
+                                            Shipment Duration Range
+                                            {{ selectedCouriers?.duration }}
+                                        </p>
+                                    </div>
+                                    <div>
+                                        <v-dialog
+                                            v-model="courierDialog"
+                                            class="max-w-3xl">
+                                            <template
+                                                v-slot:activator="{
+                                                    props: activatorProps,
+                                                }">
                                                 <button
-                                                    class="w-8 border rounded-full h-8 text-gray-700 hover:text-white hover:bg-red-500 transition-colors duration-300"
+                                                    v-bind="activatorProps"
                                                     @click="
-                                                        courierDialog = false
-                                                    ">
-                                                    <i
-                                                        class="fa-solid fa-x"></i>
+                                                        searchCourierRates()
+                                                    "
+                                                    type="button"
+                                                    class="text-blue-500 text-sm">
+                                                    Change
                                                 </button>
-                                            </div>
-                                            <div class="p-5 space-y-5">
+                                            </template>
+
+                                            <v-card
+                                                class="invisible-scrollbar relative !rounded-lg">
                                                 <div
-                                                    v-if="couriers.length > 0"
-                                                    v-for="(
-                                                        courier, index
-                                                    ) in couriers"
-                                                    :key="index">
+                                                    class="sticky top-0 p-5 border flex justify-between items-center bg-white">
+                                                    <p
+                                                        class="text-lg font-medium">
+                                                        Shipping Options
+                                                    </p>
+                                                    <button
+                                                        class="w-8 border rounded-full h-8 text-gray-700 hover:text-white hover:bg-red-500 transition-colors duration-300"
+                                                        @click="
+                                                            courierDialog = false
+                                                        ">
+                                                        <i
+                                                            class="fa-solid fa-x"></i>
+                                                    </button>
+                                                </div>
+                                                <div class="p-5 space-y-5">
                                                     <div
-                                                        class="border rounded-lg p-3 shadow-lg">
+                                                        v-if="
+                                                            couriers.length > 0
+                                                        "
+                                                        v-for="(
+                                                            courier, index
+                                                        ) in couriers"
+                                                        :key="index">
                                                         <div
-                                                            class="grid grid-cols-5 gap-3 text-xs">
-                                                            <div
-                                                                class="flex items-center justify-center">
-                                                                <img
-                                                                    class="w-20"
-                                                                    :src="
-                                                                        '/assets/images/couriers/' +
-                                                                        courier.courier_code +
-                                                                        '.png'
-                                                                    "
-                                                                    alt="Courier Image" />
-                                                            </div>
-                                                            <div
-                                                                class="flex flex-col">
-                                                                <p
-                                                                    class="font-bold text-center">
-                                                                    Type of
-                                                                    Service
-                                                                </p>
+                                                            :class="
+                                                                tempSelectedCouriers ==
+                                                                courier
+                                                                    ? 'bg-ezzora-100'
+                                                                    : ''
+                                                            "
+                                                            class="border rounded-lg shadow-lg">
+                                                            <input
+                                                                v-model="
+                                                                    tempSelectedCouriers
+                                                                "
+                                                                :value="courier"
+                                                                type="radio"
+                                                                name="selectedCouriers"
+                                                                class="hidden"
+                                                                :id="
+                                                                    'couriers-' +
+                                                                    index
+                                                                " />
+                                                            <label
+                                                                :for="
+                                                                    'couriers-' +
+                                                                    index
+                                                                ">
                                                                 <div
-                                                                    class="flex items-center justify-center h-full py-2">
-                                                                    <p
-                                                                        class="text-center">
-                                                                        {{
-                                                                            courier.courier_name
-                                                                        }}
-                                                                        {{
-                                                                            courier.courier_service_name
-                                                                        }}
-                                                                    </p>
+                                                                    class="grid grid-cols-5 gap-3 text-xs p-3">
+                                                                    <div
+                                                                        class="flex items-center justify-center">
+                                                                        <img
+                                                                            class="w-20"
+                                                                            :src="
+                                                                                '/assets/images/couriers/' +
+                                                                                courier.courier_code +
+                                                                                '.png'
+                                                                            "
+                                                                            alt="Courier Image" />
+                                                                    </div>
+                                                                    <div
+                                                                        class="flex flex-col">
+                                                                        <p
+                                                                            class="font-bold text-center">
+                                                                            Type
+                                                                            of
+                                                                            Service
+                                                                        </p>
+                                                                        <div
+                                                                            class="flex items-center justify-center h-full py-2">
+                                                                            <p
+                                                                                class="text-center">
+                                                                                {{
+                                                                                    courier.courier_name
+                                                                                }}
+                                                                                {{
+                                                                                    courier.courier_service_name
+                                                                                }}
+                                                                            </p>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div
+                                                                        class="flex flex-col">
+                                                                        <p
+                                                                            class="font-bold text-center">
+                                                                            Estimated
+                                                                            Shipping
+                                                                        </p>
+                                                                        <div
+                                                                            class="flex items-center justify-center h-full py-2">
+                                                                            <p
+                                                                                class="text-center">
+                                                                                {{
+                                                                                    courier.duration
+                                                                                }}
+                                                                            </p>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div
+                                                                        class="flex flex-col">
+                                                                        <p
+                                                                            class="font-bold text-center">
+                                                                            Description
+                                                                        </p>
+                                                                        <div
+                                                                            class="flex items-center justify-center h-full py-2">
+                                                                            <p
+                                                                                class="text-center">
+                                                                                {{
+                                                                                    courier.description
+                                                                                }}
+                                                                            </p>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div
+                                                                        class="flex flex-col">
+                                                                        <p
+                                                                            class="font-bold text-center">
+                                                                            Price
+                                                                        </p>
+                                                                        <div
+                                                                            class="flex items-center justify-center h-full py-2">
+                                                                            <p
+                                                                                class="text-center">
+                                                                                Rp.
+                                                                                {{
+                                                                                    formatPrice(
+                                                                                        courier.price,
+                                                                                    )
+                                                                                }}
+                                                                            </p>
+                                                                        </div>
+                                                                    </div>
                                                                 </div>
-                                                            </div>
-                                                            <div
-                                                                class="flex flex-col">
-                                                                <p
-                                                                    class="font-bold text-center">
-                                                                    Estimated
-                                                                    Shipping
-                                                                </p>
-                                                                <div
-                                                                    class="flex items-center justify-center h-full py-2">
-                                                                    <p
-                                                                        class="text-center">
-                                                                        {{
-                                                                            courier.duration
-                                                                        }}
-                                                                    </p>
-                                                                </div>
-                                                            </div>
-                                                            <div
-                                                                class="flex flex-col">
-                                                                <p
-                                                                    class="font-bold text-center">
-                                                                    Description
-                                                                </p>
-                                                                <div
-                                                                    class="flex items-center justify-center h-full py-2">
-                                                                    <p
-                                                                        class="text-center">
-                                                                        {{
-                                                                            courier.description
-                                                                        }}
-                                                                    </p>
-                                                                </div>
-                                                            </div>
-                                                            <div
-                                                                class="flex flex-col">
-                                                                <p
-                                                                    class="font-bold text-center">
-                                                                    Price
-                                                                </p>
-                                                                <div
-                                                                    class="flex items-center justify-center h-full py-2">
-                                                                    <p
-                                                                        class="text-center">
-                                                                        Rp.
-                                                                        {{
-                                                                            formatPrice(
-                                                                                courier.price,
-                                                                            )
-                                                                        }}
-                                                                    </p>
-                                                                </div>
-                                                            </div>
+                                                            </label>
                                                         </div>
+                                                    </div>
+                                                    <div
+                                                        v-else
+                                                        class="flex items-center justify-center">
+                                                        <svg
+                                                            role="status"
+                                                            class="inline mr-2 w-10 h-10 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600"
+                                                            viewBox="0 0 100 101"
+                                                            fill="none"
+                                                            xmlns="http://www.w3.org/2000/svg">
+                                                            <path
+                                                                d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
+                                                                fill="currentColor" />
+                                                            <path
+                                                                d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
+                                                                fill="currentFill" />
+                                                        </svg>
                                                     </div>
                                                 </div>
                                                 <div
-                                                    v-else
-                                                    class="flex items-center justify-center">
-                                                    <svg
-                                                        role="status"
-                                                        class="inline mr-2 w-10 h-10 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600"
-                                                        viewBox="0 0 100 101"
-                                                        fill="none"
-                                                        xmlns="http://www.w3.org/2000/svg">
-                                                        <path
-                                                            d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
-                                                            fill="currentColor" />
-                                                        <path
-                                                            d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
-                                                            fill="currentFill" />
-                                                    </svg>
+                                                    class="sticky bottom-0 left-0 bg-white p-5 border-t">
+                                                    <div
+                                                        class="flex justify-between">
+                                                        <button
+                                                            type="button"
+                                                            @click="
+                                                                onSelectCouriers
+                                                            "
+                                                            class="bg-secondary-3 text-white py-2 px-4 rounded-md flex flex-row gap-2 duration-300 hover:opacity-80 text-sm">
+                                                            Save
+                                                        </button>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        </v-card>
-                                    </v-dialog>
+                                            </v-card>
+                                        </v-dialog>
+                                    </div>
                                 </div>
+                                <p class="font-semibold">
+                                    Rp.
+                                    {{
+                                        selectedCouriers
+                                            ? formatPrice(
+                                                  selectedCouriers.price,
+                                              )
+                                            : 0
+                                    }}
+                                </p>
                             </div>
                         </div>
                     </div>
@@ -565,14 +673,31 @@ const searchCourierRates = async () => {
                                     </p>
                                 </div>
                                 <div class="grid grid-cols-2 gap-10">
+                                    <p>Service Fee</p>
+                                    <p class="text-right">Rp. 1000</p>
+                                </div>
+                                <!-- <div class="grid grid-cols-2 gap-10">
                                     <p>Voucher</p>
                                     <p class="text-right">-Rp. 0</p>
+                                </div> -->
+                                <div class="grid grid-cols-2 gap-10">
+                                    <p>Shipping Costs</p>
+                                    <p class="text-right">
+                                        Rp.
+                                        {{
+                                            selectedCouriers
+                                                ? formatPrice(
+                                                      selectedCouriers.price,
+                                                  )
+                                                : 0
+                                        }}
+                                    </p>
                                 </div>
                                 <div class="grid grid-cols-2 gap-10">
                                     <p>Total</p>
                                     <p class="text-right text-2xl font-medium">
                                         Rp.
-                                        {{ formatPrice(subTotalPrice) }}
+                                        {{ formatPrice(totalPrice) }}
                                     </p>
                                 </div>
                             </div>

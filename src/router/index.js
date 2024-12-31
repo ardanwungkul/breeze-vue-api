@@ -473,6 +473,24 @@ const routes = [
         },
     },
     {
+        path: '/packing/order/unpacked',
+        name: 'packing.unpacked',
+        component: () => import('@/pages/packing/Unpacked.vue'),
+        meta: {
+            guard: 'auth',
+            role: 'packing',
+        },
+    },
+    {
+        path: '/packing/order/packed',
+        name: 'packing.packed',
+        component: () => import('@/pages/packing/Packed.vue'),
+        meta: {
+            guard: 'auth',
+            role: 'packing',
+        },
+    },
+    {
         path: '/packing/scan/:invoice',
         name: 'packing.scan',
         component: () => import('@/pages/packing/Scan.vue'),

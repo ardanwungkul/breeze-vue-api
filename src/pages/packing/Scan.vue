@@ -103,6 +103,18 @@ const headersData = [
     { key: 'code', title: 'Product Code' },
     { key: 'quantity', title: 'Quantity', align: 'center' },
 ]
+
+const submitStock = async () => {
+    const formData = new FormData()
+    packingProduct.value.forEach((product, index) => {
+        formData.append(`products[${index}][code]`, product.code)
+        formData.append(`products[${index}][id]`, product.product.id)
+        formData.append(`products[${index}][quantity]`, product.quantity)
+    })
+    formData.append('payment_id', payment.value.id)
+
+    await storeStock.submitToPacked(formData, setErrors, processing)
+}
 </script>
 <template>
     <PackingLayout :title="'Packing for ' + invoiceCode">

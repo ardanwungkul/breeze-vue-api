@@ -16,9 +16,26 @@ const rail = inject('rail')
 const sidebarItem = ref([
     {
         icon: 'fa-regular fa-grid-2',
-        to: 'report.dashboard',
+        to: 'packing.dashboard',
         title: 'Dashboard',
         isHasChild: false,
+    },
+    {
+        icon: 'fa-regular fa-boxes-stacked',
+        title: 'Orders',
+        isHasChild: true,
+        child: [
+            {
+                title: 'Unpacked Orders',
+                icon: 'fa-regular fa-box-open',
+                to: 'packing.unpacked',
+            },
+            {
+                title: 'Packed Orders',
+                icon: 'fa-regular fa-box',
+                to: 'packing.packed',
+            },
+        ],
     },
 ])
 
