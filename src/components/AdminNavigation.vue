@@ -100,13 +100,13 @@ const sidebarItem = ref([
         ],
     },
     {
-        icon: 'fa-regular fa-browser',
+        icon: 'fa-duotone fa-solid fa-gear',
         title: 'Setting',
         isHasChild: true,
         child: [
             {
                 title: 'Couriers',
-                icon: 'fa-regular fa-rectangle-vertical-history',
+                icon: 'fa-duotone fa-regular fa-truck-fast',
                 to: 'admin.couriers.index',
             },
         ],
