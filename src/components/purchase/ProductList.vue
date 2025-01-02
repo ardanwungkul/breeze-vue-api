@@ -14,7 +14,7 @@ function formatPrice(price) {
                 :src="
                     backendUrl +
                     '/storage/images/product/' +
-                    data.product.product_image
+                    data?.product?.product_image
                 "
                 class="h-28 w-28 rounded-lg"
                 contain>
@@ -28,7 +28,7 @@ function formatPrice(price) {
             </v-img>
             <div class="flex flex-col gap-1">
                 <p class="line-clamp-2">
-                    {{ data.product.product_name }}
+                    {{ data?.product?.product_name }}
                 </p>
                 <p
                     v-if="data.bundling"

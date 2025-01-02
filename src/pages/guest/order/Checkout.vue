@@ -20,29 +20,24 @@ import { useAddressStore } from '@/stores/address'
 import { useUsers } from '@/stores/user'
 import { usePaymentStore } from '@/stores/payment'
 import ValidationErrors from '@/components/ValidationErrors.vue'
+import { useCouriers } from '@/stores/couriers'
 
 const processing = ref(false)
 const storePayment = usePaymentStore()
 const storeCart = useCartStore()
 const storeAddress = useAddressStore()
+const storeCourier = useCouriers()
 const storeUser = useUsers()
 const route = useRoute()
 const address = ref([])
 const setErrors = ref([])
 const errors = computed(() => setErrors.value)
 const courierDialog = ref(false)
+const activeCourier = ref([])
 
 const couriers = ref([])
 const tempSelectedCouriers = ref(null)
 const selectedCouriers = ref(null)
-const itemsCourierRates = ref([
-    {
-        name: 'Sample Item',
-        weight: 1000,
-        quantity: 1,
-        value: 50000,
-    },
-])
 
 const secretKey = 'ezzorasecretkey'
 const encryptedData = route.params.data
@@ -95,7 +90,15 @@ onMounted(async () => {
     await storeAddress.getData(storeUser.userData.id)
     fetchAddress()
     fetchProduct()
+    fetchActiveCouriers()
 })
+
+const fetchActiveCouriers = async () => {
+    await storeCourier.getCouriers()
+    activeCourier.value = storeCourier.couriers.filter(cr => {
+        return cr.courier_status == true
+    })
+}
 
 const fetchProduct = async () => {
     carts.value = storeCart.carts
@@ -138,7 +141,7 @@ const checkout = async () => {
             'courier_service_code',
             selectedCouriers.value.courier_service_code,
         )
-        formData.append('courier_price', selectedCouriers.value.courier_price)
+        formData.append('courier_price', selectedCouriers.value.price)
         await storePayment.checkout(formData, processing)
     }
 }
@@ -172,10 +175,24 @@ const searchCourierRates = async () => {
             )
             formData.append(
                 'couriers',
-                'gojek,grab,deliveree,jne,tiki,ninja,lion,sicepat,sentralcargo,jnt,idexpress,rpx,wahana,pos,anteraja,sap,paxel,borzo,lalamove',
+                activeCourier.value
+                    .map(courier => courier.courier_code)
+                    .join(','),
             )
-            itemsCourierRates.value.forEach((item, index) => {
-                formData.append(`items[${index}]`, JSON.stringify(item))
+            carts.value.forEach((item, index) => {
+                formData.append(
+                    `items[${index}][name]`,
+                    item.product.product_name,
+                )
+                formData.append(
+                    `items[${index}][weight]`,
+                    item.product.product_weight,
+                )
+                formData.append(`items[${index}][quantity]`, item.quantity)
+                formData.append(
+                    `items[${index}][value]`,
+                    item.product.product_price,
+                )
             })
             await storeAddress.getRate(formData, processing, couriers)
         }

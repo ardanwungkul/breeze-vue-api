@@ -228,14 +228,20 @@ function formatPrice(price) {
                         <table>
                             <tbody
                                 class="!divide-y divide-typography-2 divide-opacity-50 border-y border-y-typography-2 border-opacity-50">
-                                <tr v-for="(items, index) in payment.items">
+                                <tr
+                                    v-for="(
+                                        items, index
+                                    ) in payment.items.filter(it => {
+                                        return it.product_id !== null
+                                    })">
                                     <td class="py-2">
                                         <div class="flex gap-5 items-start">
                                             <v-img
                                                 :src="
                                                     backendUrl +
                                                     '/storage/images/product/' +
-                                                    items.product.product_image
+                                                    items?.product
+                                                        ?.product_image
                                                 "
                                                 class="h-28 w-28 rounded-lg"
                                                 contain>
@@ -283,21 +289,26 @@ function formatPrice(price) {
                                         class="text-end py-2 px-5 text-sm text-typography-2">
                                         Subtotal Shipping
                                     </td>
-                                    <td></td>
+                                    <td class="text-end">
+                                        Rp.
+                                        {{ formatPrice(payment.courier_price) }}
+                                    </td>
                                 </tr>
                                 <tr>
                                     <td
                                         class="text-end py-2 px-5 text-sm text-typography-2">
                                         Service Fee
                                     </td>
-                                    <td></td>
+                                    <td class="text-end">Rp. 1.000</td>
                                 </tr>
                                 <tr>
                                     <td
                                         class="text-end py-2 px-5 text-sm text-typography-2">
                                         Total Orders
                                     </td>
-                                    <td></td>
+                                    <td class="text-end">
+                                        Rp. {{ formatPrice(payment.amount) }}
+                                    </td>
                                 </tr>
                             </tbody>
                         </table>

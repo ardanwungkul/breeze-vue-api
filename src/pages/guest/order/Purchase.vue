@@ -134,7 +134,14 @@ const tabs = [
                                                     <div
                                                         v-for="(
                                                             items, i
-                                                        ) in order.items"
+                                                        ) in order.items.filter(
+                                                            it => {
+                                                                return (
+                                                                    it.product_id !==
+                                                                    null
+                                                                )
+                                                            },
+                                                        )"
                                                         :key="i">
                                                         <ProductList
                                                             :data="items" />
@@ -269,7 +276,14 @@ const tabs = [
                                                     <div
                                                         v-for="(
                                                             items, i
-                                                        ) in order.items"
+                                                        ) in order.items.filter(
+                                                            it => {
+                                                                return (
+                                                                    it.product_id !==
+                                                                    null
+                                                                )
+                                                            },
+                                                        )"
                                                         :key="i">
                                                         <ProductList
                                                             :data="items" />

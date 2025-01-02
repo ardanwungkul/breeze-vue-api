@@ -62,12 +62,18 @@ const fetchPayment = () => {
     filterPaymentBundling()
 }
 const filterPaymentBundling = () => {
-    const items = payment.value?.items || []
+    const items =
+        payment.value?.items.filter(it => {
+            return it.product_id !== null
+        }) || []
+    console.log(items)
+
     items.forEach(item => {
         if (item.bundling?.item) {
             item.bundling.item.forEach(bundledItem => {
                 const existingProduct = packingProduct.value.find(
-                    product => product.product.id === bundledItem.product.id,
+                    product =>
+                        product?.product?.id === bundledItem?.product?.id,
                 )
                 if (existingProduct) {
                     existingProduct.quantity += item.quantity
@@ -82,7 +88,7 @@ const filterPaymentBundling = () => {
             })
         } else {
             const existingProduct = packingProduct.value.find(
-                product => product.product.id === item.product.id,
+                product => product?.product?.id === item?.product?.id,
             )
             if (existingProduct) {
                 existingProduct.quantity += item.quantity
@@ -175,7 +181,7 @@ const submitStock = async () => {
                     <template v-slot:item.product.product_name="{ item }">
                         <div class="py-2">
                             <p class="line-clamp-2">
-                                {{ item.product.product_name }}
+                                {{ item?.product?.product_name }}
                             </p>
                         </div>
                     </template>
