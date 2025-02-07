@@ -35,6 +35,11 @@ const sidebarItem = ref([
                 icon: 'fa-regular fa-box',
                 to: 'packing.packed',
             },
+            {
+                title: 'Confirmed Orders',
+                icon: 'fa-regular fa-check-to-slot',
+                to: 'packing.confirmed',
+            },
         ],
     },
 ])

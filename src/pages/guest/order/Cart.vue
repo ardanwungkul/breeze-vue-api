@@ -13,13 +13,14 @@ import { useUsers } from '@/stores/user'
 import { VNumberInput } from 'vuetify/labs/VNumberInput'
 import '@/assets/css/vuetify.css'
 import CryptoJS from 'crypto-js'
-import { useRouter } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import ConfirmDelete from '@/components/dialog/ConfirmDelete.vue'
 import ValidationErrors from '@/components/ValidationErrors.vue'
 
 const setErrors = ref([])
 const errors = computed(() => setErrors.value)
 const router = useRouter()
+const route = useRoute()
 const storeCart = useCartStore()
 const storeUser = useUsers()
 const carts = ref([])
@@ -54,6 +55,18 @@ onMounted(async () => {
     processing.value = true
     await storeCart.cartAll(storeUser.userData.id, processing)
     fetchData()
+    if (route.query && route.query.id) {
+        const foundCart = carts.value.find(crt => {
+            return crt.id == route.query.id
+        })
+
+        if (foundCart) {
+            foundCart.status = true
+            console.log('Updated cart:', foundCart)
+        } else {
+            console.log('No cart found with ID:', route.query.id)
+        }
+    }
 })
 const fetchData = async () => {
     carts.value = storeCart.carts

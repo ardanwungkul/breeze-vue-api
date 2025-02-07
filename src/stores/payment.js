@@ -258,6 +258,47 @@ export const usePaymentStore = defineStore({
                 processing.value = false
             }
         },
+        async createOrder(id, processing, setErrors, setSuccess) {
+            await csrf()
+            processing.value = true
+            try {
+                const response = await axios.post(
+                    `/api/payment-create-order/${id}`,
+                )
+                console.log(response)
+                setSuccess.value = Object.values([
+                    response.data.biteship.original.message,
+                ])
+                this.payments = this.payments.filter(
+                    Payment => Payment.id !== id,
+                )
+
+                processing.value = false
+            } catch (error) {
+                console.log(error)
+
+                if (error.response.status !== 422) throw error
+
+                setErrors.value = Object.values(
+                    error.response.data.errors,
+                ).flat()
+                processing.value = false
+            } finally {
+                processing.value = false
+            }
+        },
+        async downloadWaybill(invoice) {
+            this.loading = true
+            try {
+                window.location.href =
+                    import.meta.env.VITE_PUBLIC_BACKEND_URL +
+                    `/api/biteship/download-waybill/${invoice}`
+            } catch (error) {
+                console.log(error)
+            } finally {
+                this.loading = false
+            }
+        },
     },
 })
 

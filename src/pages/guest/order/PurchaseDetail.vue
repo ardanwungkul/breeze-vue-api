@@ -65,11 +65,37 @@ function formatDate(dateString) {
     const options = { year: 'numeric', month: 'long', day: 'numeric' }
     return new Date(dateString).toLocaleDateString('en-US', options)
 }
+function formatFullDate(dateString) {
+    if (dateString) {
+        if (!dateString || typeof dateString !== 'string') {
+            return 'Invalid Date'
+        }
+
+        const isoDateString = dateString.includes('T')
+            ? dateString
+            : dateString.replace(' ', 'T') + 'Z'
+
+        const date = new Date(isoDateString)
+
+        if (isNaN(date.getTime())) {
+            return 'Invalid Date'
+        }
+        const year = date.getUTCFullYear()
+        const month = String(date.getUTCMonth() + 1).padStart(2, '0')
+        const day = String(date.getUTCDate()).padStart(2, '0')
+        const hours = String(date.getUTCHours()).padStart(2, '0')
+        const minutes = String(date.getUTCMinutes()).padStart(2, '0')
+
+        return `${day}-${month}-${year} ${hours}:${minutes}`
+    }
+}
 const fetchData = async () => {
     payment.value = storePayment.singlePayment
 }
 function formatPrice(price) {
-    return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')
+    if (price) {
+        return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')
+    }
 }
 </script>
 <template>
@@ -82,11 +108,11 @@ function formatPrice(price) {
                         Invoice Code {{ payment?.invoice_code }}
                     </p>
                     <p>|</p>
-                    <p class="text-sm">
+                    <p class="text-sm font-medium">
                         {{
                             payment?.status_proccess
-                                ? payment?.status_proccess
-                                : payment?.status_payment
+                                ? payment?.status_proccess?.replace('_', ' ')
+                                : payment?.status_payment?.replace('_', ' ')
                         }}
                     </p>
                 </div>
@@ -101,7 +127,7 @@ function formatPrice(price) {
                         <template v-slot:opposite>
                             <p class="text-sm text-center">Order Make</p>
                             <p class="text-xs text-center text-typography-2">
-                                {{ formatDate(payment.created_at) }}
+                                {{ formatFullDate(payment.created_at) }}
                             </p>
                         </template>
                         <template v-slot:icon class="">
@@ -119,7 +145,11 @@ function formatPrice(price) {
                         <template v-slot:opposite>
                             <p class="text-sm text-center">Order Paid</p>
                             <p class="text-xs text-center text-typography-2">
-                                {{ formatDate(payment.created_at) }}
+                                {{
+                                    payment.paid_at
+                                        ? formatFullDate(payment.paid_at)
+                                        : '-'
+                                }}
                             </p>
                         </template>
                         <template v-slot:icon class="">
@@ -135,7 +165,9 @@ function formatPrice(price) {
                     <v-timeline-item
                         size="80"
                         :dot-color="
-                            payment.status_payment == 'SUCCESS'
+                            payment?.history?.some(
+                                history => history.status == 'BEING_PACKED',
+                            )
                                 ? '#43b430'
                                 : '#ffffff'
                         ">
@@ -144,41 +176,115 @@ function formatPrice(price) {
                                 Order Being Packed
                             </p>
                             <p class="text-xs text-center text-typography-2">
-                                {{ formatDate(payment.created_at) }}
+                                {{
+                                    payment?.history?.some(
+                                        history =>
+                                            history.status === 'BEING_PACKED',
+                                    )
+                                        ? formatFullDate(
+                                              payment?.history?.filter(
+                                                  packed =>
+                                                      packed.status ===
+                                                      'BEING_PACKED',
+                                              )[0]?.created_at,
+                                          )
+                                        : ''
+                                }}
                             </p>
                         </template>
                         <template v-slot:icon class="">
                             <i
                                 :class="
-                                    payment.status_proccess == 'BEING_PACKED'
+                                    payment?.history?.some(
+                                        history =>
+                                            history.status == 'BEING_PACKED',
+                                    )
                                         ? 'text-light-primary-1'
                                         : 'text-typography-2'
                                 "
                                 class="fa-regular fa-boxes-packing text-3xl"></i>
                         </template>
                     </v-timeline-item>
-                    <v-timeline-item size="80">
+                    <v-timeline-item
+                        size="80"
+                        :dot-color="
+                            payment?.history?.some(
+                                history => history.status == 'ALLOCATED',
+                            )
+                                ? '#43b430'
+                                : '#ffffff'
+                        ">
                         <template v-slot:opposite>
                             <p class="text-sm text-center">Order Shipped</p>
                             <p class="text-xs text-center text-typography-2">
-                                {{ formatDate(payment.created_at) }}
+                                {{
+                                    payment?.history?.some(
+                                        history =>
+                                            history.status === 'ALLOCATED',
+                                    )
+                                        ? formatFullDate(
+                                              payment?.history?.filter(
+                                                  shipped =>
+                                                      shipped.status ===
+                                                      'ALLOCATED',
+                                              )[0]?.created_at,
+                                          )
+                                        : '-'
+                                }}
                             </p>
                         </template>
                         <template v-slot:icon class="">
                             <i
-                                class="fa-regular fa-truck text-3xl text-typography-2"></i>
+                                :class="
+                                    payment?.history?.some(
+                                        history =>
+                                            history.status == 'ALLOCATED',
+                                    )
+                                        ? 'text-light-primary-1'
+                                        : 'text-typography-2'
+                                "
+                                class="fa-regular fa-truck text-3xl"></i>
                         </template>
                     </v-timeline-item>
-                    <v-timeline-item size="80">
+                    <v-timeline-item
+                        size="80"
+                        :dot-color="
+                            payment?.history?.some(
+                                history => history.status == 'DELIVERED',
+                            )
+                                ? '#43b430'
+                                : '#ffffff'
+                        ">
                         <template v-slot:opposite>
-                            <p class="text-sm text-center">Sent</p>
+                            <p class="text-sm text-center">Delivered</p>
                             <p class="text-xs text-center text-typography-2">
-                                {{ formatDate(payment.created_at) }}
+                                {{
+                                    payment?.history?.some(
+                                        history =>
+                                            history.status === 'DELIVERED',
+                                    )
+                                        ? formatFullDate(
+                                              payment?.history?.filter(
+                                                  shipped =>
+                                                      shipped.status ===
+                                                      'DELIVERED',
+                                              )[0]?.created_at,
+                                          )
+                                        : '-'
+                                }}
                             </p>
                         </template>
                         <template v-slot:icon class="">
                             <i
-                                class="fa-regular fa-box-check text-3xl text-typography-2"></i>
+                                :class="
+                                    payment?.history?.some(
+                                        history =>
+                                            history.status == 'DELIVERED',
+                                    )
+                                        ? 'text-light-primary-1'
+                                        : 'text-typography-2'
+                                "
+                                class="fa-regular fa-box-check text-3xl"></i>
                         </template>
                     </v-timeline-item>
                 </v-timeline>
@@ -200,24 +306,69 @@ function formatPrice(price) {
                         );
                     "></div>
                 <div class="p-5">
-                    <p class="text-lg font-medium py-3">Shipping Address</p>
+                    <div class="w-full flex justify-between">
+                        <p class="text-lg font-medium py-3">Shipping Address</p>
+                        <div
+                            class="flex flex-col text-xs text-end text-gray-500">
+                            <p>
+                                {{ payment?.courier_name }} -
+                                {{ payment?.courier_service_name }}
+                            </p>
+                            <p>{{ payment?.waybill }}</p>
+                        </div>
+                    </div>
                     <div class="flex divide-x divide-typography-2">
                         <div class="w-full max-w-sm">
                             <p class="text-base font-medium pb-1">
-                                {{ payment.address.name }}
+                                {{ payment?.address?.name }}
                             </p>
                             <p class="text-typography-2 text-sm pb-1">
-                                {{ payment.address.phone_number }}
+                                {{ payment?.address?.phone_number }}
                             </p>
                             <p class="text-typography-2 text-sm">
-                                {{ payment.address.detail }},
-                                {{ payment.address.subdistrict }},
-                                {{ payment.address.city }},
-                                {{ payment.address.province }},
-                                {{ payment.address.post_code }}
+                                {{ payment?.address?.detail }},
+                                {{ payment?.address?.subdistrict }},
+                                {{ payment?.address?.city }},
+                                {{ payment?.address?.province }},
+                                {{ payment?.address?.post_code }}
                             </p>
                         </div>
-                        <div></div>
+                        <div>
+                            <v-timeline align="start" side="end">
+                                <v-timeline-item
+                                    dot-color="#ffffff"
+                                    size="small"
+                                    v-for="(history, index) in payment?.history
+                                        ?.slice()
+                                        .reverse()">
+                                    <div class="flex gap-5 mt-[5px]">
+                                        <p class="text-xs min-w-20 flex-none">
+                                            {{
+                                                formatFullDate(
+                                                    history.created_at,
+                                                )
+                                            }}
+                                        </p>
+                                        <div>
+                                            <p
+                                                class="text-xs font-medium capitalize">
+                                                {{
+                                                    history.status ==
+                                                    'ORDER_MADE'
+                                                        ? 'Order Created'
+                                                        : history.status
+                                                              .replace('_', ' ')
+                                                              .toLowerCase()
+                                                }}
+                                            </p>
+                                            <div class="text-gray-500 text-sm">
+                                                {{ history.message }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </v-timeline-item>
+                            </v-timeline>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -231,7 +382,7 @@ function formatPrice(price) {
                                 <tr
                                     v-for="(
                                         items, index
-                                    ) in payment.items.filter(it => {
+                                    ) in payment?.items?.filter(it => {
                                         return it.product_id !== null
                                     })">
                                     <td class="py-2">

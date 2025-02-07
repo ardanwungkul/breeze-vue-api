@@ -156,8 +156,12 @@ const searchCourierRates = async () => {
     } else {
         if (couriers.value.length <= 0) {
             const formData = new FormData()
-            formData.append('origin_area_id', 'IDNP9IDNC22IDND2019')
-            formData.append('destination_area_id', selectedAddress.value.map_id)
+
+            formData.append('origin_area_id', '6763c83cb5d5980012374410')
+            formData.append(
+                'destination_area_id',
+                selectedAddress.value.location_id,
+            )
             formData.append('origin_latitude', -6.965101234471844)
             formData.append('origin_longitude', 107.63886094093324)
             formData.append(

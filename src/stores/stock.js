@@ -255,9 +255,8 @@ export const useStockStore = defineStore({
                 .post('/api/stock-to-packed', form)
                 .then(response => {
                     processing.value = false
-                    console.log(response.data)
-                    // this.stocks.push(response.data)
-                    this.router.push({ name: 'packing.dashboard' })
+                    console.log(response)
+                    this.router.push({ name: 'packing.packed' })
                 })
                 .catch(error => {
                     console.log(error)

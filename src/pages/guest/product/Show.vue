@@ -109,6 +109,17 @@ const addToCart = async () => {
 
     await storeCart.addCart(formData, setErrors, isLoading)
 }
+const buyNow = async () => {
+    const formData = new FormData()
+    formData.append('quantity', form.value.quantity)
+    formData.append('user_id', storeUser.userData.id)
+    formData.append('product_id', product.value.id)
+    if (variant.value && variant.value !== null) {
+        formData.append('bundling_id', variant.value.id)
+    }
+
+    await storeCart.buyNow(formData, setErrors, isLoading)
+}
 
 const swiperJs = swiper => {}
 </script>
@@ -412,7 +423,7 @@ const swiperJs = swiper => {}
                                     <p>Add to Cart</p>
                                 </button>
                             </form>
-                            <form class="w-full">
+                            <form class="w-full" @submit.prevent="buyNow()">
                                 <button
                                     class="py-2 px-4 duration-300 flex items-center gap-2 w-full justify-center bg-secondary-3 text-typography-1 rounded-lg hover:bg-opacity-80">
                                     <div class="w-5 h-5">

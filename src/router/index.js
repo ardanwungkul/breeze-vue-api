@@ -420,7 +420,7 @@ const routes = [
     },
     // Cart
     {
-        path: '/cart/',
+        path: '/cart',
         name: 'cart.index',
         component: () => import('@/pages/guest/order/Cart.vue'),
         props: true,
@@ -485,6 +485,15 @@ const routes = [
         path: '/packing/order/packed',
         name: 'packing.packed',
         component: () => import('@/pages/packing/Packed.vue'),
+        meta: {
+            guard: 'auth',
+            role: 'packing',
+        },
+    },
+    {
+        path: '/packing/order/confirmed',
+        name: 'packing.confirmed',
+        component: () => import('@/pages/packing/Confirmed.vue'),
         meta: {
             guard: 'auth',
             role: 'packing',
