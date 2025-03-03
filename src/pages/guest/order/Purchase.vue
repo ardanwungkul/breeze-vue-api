@@ -26,7 +26,9 @@ onMounted(async () => {
 })
 
 const fetchData = async () => {
-    payments.value = storePayment.payments
+    payments.value = storePayment.payments.filter(P => {
+        return P.is_reseller == false
+    })
 }
 
 function urlSafeData(url) {

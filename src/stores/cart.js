@@ -118,6 +118,28 @@ export const useCartStore = defineStore({
                     processing.value = false
                 })
         },
+        async addPreOrder(form, setErrors, processing) {
+            await csrf()
+            processing.value = true
+            axios
+                .post('/api/cart', form)
+                .then(response => {
+                    processing.value = false
+                    console.log(response.data)
+                    if (response.data.status == 'new') {
+                        this.carts.push(response.data.cart)
+                    }
+                })
+                .catch(error => {
+                    console.log(error)
+                    if (error.response.status !== 422) throw error
+
+                    setErrors.value = Object.values(
+                        error.response.data.errors,
+                    ).flat()
+                    processing.value = false
+                })
+        },
         async buyNow(form, setErrors, processing) {
             await csrf()
             processing.value = true

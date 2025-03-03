@@ -1,5 +1,5 @@
 <script setup>
-import AdminLayout from '@/layouts/AdminLayout.vue'
+import StoreLayout from '@/layouts/StoreLayout.vue'
 import { ref, onMounted, computed } from 'vue'
 import { useSubCategoryStore } from '@/stores/subcategory'
 import { useProductStore } from '@/stores/product'
@@ -226,7 +226,7 @@ async function inputProductPrice() {
 }
 </script>
 <template>
-    <AdminLayout title="Add Products">
+    <StoreLayout title="Add Products">
         <ValidationErrors class="w-full" :errors="errors" />
         <Cropper :showCropper="showCropper" :img="imageSrc" :method="handleCrop" :aspect="1" />
         <div class="w-full">
@@ -570,5 +570,5 @@ async function inputProductPrice() {
                 </form>
             </div>
         </div>
-    </AdminLayout>
+    </StoreLayout>
 </template>

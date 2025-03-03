@@ -198,6 +198,7 @@ const searchCourierRates = async () => {
                     item.product.product_price,
                 )
             })
+            
             await storeAddress.getRate(formData, processing, couriers)
         }
 
@@ -329,7 +330,7 @@ async function onSelectCouriers() {
                                                             .product_name
                                                     }}
                                                 </p>
-                                                <div>
+                                                <div class=" flex flex-wrap gap-3">
                                                     <v-menu
                                                         open-on-hover
                                                         :location="'bottom'">
@@ -406,6 +407,9 @@ async function onSelectCouriers() {
                                                             </div>
                                                         </div>
                                                     </v-menu>
+                                                    <div v-if="cart.is_pre_order" class="border border-secondary-2 text-secondary-2 rounded px-3 py-1 cursor-pointer w-min whitespace-nowrap">
+                                                        Pre-order
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -508,7 +512,7 @@ async function onSelectCouriers() {
                                                 <div class="p-5 space-y-5">
                                                     <div
                                                         v-if="
-                                                            couriers.length > 0
+                                                            couriers?.length > 0
                                                         "
                                                         v-for="(
                                                             courier, index

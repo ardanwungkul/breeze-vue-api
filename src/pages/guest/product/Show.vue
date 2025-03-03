@@ -120,6 +120,18 @@ const buyNow = async () => {
 
     await storeCart.buyNow(formData, setErrors, isLoading)
 }
+const addPreOrder = async () => {
+    const formData = new FormData()
+    formData.append('quantity', form.value.quantity)
+    formData.append('user_id', storeUser.userData.id)
+    formData.append('product_id', product.value.id)
+    formData.append('is_pre_order', true)
+    if (variant.value && variant.value !== null) {
+        formData.append('bundling_id', variant.value.id)
+    }
+
+    await storeCart.addCart(formData, setErrors, isLoading)
+}
 
 const swiperJs = swiper => {}
 </script>
@@ -393,7 +405,6 @@ const swiperJs = swiper => {}
                                 :single-line="false"
                                 variant="solo-filled"
                                 :min="productStock > 0 ? 1 : 0"
-                                :max="productStock"
                                 control-variant="split"></v-number-input>
                         </div>
                         <div>
@@ -416,7 +427,9 @@ const swiperJs = swiper => {}
                             class="flex flex-col justify-between text-[13px] gap-2">
                             <form @submit.prevent="addToCart()" class="w-full">
                                 <button
-                                    class="py-2 px-4 duration-300 flex items-center gap-2 w-full justify-center bg-ezzora-100 rounded-lg hover:bg-opacity-80">
+                                    :class="form.quantity > productStock ? 'opacity-60 cursor-not-allowed' : 'hover:bg-opacity-80'"
+                                    :disabled="form.quantity > productStock"
+                                    class="py-2 px-4 duration-300 flex items-center gap-2 w-full justify-center bg-ezzora-100 rounded-lg ">
                                     <div class="w-5 h-5">
                                         <i class="fa-regular fa-plus"></i>
                                     </div>
@@ -425,12 +438,23 @@ const swiperJs = swiper => {}
                             </form>
                             <form class="w-full" @submit.prevent="buyNow()">
                                 <button
-                                    class="py-2 px-4 duration-300 flex items-center gap-2 w-full justify-center bg-secondary-3 text-typography-1 rounded-lg hover:bg-opacity-80">
+                                    :class="form.quantity > productStock ? 'opacity-60 cursor-not-allowed' : 'hover:bg-opacity-80'"
+                                    :disabled="form.quantity > productStock"
+                                    class="py-2 px-4 duration-300 flex items-center gap-2 w-full justify-center bg-secondary-3 text-typography-1 rounded-lg">
                                     <div class="w-5 h-5">
                                         <i
                                             class="fa-regular fa-cart-shopping"></i>
                                     </div>
                                     <p>Buy Now</p>
+                                </button>
+                            </form>
+                            <form @submit.prevent="addPreOrder()" class="w-full">
+                                <button
+                                    class="py-2 px-4 duration-300 flex items-center gap-2 w-full justify-center bg-secondary-2 text-typography-1 rounded-lg hover:bg-opacity-80">
+                                    <div class="w-5 h-5">
+                                        <i class="fa-regular fa-plus"></i>
+                                    </div>
+                                    <p>Pre Order</p>
                                 </button>
                             </form>
                         </div>

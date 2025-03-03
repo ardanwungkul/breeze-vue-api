@@ -1,48 +1,124 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, computed, watch, onMounted } from 'vue'
 import { Swiper, SwiperSlide } from 'swiper/vue'
 import { Navigation, Autoplay } from 'swiper/modules'
 import OfficialAgentForm from '@/pages/guest/welcome/OfficialAgentForm.vue'
+import ValidationErrors from '@/components/ValidationErrors.vue'
+
 import placeholderImage from '@/assets/images/placeholder-image.jpg'
+
+import { useUsers } from '@/stores/user'
+import { useStoreStore } from '@/stores/store'
+import { usePaymentStore } from '@/stores/payment'
+import { useResellerPackageStore } from '@/stores/resellerpackage'
+
+const setErrors = ref([])
+const cekAuth = ref(false)
+const errors = computed(() => setErrors.value)
+
+const user = ref(null)
+const storeUser = useUsers()
+const storeStore = useStoreStore()
+const processing = ref(false)
+
+const storePayment = usePaymentStore()
+const payment = ref(null)
+const havePayment = ref(true)
+
+const storeResellerPackage = useResellerPackageStore()
+const resellerPackage = ref([])
+
+function formatJuta(price) {
+    return (price / 1000000).toString().replace(/\./g, ',') + 'Juta';
+}
+
+onMounted(async () => {
+    await fetchUser()
+    await fetchResellerPackage()
+    if (storeUser.authUser) {
+        await fetchPayment()
+    } else {
+        payment.value = null;
+    }
+})
+
+watch(() => storeUser.authUser, async (newValue, oldValue) => {
+    await fetchUser()
+    await fetchResellerPackage()
+    if (user.value) {
+        await fetchPayment()
+    } else {
+        payment.value = null;
+    }
+});
+
+async function fetchUser() {
+    await storeUser.getAuth()
+    user.value = storeUser.userAuth
+}
+
+async function fetchPayment() {
+    await storePayment.paymentReseller(user.value.id)
+    payment.value = storePayment.singlePayment
+
+}
+
+async function fetchResellerPackage() {
+    await storeResellerPackage.resellerPackageAll();
+
+    let allResellerPackage = storeResellerPackage.allResellerPackage;
+
+    if (user?.value?.store) {
+        allResellerPackage = allResellerPackage.filter(P => 
+            P.id === user.value.store.reseller_package_id
+        );
+    }
+
+    resellerPackage.value = allResellerPackage.map(pkg => ({
+        id: pkg.id,
+        name: pkg.name,
+        price: pkg.price,
+        level: pkg.level,
+        package_item: [
+            { status: pkg.plakat, name: 'Plakat' },
+            { status: pkg.neon_etalase, name: 'Neon Etalase' },
+            { status: pkg.rack_product, name: 'Rack Product' },
+            { status: pkg.interior_design, name: 'Interior Design' },
+            { status: pkg.application_crm, name: 'Application CRM' },
+            { status: pkg.application_finance, name: 'Application Finance' },
+            { status: pkg.application_logistic, name: 'Application Logistic' },
+            { status: pkg.bonus, name: 'Bonus' },
+        ]
+    }));
+}
 
 const swiperModules = [Navigation, Autoplay]
 const swiperJs = swiper => {}
+
 const swiperConfig = {
     navigation: {
         nextEl: '.swiper-button-next',
         prevEl: '.swiper-button-prev',
     },
 }
+
+const Continue = async () => {
+    processing.value = true
+
+    const id = payment.value.id;
+
+    await storeStore.paymentReseller(id, processing)
+}
+
+const AddStore = async newStore => {
+    await storeStore.buyPackage(newStore, setErrors, processing)
+}
+
 const modules = swiperModules
-const packet = ref([
-    {
-        index: 1,
-        name: 'EARLYBIRD',
-        harga: '4Juta',
-        availabel: [],
-    },
-    {
-        index: 2,
-        name: 'SHAPIRE',
-        harga: '25Juta',
-        availabel: [],
-    },
-    {
-        index: 3,
-        name: 'EMERALD',
-        harga: '150Juta',
-        availabel: [],
-    },
-    {
-        index: 4,
-        name: 'DIAMOND',
-        harga: '500Juta',
-        availabel: [],
-    },
-])
 </script>
 <template>
     <div class="px-3 xl:px-0">
+        <ValidationErrors class="w-full" :errors="errors" />
         <div
             class="w-full rounded-md border p-5 bg-[#f4f0ed]"
             style="box-shadow: 0px 0px 11px rgba(0, 0, 0, 0.2)">
@@ -121,70 +197,66 @@ const packet = ref([
 
                     <template v-slot:default="{ isActive }">
                         <div
-                            class="w-full max-w-4xl mx-auto bg-light-primary-1 rounded-xl shadow-lg h-[80vh] mt-4">
+                            class="w-full pb-8 max-w-4xl mx-auto bg-light-primary-1 rounded-xl shadow-lg max-h-[80vh] mt-4">
                             <div
                                 class="flex justify-end p-3 bg-transparent relative">
                                 <button
                                     @click="isActive.value = false"
-                                    class="fa-solid fa-x rounded-xl hover:bg-gray-100 px-3 py-2 absolute z-10"></button>
+                                    class="fa-solid fa-xmark rounded-xl hover:scale-110 px-3 py-2 absolute z-10 duration-300"></button>
                             </div>
                             <div
-                                class="p-3 invisible-scrollbar overflow-y-scroll h-[calc(80vh-56px)]">
+                                class="p-3 invisible-scrollbar overflow-y-scroll space-y-4 max-h-[calc(80vh-56px)]">
+                                <div v-if="payment && user?.store === null && havePayment" class=" w-full border border-blue-500 rounded-md py-2 px-4 flex justify-between mt-2">
+                                    <p class="text-blue-500">You have made a payment {{ payment?.package?.name }} before. Would you like to proceed?</p>
+                                    <div class=" flex gap-2">
+                                        <button @click="Continue()" class=" text-green-500 font-semibold hover:scale-110 duration-300">Yes</button>
+                                        <p>/</p>
+                                        <button @click="havePayment = false" class=" text-red-500 font-semibold hover:scale-110 duration-300">No</button>
+                                    </div>
+                                </div>
                                 <swiper
                                     :modules="swiperModules"
                                     :breakpoints="{
-                                        '640': {
-                                            slidesPerView: 1,
-                                            spaceBetween: 10,
-                                        },
-                                        '768': {
-                                            slidesPerView: 3,
-                                            spaceBetween: 10,
-                                        },
-                                        '1024': {
-                                            slidesPerView: 4,
-                                            spaceBetween: 10,
-                                        },
+                                        '640': { slidesPerView: 1, spaceBetween: 10 },
+                                        '768': { slidesPerView: 3, spaceBetween: 10 },
+                                        '1024': { slidesPerView: 4, spaceBetween: 10 },
                                     }"
                                     @swiper="swiperJs">
                                     <swiper-slide
-                                        v-for="i in packet"
-                                        :key="i.index"
+                                        v-for="item in resellerPackage"
+                                        :key="item.index"
                                         class="flex justify-center">
                                         <div
                                             class="w-full h-full text-blue-500 text-center flex justify-center flex-col">
                                             <div
                                                 class="text-3xl font-semibold text-black/50 mb-4">
-                                                {{ i.name }}
+                                                {{ item.name }}
                                             </div>
                                             <div
                                                 class="text-xl font-medium mb-4">
-                                                Rp. {{ i.harga }}
+                                                Rp. {{ formatJuta(item.price) }}
                                             </div>
                                             <div
                                                 class="w-full justify-center mb-4">
-                                                <OfficialAgentForm />
+                                                <OfficialAgentForm :resellerPackage="item" :user="user" :method="AddStore" />
                                             </div>
-                                            <div class="border-t p-4 pb-0">
-                                                <div
-                                                    v-for="i in 8"
-                                                    :key="i"
-                                                    class="max-h-full overflow-auto flex flex-row justify-center gap-2 mb-4">
-                                                    <div
-                                                        class="w-3 flex items-center">
-                                                        <svg
-                                                            height="12"
-                                                            viewBox="0 0 16 16"
-                                                            width="12"
-                                                            xmlns="http://www.w3.org/2000/svg">
-                                                            <polygon
-                                                                fill-rule="evenodd"
-                                                                points="8 9.414 3.707 13.707 2.293 12.293 6.586 8 2.293 3.707 3.707 2.293 8 6.586 12.293 2.293 13.707 3.707 9.414 8 13.707 12.293 12.293 13.707 8 9.414" />
-                                                        </svg>
-                                                    </div>
-                                                    <div
-                                                        class="font-semibold text-sm">
-                                                        plakat
+                                            <div class=" border-t flex justify-center w-full">
+                                                <div class=" py-4 px-8 pb-0 space-y-3">
+                                                    <div v-for="package_item in item.package_item"
+                                                        :key="package_item.index" 
+                                                        class="flex flex-row items-center gap-2">
+                                                        <div v-if="package_item.status"
+                                                            class="w-3 h-3 text-sm flex items-center text-secondary-3">
+                                                            <i class="fa-solid fa-check"></i>
+                                                        </div>
+                                                        <div v-if="!package_item.status"
+                                                            class="w-3 h-3 text-sm flex items-center text-red-600">
+                                                            <i class="fa-solid fa-xmark"></i>
+                                                        </div>
+                                                        <p
+                                                            class="font-semibold text-sm">
+                                                            {{ package_item.name }}
+                                                        </p>
                                                     </div>
                                                 </div>
                                             </div>

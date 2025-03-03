@@ -16,14 +16,8 @@ const rail = inject('rail')
 const sidebarItem = ref([
     {
         icon: 'fa-regular fa-grid-2',
-        to: 'admin.dashboard',
+        to: 'store.dashboard',
         title: 'Dashboard',
-        isHasChild: false,
-    },
-    {
-        icon: 'fa-regular fa-users',
-        to: 'admin.user.index',
-        title: 'Users',
         isHasChild: false,
     },
     {
@@ -34,88 +28,42 @@ const sidebarItem = ref([
             {
                 title: 'Product Category',
                 icon: 'fa-regular fa-layer-group',
-                to: 'admin.category.index',
+                to: 'store.category.index',
             },
             {
                 title: 'Product Item',
                 icon: 'fa-regular fa-box',
-                to: 'admin.product.index',
+                to: 'store.product.index',
             },
             {
                 title: 'Product Stock',
                 icon: 'fa-regular fa-cubes-stacked',
-                to: 'admin.stock.index',
+                to: 'store.stock.index',
             },
             {
                 icon: 'fa-regular fa-tags',
                 title: 'Vouchers',
-                to: 'admin.voucher.index',
+                to: 'store.voucher.index',
             },
         ],
     },
     {
         title: 'Flash Sale',
         icon: 'fa-regular fa-bolt-lightning',
-        to: 'admin.shop.index.flash-sale',
+        to: 'store.shop.index.flash-sale',
         isHasChild: false,
     },
     {
         icon: 'fa-regular fa-credit-card',
-        to: 'admin.payment.index',
+        to: 'store.payment.index',
         title: 'Payments',
         isHasChild: false,
     },
     {
         icon: 'fa-regular fa-money-bill-transfer',
-        to: 'admin.cashflow.index',
+        to: 'store.cashflow.index',
         title: 'Cash Flow',
         isHasChild: false,
-    },
-    {
-        icon: 'fa-regular fa-user-check',
-        to: 'admin.agent.index',
-        title: 'Agents',
-        isHasChild: false,
-    },
-    {
-        icon: 'fa-regular fa-browser',
-        title: 'Pages',
-        isHasChild: true,
-        child: [
-            {
-                title: 'Shop Banner',
-                icon: 'fa-regular fa-rectangle-vertical-history',
-                to: 'admin.shop.index.banner',
-            },
-            {
-                icon: 'fa-regular fa-building',
-                to: 'admin.about-us.index',
-                title: 'About Us',
-            },
-            {
-                icon: 'fa-regular fa-newspaper',
-                to: 'admin.article.index',
-                title: 'Articles',
-            },
-        ],
-    },
-    {
-        icon: 'fa-solid fa-cube',
-        to: 'admin.reseller-package.index',
-        title: 'Reseller Package',
-        isHasChild: false,
-    },
-    {
-        icon: 'fa-duotone fa-solid fa-gear',
-        title: 'Setting',
-        isHasChild: true,
-        child: [
-            {
-                title: 'Couriers',
-                icon: 'fa-duotone fa-regular fa-truck-fast',
-                to: 'admin.couriers.index',
-            },
-        ],
     },
 ])
 

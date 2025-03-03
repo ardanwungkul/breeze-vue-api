@@ -30,11 +30,16 @@ function formatPrice(price) {
                 <p class="line-clamp-2">
                     {{ data?.product?.product_name }}
                 </p>
-                <p
-                    v-if="data.bundling"
-                    class="text-xs text-typography-2 border w-min whitespace-nowrap px-2 py-1 rounded-lg border-typography-2">
-                    {{ data.bundling.name }}
-                </p>
+                <div class=" flex flex-wrap gap-2">
+                    <p
+                        v-if="data.bundling"
+                        class="text-xs text-typography-2 border w-min whitespace-nowrap px-2 py-1 rounded-lg border-typography-2">
+                        {{ data.bundling.name }}
+                    </p>
+                    <div v-if="data.is_pre_order" class="border border-secondary-2 text-secondary-2 text-xs rounded-lg px-3 py-1 cursor-pointer w-min whitespace-nowrap">
+                        Pre-order
+                    </div>
+                </div>
                 <p class="text-xs text-typography-2">x{{ data.quantity }}</p>
             </div>
         </div>
