@@ -99,6 +99,7 @@ const routes = [
             role: 'admin',
         },
     },
+    
     // Admin Users
     {
         path: '/admin/user',
@@ -112,6 +113,7 @@ const routes = [
             role: 'admin',
         },
     },
+
     // Admin Stocks
     {
         path: '/admin/stock',
@@ -137,6 +139,7 @@ const routes = [
             role: 'admin',
         },
     },
+
     // Admin Product
     {
         path: '/admin/product',
@@ -173,6 +176,7 @@ const routes = [
             role: 'admin',
         },
     },
+
     // Admin Category
     {
         path: '/admin/category',
@@ -200,6 +204,7 @@ const routes = [
             role: 'admin',
         },
     },
+
     // Shop Flash Sale
     {
         path: '/admin/shop/flash-sale',
@@ -240,7 +245,6 @@ const routes = [
             role: 'admin',
         },
     },
-    // About Us Create
     {
         path: '/admin/about-us/create',
         name: 'admin.about-us.create',
@@ -253,7 +257,6 @@ const routes = [
             role: 'admin',
         },
     },
-    // About Us Edit
     {
         path: '/admin/about-us/edit/:id',
         name: 'admin.about-us.edit',
@@ -266,6 +269,7 @@ const routes = [
             role: 'admin',
         },
     },
+
     // Voucher
     {
         path: '/admin/voucher',
@@ -342,6 +346,7 @@ const routes = [
             role: 'admin',
         },
     },
+
     // Payment
     {
         path: '/admin/payments',
@@ -355,6 +360,7 @@ const routes = [
             role: 'admin',
         },
     },
+
     // Cash Flow
     {
         path: '/admin/cash-flow',
@@ -393,6 +399,7 @@ const routes = [
         },
         props: true,
     },
+
     // Agents
     {
         path: '/admin/agents',
@@ -406,6 +413,226 @@ const routes = [
             role: 'admin',
         },
     },
+    // Reseller Package
+    {
+        path: '/admin/reseller-package',
+        name: 'admin.reseller-package.index',
+        component: () => import('@/pages/admin/reseller-package/Index.vue'),
+        query: {
+            verified: 'verified',
+        },
+        meta: {
+            guard: 'auth',
+            role: 'admin',
+        },
+    }, 
+
+    // MARK:Store
+    // Dashboard
+    {
+        path: '/store/dashboard/',
+        name: 'store.dashboard',
+        component: () => import('@/pages/store/Dashboard.vue'),
+        query: {
+            verified: 'verified',
+        },
+        meta: {
+            guard: 'auth',
+            reseller: true,
+        },
+    },
+    // Dashboard
+    {
+        path: '/store/re-registeration/',
+        name: 'store.reregister',
+        component: () => import('@/pages/store/ReRegister.vue'),
+        query: {
+            verified: 'verified',
+        },
+        meta: {
+            guard: 'auth',
+            reseller: true,
+        },
+    },
+    // Store Stocks
+    {
+        path: '/store/stock',
+        name: 'store.stock.index',
+        component: () => import('@/pages/store/stock/Index.vue'),
+        query: {
+            verified: 'verified',
+        },
+        meta: {
+            guard: 'auth',
+            reseller: true,
+        },
+    },
+    {
+        path: '/store/stock/scan',
+        name: 'store.stock.scan',
+        component: () => import('@/pages/store/stock/Scan.vue'),
+        query: {
+            verified: 'verified',
+        },
+        meta: {
+            guard: 'auth',
+            reseller: true,
+        },
+    },
+
+    // Store Product
+    {
+        path: '/store/product',
+        name: 'store.product.index',
+        component: () => import('@/pages/store/product/Index.vue'),
+        query: {
+            verified: 'verified',
+        },
+        meta: {
+            guard: 'auth',
+            reseller: true,
+        },
+    },
+    {
+        path: '/store/product/create',
+        name: 'store.product.create',
+        component: () => import('@/pages/store/product/Create.vue'),
+        query: {
+            verified: 'verified',
+        },
+        meta: {
+            guard: 'auth',
+            reseller: true,
+        },
+    },
+    {
+        path: '/store/product/:id/edit',
+        name: 'store.product.edit',
+        component: () => import('@/pages/store/product/Edit.vue'),
+        props: true,
+        meta: {
+            guard: 'auth',
+            reseller: true,
+        },
+    },
+
+    // Store Category
+    {
+        path: '/store/category',
+        name: 'store.category.index',
+        component: () => import('@/pages/store/category/Index.vue'),
+        query: {
+            verified: 'verified',
+        },
+        meta: {
+            guard: 'auth',
+            reseller: true,
+        },
+    },
+    // Shop Flash Sale
+    {
+        path: '/store/shop/flash-sale',
+        name: 'store.shop.index.flash-sale',
+        component: () => import('@/pages/store/shop/FlashSale.vue'),
+        query: {
+            verified: 'verified',
+        },
+        meta: {
+            guard: 'auth',
+            reseller: true,
+        },
+    },
+    {
+        path: '/store/shop/flash-sale/:id',
+        name: 'store.shop.show.flash-sale',
+        component: () => import('@/pages/store/shop/ShowFlashSale.vue'),
+        query: {
+            verified: 'verified',
+        },
+        meta: {
+            guard: 'auth',
+            reseller: true,
+        },
+        props: true,
+    },
+    // Voucher
+    {
+        path: '/store/voucher',
+        name: 'store.voucher.index',
+        component: () => import('@/pages/store/voucher/Index.vue'),
+        query: {
+            verified: 'verified',
+        },
+        meta: {
+            guard: 'auth',
+            reseller: true,
+        },
+    },
+    {
+        path: '/store/voucher/create',
+        name: 'store.voucher.create',
+        component: () => import('@/pages/store/voucher/Create.vue'),
+        query: {
+            verified: 'verified',
+        },
+        meta: {
+            guard: 'auth',
+            reseller: true,
+        },
+    },
+    // Payment
+    {
+        path: '/store/payments',
+        name: 'store.payment.index',
+        component: () => import('@/pages/store/payment/Index.vue'),
+        query: {
+            verified: 'verified',
+        },
+        meta: {
+            guard: 'auth',
+            reseller: true,
+        },
+    },
+
+    // Cash Flow
+    {
+        path: '/store/cash-flow',
+        name: 'store.cashflow.index',
+        component: () => import('@/pages/store/cashflow/Index.vue'),
+        query: {
+            verified: 'verified',
+        },
+        meta: {
+            guard: 'auth',
+            reseller: true,
+        },
+    },
+    {
+        path: '/store/expense/create',
+        name: 'store.expense.create',
+        component: () => import('@/pages/store/cashflow/expense/Create.vue'),
+        query: {
+            verified: 'verified',
+        },
+        meta: {
+            guard: 'auth',
+            reseller: true,
+        },
+    },
+    {
+        path: '/store/expense/:id/edit',
+        name: 'store.expense.edit',
+        component: () => import('@/pages/store/cashflow/expense/Edit.vue'),
+        query: {
+            verified: 'verified',
+        },
+        meta: {
+            guard: 'auth',
+            reseller: true,
+        },
+        props: true,
+    },
+
     // MARK: User
     // Product Detail
     {
@@ -679,6 +906,26 @@ router.beforeEach(async (to, from, next) => {
         }
         const role = store.userData.role
         if (role && to.matched.some(route => route.meta.role === role)) {
+            next()
+        } else {
+            return role === 'admin'
+                ? next({ name: 'admin.dashboard' })
+                : role === 'report'
+                ? next({ name: 'report.dashboard' })
+                : role === 'packing'
+                ? next({ name: 'packing.dashboard' })
+                : next({ name: 'welcome' })
+        }
+    } else if (to.matched.some(route => route.meta.reseller)) {
+        const store = useUsers()
+        if (store.authUser) {
+            if (!store.hasUserData) {
+                await store.getData()
+            }
+        }
+        const role = store.userData.role
+        const reseller = store.userData.store
+        if (reseller) {
             next()
         } else {
             return role === 'admin'

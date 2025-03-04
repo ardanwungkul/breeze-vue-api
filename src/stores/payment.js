@@ -102,6 +102,28 @@ export const usePaymentStore = defineStore({
                 loading.value = false
             }
         },
+        async paymentReseller(userid) {
+            try {
+                const response = await axios.get(
+                    `api/payment-reseller/${userid}`,
+                )
+                if (response.status === 200) {
+                    console.log(!response.data);
+                    
+                    this.singlePayment = response.data
+                } else {
+                    
+                    this.singlePayment = {}
+                }
+            } catch (error) {
+                if (error.response && error.response.status === 404) {
+                    this.singlePayment = {}
+                } else {
+                    this.error = error
+                }
+            } finally {
+            }
+        },
         async getDataEdit(id) {
             this.loading = true
             try {

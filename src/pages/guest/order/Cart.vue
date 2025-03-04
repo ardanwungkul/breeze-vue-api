@@ -228,7 +228,7 @@ function productStock(item) {
                                                 class="line-clamp-3">
                                                 {{ item.product.product_name }}
                                             </router-link>
-                                            <div>
+                                            <div class="flex flex-wrap gap-3">
                                                 <v-menu
                                                     open-on-hover
                                                     :location="'bottom'">
@@ -239,7 +239,7 @@ function productStock(item) {
                                                         <p
                                                             v-bind="props"
                                                             v-if="item.bundling"
-                                                            class="border rounded px-3 py-1 cursor-pointer">
+                                                            class="border rounded px-3 py-1 cursor-pointer w-min whitespace-nowrap">
                                                             {{
                                                                 item.bundling
                                                                     .name
@@ -300,6 +300,9 @@ function productStock(item) {
                                                         </div>
                                                     </div>
                                                 </v-menu>
+                                                <div v-if="item.is_pre_order" class="border border-secondary-2 text-secondary-2 rounded px-3 py-1 cursor-pointer w-min whitespace-nowrap">
+                                                    Pre-order
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -328,18 +331,15 @@ function productStock(item) {
                                                     editQuantity(item)
                                                 "
                                                 :max="
-                                                    item.bundling
-                                                        ? productStock(
-                                                              item.bundling,
-                                                          )
-                                                        : item?.product?.stock.filter(
-                                                              s => {
-                                                                  return (
-                                                                      s.product_stock_status ==
-                                                                      'warehouse'
-                                                                  )
-                                                              },
-                                                          ).length
+                                                    item.is_pre_order === 0
+                                                        ? (
+                                                            item.bundling
+                                                                ? productStock(item.bundling)
+                                                                : item?.product?.stock.filter(
+                                                                    s => s.product_stock_status == 'warehouse'
+                                                                ).length
+                                                        )
+                                                        : Infinity
                                                 "
                                                 v-model="item.quantity"
                                                 class="border rounded-lg overflow-hidden"

@@ -1,0 +1,1002 @@
+<script setup>
+import StoreLayout from '@/layouts/StoreLayout.vue'
+import { ref, onMounted, computed, onBeforeMount } from 'vue'
+import { useSubCategoryStore } from '@/stores/subcategory'
+import { useProductStore } from '@/stores/product'
+import { cropper } from 'vue-picture-cropper'
+import { useRoute, useRouter } from 'vue-router'
+import placeholderImage from '@/assets/images/placeholder-image.jpg'
+import Cropper from '@/components/dialog/Cropper.vue'
+import ValidationErrors from '@/components/ValidationErrors.vue'
+import Multiselect from 'vue-multiselect'
+import '@/assets/css/vue-multiselect.css'
+import LoadingAdmin from '@/components/LoadingAdmin.vue'
+import axios from 'axios'
+import QrScanner from '@/components/dialog/QrScanner.vue'
+import { QuillEditor } from '@vueup/vue-quill'
+import '@/assets/css/quill.css'
+import ConfirmDelete from '@/components/dialog/ConfirmDelete.vue'
+import { vMaska } from 'maska/vue'
+
+const storeProduct = useProductStore()
+const storeSubCategory = useSubCategoryStore()
+const subcategories = ref([])
+const qr = ref({
+    paused: false,
+    alert: false,
+})
+
+onMounted(async () => {
+    await fetchSubCategories()
+    await storeProduct.productAll()
+    fetchProduct()
+})
+async function fetchProduct() {
+    allProduct.value = storeProduct.products.filter(p => {
+        return p.id !== product.value.id
+    })
+}
+const isLoading = ref(true)
+const product = ref(null)
+const router = useRouter()
+
+const route = useRoute()
+const productId = ref(route.params.id)
+const allProduct = ref([])
+const filteredAllProduct = computed(() => {
+    return allProduct.value.filter(p => {
+        return p.id !== parseInt(productId.value)
+    })
+})
+
+const bundlings = ref([])
+const newBundlings = ref([])
+const product_name = ref('')
+const product_description = ref('')
+const product_price = ref('')
+const product_weight = ref('')
+const product_tag = ref('')
+const product_image = ref('')
+const product_code = ref('')
+const product_code_type = ref('')
+const selectedCategory = ref([])
+const product_image_3d = ref('')
+const imageSrc = ref()
+const imageGallery = ref([])
+const img3D = ref()
+const product_promo = ref({
+    status: false,
+    price: null,
+    percentage: null,
+})
+
+onBeforeMount(async () => {
+    await storeProduct.productById(productId.value)
+    if (
+        !storeProduct.singleProduct ||
+        Object.keys(storeProduct.singleProduct).length === 0
+    ) {
+        router.replace('/404')
+    } else {
+        product.value = storeProduct.singleProduct
+        product_name.value = product.value.product_name
+        product_price.value = product.value.product_price
+        product_code_type.value = product.value.product_code_type
+        product_code.value = product.value.product_code
+        product_weight.value = product.value.product_weight
+        if (product.value.product_tags) {
+            product_tag.value = product.value.product_tags
+        }
+        product_description.value = product.value.product_description
+        product_promo.value.price = product.value.product_promo_price
+        product_promo.value.percentage =
+            ((parseInt(product_promo.value.price) -
+                parseInt(product_price.value)) /
+                parseInt(product_promo.value.price)) *
+            100
+        bundlings.value = product.value.bundling.map(p => ({
+            id: p.id,
+            name: p.name,
+            price: p.price,
+            items: p.item,
+            product: p.item.map(item => item.product),
+            imageSrc: p.image
+                ? import.meta.env.VITE_PUBLIC_BACKEND_URL +
+                  '/storage/images/product/bundling/' +
+                  product.value.id +
+                  '/' +
+                  p.image
+                : null,
+        }))
+        img3D.value = product.value.product_image_3d
+            ? import.meta.env.VITE_PUBLIC_BACKEND_URL +
+              '/storage/images/product/3d/' +
+              product.value.id +
+              '/' +
+              product.value.product_image_3d
+            : ''
+        for (const gallery of product.value.gallery) {
+            try {
+                const response = await axios.get(
+                    import.meta.env.VITE_PUBLIC_BACKEND_URL +
+                        '/api/storage/images/product/gallery/' +
+                        product.value.id +
+                        '/' +
+                        gallery.product_image,
+                    {
+                        responseType: 'blob',
+                    },
+                )
+                const blob = response.data
+                const file = new File([blob], gallery.product_image, {
+                    type: blob.type,
+                })
+                imageGallery.value.push({
+                    url:
+                        import.meta.env.VITE_PUBLIC_BACKEND_URL +
+                        '/storage/images/product/gallery/' +
+                        product.value.id +
+                        '/' +
+                        gallery.product_image,
+                    file: file,
+                })
+            } catch (error) {
+                console.error('Error fetching the image:', error)
+            }
+        }
+        selectedCategory.value = product.value.subcategory
+            ? product.value.subcategory
+            : []
+        imageSrc.value =
+            import.meta.env.VITE_PUBLIC_BACKEND_URL +
+            '/storage/images/product/' +
+            product.value.product_image
+        isLoading.value = storeProduct.loading
+    }
+})
+async function fetchSubCategories() {
+    await storeSubCategory.subCategoryAll()
+    subcategories.value = storeSubCategory.allSubCategories
+}
+
+const processing = ref(false)
+const setErrors = ref([])
+const errors = computed(() => setErrors.value)
+const croppedImage = ref('')
+const showCropper = ref(false)
+
+const deleteVariant = async id => {
+    await storeProduct.deleteVariant(id, processing)
+    bundlings.value = bundlings.value.filter(bundling => {
+        return bundling.id !== id
+    })
+}
+const editProduct = async () => {
+    processing.value = true
+
+    const formData = new FormData()
+    if (product_code.value !== '' && product_code.value !== null) {
+        formData.append('product_code', product_code.value)
+    }
+    formData.append('product_name', product_name.value)
+    formData.append('product_code_type', product_code_type.value)
+    formData.append('product_price', product_price.value)
+    formData.append('product_weight', product_weight.value)
+    formData.append('product_tag', product_tag.value)
+    formData.append('product_image', product_image.value)
+    formData.append('product_description', product_description.value)
+    formData.append('_method', 'PUT')
+    formData.append(
+        'product_image_3d',
+        product_image_3d.value ? product_image_3d.value : 'null',
+    )
+    selectedCategory.value.forEach(category => {
+        if (category) {
+            formData.append('sub_category[]', category.id)
+        }
+    })
+
+    imageGallery.value.forEach((image, index) => {
+        if (image.file) {
+            formData.append(`gallery[]`, image.file)
+        }
+    })
+    if (bundlings.value.length > 0) {
+        bundlings.value.forEach((bundling, index) => {
+            formData.append(`bundlings[${index}][name]`, bundling.name)
+            formData.append(`bundlings[${index}][price]`, bundling.price)
+            formData.append(`bundlings[${index}][id]`, bundling.id)
+
+            bundling.product.forEach((item, itemIndex) => {
+                if (item.id !== parseInt(productId.value)) {
+                    formData.append(
+                        `bundlings[${index}][items][${itemIndex}]`,
+                        item.id,
+                    )
+                }
+            })
+        })
+    }
+    if (newBundlings.value.length > 0) {
+        newBundlings.value.forEach((bundling, index) => {
+            formData.append(`newBundlings[${index}][name]`, bundling.name)
+            formData.append(`newBundlings[${index}][price]`, bundling.price)
+
+            if (bundling.image !== null && bundling.image) {
+                formData.append(`newBundlings[${index}][image]`, bundling.image)
+            }
+            bundling.items.forEach((item, itemIndex) => {
+                formData.append(
+                    `newBundlings[${index}][items][${itemIndex}]`,
+                    item.id,
+                )
+            })
+        })
+    }
+    if (bundlings.value.length > 0) {
+        bundlings.value.forEach((bundling, index) => {
+            formData.append(`bundlings[${index}][id]`, bundling.id)
+            formData.append(`bundlings[${index}][name]`, bundling.name)
+            formData.append(`bundlings[${index}][price]`, bundling.price)
+
+            if (bundling.image !== null && bundling.image) {
+                formData.append(`bundlings[${index}][image]`, bundling.image)
+            }
+            bundling.product.forEach((item, itemIndex) => {
+                if (item.id !== product.value.id) {
+                    formData.append(
+                        `bundlings[${index}][items][${itemIndex}]`,
+                        item.id,
+                    )
+                }
+            })
+        })
+    }
+    formData.append('product_promo_price', product_promo.value.price)
+    await storeProduct.editProduct(
+        formData,
+        setErrors,
+        processing,
+        productId.value,
+    )
+}
+
+const changePlaceholder = event => {
+    const file = event.target.files[0]
+    if (file) {
+        imageSrc.value = URL.createObjectURL(file)
+        showCropper.value = true
+    }
+}
+const handleUpload3D = event => {
+    const file = event.target.files[0]
+    if (file) {
+        img3D.value = URL.createObjectURL(file)
+        product_image_3d.value = file
+    }
+}
+
+const dataURLtoFile = (dataURL, filename) => {
+    const [header, base64Data] = dataURL.split(',')
+    const mime = header.match(/:(.*?);/)[1]
+    const byteString = atob(base64Data)
+    const arrayBuffer = new ArrayBuffer(byteString.length)
+    const uint8Array = new Uint8Array(arrayBuffer)
+
+    for (let i = 0; i < byteString.length; i++) {
+        uint8Array[i] = byteString.charCodeAt(i)
+    }
+
+    return new File([uint8Array], filename, { type: mime })
+}
+const handleCrop = async method => {
+    if (method == 'cancel') {
+        showCropper.value = false
+        imageSrc.value = placeholderImage
+        product_image.value = ''
+    } else if (method == 'crop') {
+        croppedImage.value = cropper.getDataURL()
+        const files = dataURLtoFile(croppedImage.value, 'cropper.jpg')
+        product_image.value = files
+        imageSrc.value = croppedImage.value
+        showCropper.value = false
+    }
+}
+
+function handleUploadGallery(event) {
+    const files = event.target.files
+    for (let i = 0; i < files.length; i++) {
+        if (imageGallery.value.length >= 9) {
+            break
+        }
+        const file = files[i]
+        const reader = new FileReader()
+        reader.onload = e => {
+            imageGallery.value.push({ url: e.target.result, file })
+        }
+        reader.readAsDataURL(file)
+    }
+    event.target.value = ''
+}
+function removeGallery(index) {
+    imageGallery.value.splice(index, 1)
+}
+function removeBundling(index) {
+    this.newBundlings.splice(index, 1)
+}
+function handleUploadBundlingImage(item, event) {
+    console.log(item)
+
+    const files = event.target.files[0]
+    if (files) {
+        item.imageSrc = URL.createObjectURL(files)
+        item.image = files
+    }
+}
+async function inputPromoPrice() {
+    if (product_promo.value.price > product_price.value) {
+        const price = parseInt(product_promo.value.price)
+        const normal = parseInt(product_price.value)
+        const profit = parseInt(price - normal)
+        const value = (profit / price) * 100
+        product_promo.value.percentage = value
+    } else {
+        product_promo.value.price = null
+    }
+}
+async function inputPromoPercentage() {
+    if (product_promo.value.percentage > 0) {
+        const percentage = parseFloat(product_promo.value.percentage)
+        const price = parseInt(product_price.value)
+        const normal = price / (1 - percentage / 100)
+        product_promo.value.price = Math.round(normal)
+    } else {
+        product_promo.value.percentage = null
+    }
+}
+async function inputProductPrice() {
+    if (product_promo.value.price) {
+        const percentage = parseFloat(product_promo.value.percentage)
+        const price = parseInt(product_price.value)
+        const normal = price / (1 - percentage / 100)
+        product_promo.value.price = Math.round(normal)
+    }
+}
+const optionsMoney = {
+    mask: '9.99#',
+    tokens: {
+        9: { pattern: /[0-9]/, repeated: true },
+    },
+    reversed: true,
+}
+</script>
+<template>
+    <StoreLayout title="Edit Products">
+        <LoadingAdmin :isLoading="isLoading" />
+        <ValidationErrors class="w-full" :errors="errors" />
+        <Cropper
+            :showCropper="showCropper"
+            :img="imageSrc"
+            :method="handleCrop"
+            :aspect="1" />
+        <div class="w-full">
+            <div class="px-5 py-3">
+                <form
+                    @submit.prevent="editProduct"
+                    enctype="multipart/form-data">
+                    <div class="space-y-3">
+                        <div
+                            class="border dark:!border-typography-3 dark-primary-2 border-gray-300 p-3 rounded-lg bg-light-primary-1 dark:bg-dark-primary-2 transition-all">
+                            <p
+                                class="dark:text-light-primary-1 font-medium text-lg pb-2 border-b mb-3 px-3">
+                                Product Details
+                            </p>
+                            <div class="grid grid-cols-2 gap-3 p-3">
+                                <div
+                                    class="flex flex-col gap-2 text-sm col-span-2">
+                                    <label
+                                        class="dark:text-light-primary-1"
+                                        for="product_name"
+                                        >Name</label
+                                    >
+                                    <input
+                                        class="text-sm rounded-lg bg-light-primary-1 w-full dark:bg-dark-primary-1 dark:text-light-primary-1 border !border-gray-500 dark:!border-typography-3"
+                                        type="text"
+                                        v-model="product_name"
+                                        id="product_name"
+                                        placeholder="Enter Product Name"
+                                        required />
+                                </div>
+                                <div
+                                    class="flex flex-col gap-2 text-sm col-span-2">
+                                    <label
+                                        class="dark:text-light-primary-1"
+                                        for="product_price"
+                                        >Price</label
+                                    >
+                                    <input
+                                        class="text-sm rounded-lg bg-light-primary-1 w-full dark:bg-dark-primary-1 dark:text-light-primary-1 border !border-gray-500 dark:!border-typography-3"
+                                        type="number"
+                                        @change="inputProductPrice()"
+                                        v-model="product_price"
+                                        id="product_price"
+                                        placeholder="Enter Product Price"
+                                        required />
+                                </div>
+                                <div class="grid grid-cols-2 gap-3 col-span-2">
+                                    <div class="flex flex-col gap-2 text-sm">
+                                        <div
+                                            class="flex justify-between items-center">
+                                            <label
+                                                class="dark:text-light-primary-1"
+                                                for="product_promo_price"
+                                                >Promo Price From</label
+                                            >
+                                        </div>
+                                        <input
+                                            class="text-sm rounded-lg bg-light-primary-1 w-full dark:bg-dark-primary-1 dark:text-light-primary-1 border !border-gray-500 dark:!border-typography-3"
+                                            v-model="product_promo.price"
+                                            type="number"
+                                            @change="inputPromoPrice()"
+                                            id="product_promo_price"
+                                            placeholder="Enter Promo Price Value" />
+                                    </div>
+                                    <div class="flex flex-col gap-2 text-sm">
+                                        <div
+                                            class="flex justify-between items-center">
+                                            <label
+                                                class="dark:text-light-primary-1"
+                                                for="product_promo_percentage"
+                                                >Promo Percentage Value</label
+                                            >
+                                        </div>
+                                        <input
+                                            class="text-sm rounded-lg bg-light-primary-1 w-full dark:bg-dark-primary-1 dark:text-light-primary-1 border !border-gray-500 dark:!border-typography-3"
+                                            type="text"
+                                            v-maska="'##'"
+                                            @change="inputPromoPercentage()"
+                                            v-model="product_promo.percentage"
+                                            id="product_promo_percentage"
+                                            placeholder="Enter Promo Price Percentage" />
+                                    </div>
+                                </div>
+                                <div class="flex flex-col gap-2 text-sm">
+                                    <div class="flex justify-between">
+                                        <label
+                                            class="dark:text-light-primary-1"
+                                            for="product_code_type"
+                                            >Product Code Type</label
+                                        >
+                                    </div>
+                                    <select
+                                        name="product_code_type"
+                                        class="text-sm rounded-lg bg-light-primary-1 w-full dark:bg-dark-primary-1 dark:text-light-primary-1 border !border-gray-500 dark:!border-typography-3"
+                                        id="product_code_type"
+                                        required
+                                        v-model="product_code_type">
+                                        <option value="" selected disabled>
+                                            Select Product Code Type
+                                        </option>
+                                        <option value="unique_code">
+                                            Unique Code
+                                        </option>
+                                        <option value="common_code">
+                                            Common Code
+                                        </option>
+                                    </select>
+                                </div>
+                                <div class="flex flex-col gap-2 text-sm">
+                                    <div class="flex justify-between">
+                                        <label
+                                            class="dark:text-light-primary-1"
+                                            for="product_code"
+                                            >Product Code</label
+                                        >
+                                        <v-dialog>
+                                            <template
+                                                v-slot:activator="{
+                                                    props: activatorProps,
+                                                }">
+                                                <button
+                                                    type="button"
+                                                    v-bind="activatorProps"
+                                                    @click="qr.paused = false">
+                                                    <i
+                                                        class="fa-solid fa-camera dark:text-typography-1"></i>
+                                                </button>
+                                            </template>
+
+                                            <template
+                                                v-slot:default="{ isActive }">
+                                                <div>
+                                                    <div>
+                                                        <QrScanner
+                                                            :qr="qr"
+                                                            v-model:result="
+                                                                product_code
+                                                            "
+                                                            :show="isActive" />
+                                                    </div>
+                                                </div>
+                                            </template>
+                                        </v-dialog>
+                                    </div>
+                                    <input
+                                        class="text-sm rounded-lg bg-light-primary-1 w-full dark:bg-dark-primary-1 dark:text-light-primary-1 border !border-gray-500 dark:!border-typography-3"
+                                        type="text"
+                                        v-model="product_code"
+                                        id="product_code"
+                                        placeholder="Enter Product Code" />
+                                </div>
+                                <div class="flex flex-col gap-2 text-sm">
+                                    <div class="flex justify-between">
+                                        <label
+                                            class="dark:text-light-primary-1"
+                                            for="product_tag"
+                                            >Product Tag</label
+                                        >
+                                    </div>
+                                    <select
+                                        name="product_tag"
+                                        class="text-sm rounded-lg bg-light-primary-1 w-full dark:bg-dark-primary-1 dark:text-light-primary-1 border !border-gray-500 dark:!border-typography-3"
+                                        id="product_tag"
+                                        v-model="product_tag">
+                                        <option value="" selected disabled>
+                                            Select Product Tag
+                                        </option>
+                                        <option value="new">New Product</option>
+                                        <option value="sale">
+                                            Sale Product
+                                        </option>
+                                        <option value="featured">
+                                            Featured Product
+                                        </option>
+                                    </select>
+                                </div>
+                                <div class="flex flex-col gap-2 text-sm">
+                                    <label
+                                        class="dark:text-light-primary-1"
+                                        for="product_weight"
+                                        >Product Weight</label
+                                    >
+                                    <input
+                                        class="text-sm rounded-lg bg-light-primary-1 w-full dark:bg-dark-primary-1 dark:text-light-primary-1 border !border-gray-500 dark:!border-typography-3"
+                                        type="number"
+                                        v-model="product_weight"
+                                        id="product_weight"
+                                        placeholder="Enter Product Weight"
+                                        required />
+                                </div>
+                                <div
+                                    class="flex flex-col col-span-2 gap-2 text-sm">
+                                    <label class="dark:text-light-primary-1"
+                                        >Category</label
+                                    >
+                                    <multiselect
+                                        v-model="selectedCategory"
+                                        :options="subcategories"
+                                        :searchable="true"
+                                        :close-on-select="false"
+                                        label="sub_category_name"
+                                        :multiple="true"
+                                        track-by="sub_category_name"
+                                        :preserve-search="true"
+                                        placeholder="Select Categories"></multiselect>
+                                </div>
+                                <div
+                                    class="flex flex-col col-span-2 gap-2 text-sm">
+                                    <label class="dark:text-light-primary-1"
+                                        >Description</label
+                                    >
+                                    <QuillEditor
+                                        v-model:content="product_description"
+                                        contentType="html"
+                                        :toolbar="false"
+                                        id="article_content"
+                                        class="bg-light-primary-1 dark:bg-dark-primary-1 dark:text-typography-1 dark:!border-dark-primary-1 relative h-auto rounded-lg min-h-40 border shadow-lg"
+                                        placeholder="Enter Product Description"
+                                        toolbar="full"></QuillEditor>
+                                </div>
+                            </div>
+                        </div>
+                        <div
+                            class="border dark:!border-typography-3 dark-primary-2 border-gray-300 p-3 rounded-lg bg-light-primary-1 dark:bg-dark-primary-2">
+                            <p
+                                class="dark:text-light-primary-1 font-medium text-lg pb-2 border-b mb-3 px-3">
+                                Product Images
+                            </p>
+                            <div class="flex flex-wrap gap-3 px-3">
+                                <div class="flex justify-center w-32 flex-none">
+                                    <div class="relative">
+                                        <div
+                                            class="absolute top-1 right-1 z-20 bg-secondary-3 rounded px-1 text-white">
+                                            <p class="text-[10px]">
+                                                Main Image
+                                            </p>
+                                        </div>
+                                        <img
+                                            id="picture"
+                                            :src="imageSrc"
+                                            class="object-cover w-32 h-32 rounded-lg border shadow-lg"
+                                            alt="Placeholder Image" />
+                                        <div
+                                            class="absolute z-50 top-0 hover:!opacity-100 rounded-lg"
+                                            style="opacity: 0">
+                                            <label for="pictureInput">
+                                                <div
+                                                    class="w-32 h-32 bg-black opacity-60 flex items-center rounded-lg">
+                                                    <p
+                                                        class="text-center w-full">
+                                                        <i
+                                                            class="fa-solid fa-pen"
+                                                            style="
+                                                                color: #ffffff;
+                                                            "></i>
+                                                    </p>
+                                                </div>
+                                                <input
+                                                    accept="image/*"
+                                                    type="file"
+                                                    class="absolute bottom-0 opacity-0 w-40 h-2"
+                                                    id="pictureInput"
+                                                    @change="
+                                                        changePlaceholder
+                                                    " />
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div
+                                    class="group relative"
+                                    v-for="(image, index) in imageGallery"
+                                    :key="index">
+                                    <img
+                                        :src="image.url"
+                                        alt="Uploaded Image"
+                                        class="w-32 h-32 rounded-lg" />
+                                    <div
+                                        class="group-hover:opacity-100 opacity-0 absolute bottom-0 w-full flex items-center justify-center py-1 backdrop-blur-2xl bg-dark-primary-1/30">
+                                        <button
+                                            @click="removeGallery(index)"
+                                            type="button">
+                                            <i
+                                                class="fa-regular fa-trash text-white"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <label
+                                    v-if="imageGallery.length !== 9"
+                                    for="inputGallery"
+                                    class="w-32 h-32 border-dashed border !border-typography-2 rounded-lg flex-none flex justify-center items-center dark:hover:bg-dark-primary-1 hover:bg-light-primary-2 cursor-pointer">
+                                    <div
+                                        class="flex items-center justify-center flex-col">
+                                        <i
+                                            class="fa-regular fa-image text-typography-2 text-2xl"></i>
+                                        <p class="text-typography-2 text-xs">
+                                            Add Photo
+                                            {{ imageGallery.length }}/9
+                                        </p>
+                                    </div>
+                                    <input
+                                        type="file"
+                                        accept="image/*"
+                                        class="hidden"
+                                        name="inputGallery"
+                                        @change="handleUploadGallery"
+                                        id="inputGallery" />
+                                </label>
+                            </div>
+                            <div class="my-5">
+                                <p
+                                    class="dark:text-light-primary-1 font-medium text-lg pb-2 border-b mb-3 px-3">
+                                    Product Image 3D
+                                </p>
+                                <div class="px-3">
+                                    <label
+                                        for="image3D"
+                                        class="w-32 h-32 border-dashed border !border-typography-2 rounded-lg flex-none flex justify-center items-center dark:hover:bg-dark-primary-1 hover:bg-light-primary-2 cursor-pointer overflow-hidden">
+                                        <div
+                                            v-if="!img3D"
+                                            class="flex items-center justify-center flex-col">
+                                            <i
+                                                class="fa-regular fa-image text-typography-2 text-2xl"></i>
+                                            <p
+                                                class="text-typography-2 text-xs text-center">
+                                                Add Product Image 3D
+                                            </p>
+                                        </div>
+                                        <img
+                                            :src="img3D"
+                                            class="w-32 h-32 object-cover"
+                                            v-if="img3D"
+                                            alt="" />
+                                        <input
+                                            type="file"
+                                            accept="image/*"
+                                            class="hidden"
+                                            @change="handleUpload3D"
+                                            id="image3D" />
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Bundling -->
+                        <div
+                            class="border dark:!border-typography-3 dark-primary-2 border-gray-300 p-3 rounded-lg bg-light-primary-1 dark:bg-dark-primary-2">
+                            <!-- {{ bundlings }} -->
+                            <div
+                                class="pb-2 border-b mb-3 px-3 flex items-center justify-between">
+                                <p
+                                    class="dark:text-light-primary-1 font-medium text-lg">
+                                    Bundling Product
+                                </p>
+                                <button
+                                    type="button"
+                                    @click="
+                                        newBundlings.push({
+                                            image: null,
+                                            name: null,
+                                            price: null,
+                                            items: [],
+                                        })
+                                    "
+                                    class="bg-secondary-2 rounded-lg px-3 py-1 text-typography-1 shadow-lg text-sm">
+                                    Add Bundling
+                                </button>
+                            </div>
+                            <div
+                                class="flex flex-wrap gap-3 px-3"
+                                v-if="
+                                    bundlings.length > 0 ||
+                                    newBundlings.length > 0
+                                ">
+                                <div
+                                    class="w-full dark:text-typography-1 text-sm">
+                                    <!-- {{ newBundlings }} -->
+                                    <div
+                                        class="divide-y divide-typography-2 w-full">
+                                        <div
+                                            v-for="(item, index) in bundlings"
+                                            :key="index">
+                                            <div class="px-3 py-2">
+                                                <div
+                                                    class="flex flex-col gap-3 justify-center items-center">
+                                                    <div class="flex self-end">
+                                                        <ConfirmDelete
+                                                            :label="'Delete'"
+                                                            :type="'Product Bundle'"
+                                                            :id="item.id"
+                                                            :method="
+                                                                deleteVariant
+                                                            "></ConfirmDelete>
+                                                    </div>
+                                                    <div>
+                                                        <label
+                                                            :for="
+                                                                imageBundling +
+                                                                '-' +
+                                                                index
+                                                            "
+                                                            class="w-32 h-32 border-dashed border !border-typography-2 rounded-lg flex-none flex justify-center items-center dark:hover:bg-dark-primary-1 hover:bg-light-primary-2 cursor-pointer overflow-hidden">
+                                                            <div
+                                                                v-if="
+                                                                    !item.imageSrc
+                                                                "
+                                                                class="flex items-center justify-center flex-col">
+                                                                <i
+                                                                    class="fa-regular fa-image text-typography-2 text-2xl"></i>
+                                                                <p
+                                                                    class="text-typography-2 text-xs text-center">
+                                                                    Add Bundle
+                                                                    Image
+                                                                </p>
+                                                            </div>
+                                                            <img
+                                                                :src="
+                                                                    item.imageSrc
+                                                                "
+                                                                v-if="
+                                                                    item.imageSrc
+                                                                "
+                                                                alt="" />
+                                                            <input
+                                                                type="file"
+                                                                accept="image/*"
+                                                                class="hidden"
+                                                                @change="
+                                                                    handleUploadBundlingImage(
+                                                                        item,
+                                                                        $event,
+                                                                    )
+                                                                "
+                                                                :id="
+                                                                    imageBundling +
+                                                                    '-' +
+                                                                    index
+                                                                " />
+                                                        </label>
+                                                    </div>
+                                                    <input
+                                                        placeholder="Enter Bundling Name"
+                                                        required
+                                                        class="text-sm rounded-lg bg-light-primary-1 w-full dark:bg-dark-primary-1 dark:text-light-primary-1 border !border-gray-500 dark:!border-typography-3"
+                                                        type="text"
+                                                        v-model="item.name" />
+                                                    <input
+                                                        placeholder="Enter Bundling Price"
+                                                        required
+                                                        class="text-sm rounded-lg bg-light-primary-1 w-full dark:bg-dark-primary-1 dark:text-light-primary-1 border !border-gray-500 dark:!border-typography-3"
+                                                        type="number"
+                                                        v-model="item.price" />
+                                                    <multiselect
+                                                        v-model="item.product"
+                                                        :options="allProduct"
+                                                        :searchable="true"
+                                                        :close-on-select="false"
+                                                        label="product_name"
+                                                        :multiple="true"
+                                                        track-by="product_name"
+                                                        :preserve-search="true"
+                                                        placeholder="Select Product">
+                                                        <template
+                                                            #selection="{
+                                                                values,
+                                                                search,
+                                                                isOpen,
+                                                            }">
+                                                            <span
+                                                                class="multiselect__single text-sm"
+                                                                v-if="
+                                                                    values.length
+                                                                "
+                                                                v-show="!isOpen"
+                                                                >{{
+                                                                    values.length
+                                                                }}
+                                                                selected</span
+                                                            >
+                                                        </template>
+                                                    </multiselect>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div
+                                            v-for="(
+                                                newBundling, index
+                                            ) in newBundlings"
+                                            :key="index">
+                                            <div class="px-3 py-2">
+                                                <div
+                                                    class="flex flex-col gap-3 justify-center items-center">
+                                                    <div class="flex self-end">
+                                                        <button
+                                                            @click="
+                                                                removeBundling(
+                                                                    index,
+                                                                )
+                                                            "
+                                                            type="button"
+                                                            class="fa-solid fa-x text-red-500"></button>
+                                                    </div>
+                                                    <div>
+                                                        <label
+                                                            :for="
+                                                                'bundling-new-' +
+                                                                index
+                                                            "
+                                                            class="w-32 h-32 border-dashed border !border-typography-2 rounded-lg flex-none flex justify-center items-center dark:hover:bg-dark-primary-1 hover:bg-light-primary-2 cursor-pointer overflow-hidden">
+                                                            <div
+                                                                v-if="
+                                                                    !newBundling.imageSrc
+                                                                "
+                                                                class="flex items-center justify-center flex-col">
+                                                                <i
+                                                                    class="fa-regular fa-image text-typography-2 text-2xl"></i>
+                                                                <p
+                                                                    class="text-typography-2 text-xs text-center">
+                                                                    Add Bundle
+                                                                    Image
+                                                                </p>
+                                                            </div>
+                                                            <img
+                                                                :src="
+                                                                    newBundling.imageSrc
+                                                                "
+                                                                v-if="
+                                                                    newBundling.imageSrc
+                                                                "
+                                                                alt="" />
+                                                            <input
+                                                                type="file"
+                                                                accept="image/*"
+                                                                class="hidden"
+                                                                @change="
+                                                                    handleUploadBundlingImage(
+                                                                        newBundling,
+                                                                        $event,
+                                                                    )
+                                                                "
+                                                                :id="
+                                                                    'bundling-new-' +
+                                                                    index
+                                                                " />
+                                                        </label>
+                                                    </div>
+                                                    <input
+                                                        placeholder="Enter Bundling Name"
+                                                        required
+                                                        class="text-sm rounded-lg bg-light-primary-1 w-full dark:bg-dark-primary-1 dark:text-light-primary-1 border !border-gray-500 dark:!border-typography-3"
+                                                        type="text"
+                                                        v-model="
+                                                            newBundling.name
+                                                        " />
+                                                    <input
+                                                        placeholder="Enter Bundling Price"
+                                                        required
+                                                        class="text-sm rounded-lg bg-light-primary-1 w-full dark:bg-dark-primary-1 dark:text-light-primary-1 border !border-gray-500 dark:!border-typography-3"
+                                                        type="number"
+                                                        v-model="
+                                                            newBundling.price
+                                                        " />
+                                                    <multiselect
+                                                        v-model="
+                                                            newBundling.items
+                                                        "
+                                                        :options="allProduct"
+                                                        :searchable="true"
+                                                        :close-on-select="false"
+                                                        label="product_name"
+                                                        :multiple="true"
+                                                        track-by="product_name"
+                                                        :preserve-search="true"
+                                                        placeholder="Select Product">
+                                                        <template
+                                                            #selection="{
+                                                                values,
+                                                                search,
+                                                                isOpen,
+                                                            }">
+                                                            <span
+                                                                class="multiselect__single text-sm"
+                                                                v-if="
+                                                                    values.length
+                                                                "
+                                                                v-show="!isOpen"
+                                                                >{{
+                                                                    values.length
+                                                                }}
+                                                                selected</span
+                                                            >
+                                                        </template>
+                                                    </multiselect>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <button
+                            class="bg-secondary-3 hover:bg-opacity-90 text-white px-3 py-2 rounded-lg text-sm cursor-pointer flex justify-center items-center gap-3">
+                            <p>Edit</p>
+                            <svg
+                                v-if="processing"
+                                role="status"
+                                class="inline mr-2 w-4 h-4 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600"
+                                viewBox="0 0 100 101"
+                                fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path
+                                    d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
+                                    fill="currentColor" />
+                                <path
+                                    d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
+                                    fill="currentFill" />
+                            </svg>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </StoreLayout>
+</template>

@@ -7,6 +7,7 @@ const csrf = () => axios.get('/sanctum/csrf-cookie')
 export const useUsers = defineStore('users', {
     state: () => ({
         products: [],
+        userAuth: [],
         userData: useStorage('userData', []),
         authStatus: useStorage('authStatus', []),
     }),
@@ -33,6 +34,25 @@ export const useUsers = defineStore('users', {
                 if (error.response && error.response.status === 401) {
                     this.userData = {}
                     this.router.push('/login')
+                } else if (error.response && error.response.status === 409) {
+                    this.router.push('/verify-email')
+                } else {
+                    console.error('Error fetching user data:', error)
+                }
+            }
+        },
+        async getAuth() {
+            try {
+                await csrf()
+                if (this.authStatus === 204) {
+                    const response = await axios.get('/user')
+                    this.userAuth = response.data
+                } else {
+                    this.userAuth = null
+                }
+            } catch (error) {
+                if (error.response && error.response.status === 401) {
+                    this.userData = {}
                 } else if (error.response && error.response.status === 409) {
                     this.router.push('/verify-email')
                 } else {

@@ -1,6 +1,6 @@
 <script setup>
 import { ref, onMounted, computed } from 'vue'
-import AdminLayout from '@/layouts/AdminLayout.vue'
+import StoreLayout from '@/layouts/StoreLayout.vue'
 import '@/assets/css/vuetify.css'
 import { usePaymentStore } from '@/stores/payment'
 
@@ -113,7 +113,7 @@ export default {
 }
 </script>
 <template>
-    <AdminLayout title="List Payment">
+    <StoreLayout title="List Payment">
         <div class="w-full">
             <div class="relative">
                 <ValidationErrors class="w-full" :errors="errors" />
@@ -285,5 +285,5 @@ export default {
                 </div>
             </div>
         </div>
-    </AdminLayout>
+    </StoreLayout>
 </template>

@@ -131,6 +131,16 @@ const submitLogout = () => {
                                             </div>
                                         </router-link>
                                     </li>
+                                    <li
+                                        v-if="store.userData.store && store.userData.role == 'user'">
+                                        <router-link
+                                            :to="{ name: 'store.dashboard' }">
+                                            <div
+                                                class="tracking-wide font-semibold hover:bg-white px-3 py-2 rounded-lg text-gray-600">
+                                                Dashboard
+                                            </div>
+                                        </router-link>
+                                    </li>
                                     <li v-if="store.authUser">
                                         <router-link :to="{ name: 'purchase' }">
                                             <div
