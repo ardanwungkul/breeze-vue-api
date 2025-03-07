@@ -7,7 +7,7 @@ const props = defineProps({
         required: true,
     },
     resellerPackage: Object,
-    user:Object
+    user: Object,
 })
 
 const user = props.user
@@ -52,9 +52,11 @@ const handleStore = async () => {
             <button
                 v-bind="activatorProps"
                 :disabled="user?.store"
-                :class="user?.store ? 'bg-blue-600/30' : 'hover:bg-blue-600/30'"
-                class="p-3 border rounded-xl font-bold duration-300 border-blue-600">
-                {{ user?.store ? 'Packet Active' : 'Select Packet' }}
+                :class="
+                    user?.store ? 'bg-ezzora-600/30' : 'hover:bg-ezzora-600/30'
+                "
+                class="p-3 border rounded-xl font-bold duration-300 border-ezzora-600">
+                {{ user?.store ? 'Packet Active' : 'Select Package' }}
             </button>
         </template>
 
@@ -64,16 +66,20 @@ const handleStore = async () => {
                 <button
                     @click="isActive.value = false"
                     class="fa-solid fa-xmark rounded-xl hover:bg-gray-100 px-3 py-2 absolute top-3 right-3 z-10"></button>
-                <div class="px-5 py-3 max-h-full overflow-y-scroll relative invisible-scrollbar">
+                <div
+                    class="px-5 py-3 max-h-full overflow-y-scroll relative invisible-scrollbar">
                     <div
                         class="w-full flex flex-col overflow-auto bg-white rounded-lg text-base font-normal px-2 space-y-3">
-                        <div class=" text-xl sm:text-2xl">Upgrade Your Plan {{ resellerPackage.name }}</div>
-                        <div class=" text-sm sm:text-base text-gray-500 mb-7">
+                        <div class="text-xl sm:text-2xl">
+                            Upgrade Your Plan {{ resellerPackage.name }}
+                        </div>
+                        <div class="text-sm sm:text-base text-gray-500 mb-7">
                             Price : Rp{{ formatPrice(resellerPackage.price) }}
                         </div>
                         <form @submit.prevent="handleStore">
-                            <div class=" w-full space-y-3">
-                                <div class="grid grid-cols-1 text-sm sm:text-base sm:grid-cols-2 gap-3 sm:gap-5 mb-7">
+                            <div class="w-full space-y-3">
+                                <div
+                                    class="grid grid-cols-1 text-sm sm:text-base sm:grid-cols-2 gap-3 sm:gap-5 mb-7">
                                     <div class="flex flex-col">
                                         <label
                                             class="text-blue-600 font-medium mb-2"
@@ -84,8 +90,12 @@ const handleStore = async () => {
                                             id="username"
                                             v-model="inputUsername"
                                             :disabled="user"
-                                            :class="user ? ' cursor-not-allowed opacity-50' : ' '"
-                                            class=" text-sm sm:text-base border border-gray-300 duration-300 rounded-lg"
+                                            :class="
+                                                user
+                                                    ? ' cursor-not-allowed opacity-50'
+                                                    : ' '
+                                            "
+                                            class="text-sm sm:text-base border border-gray-300 duration-300 rounded-lg"
                                             type="text" />
                                     </div>
                                     <div class="flex flex-col">
@@ -97,7 +107,7 @@ const handleStore = async () => {
                                         <input
                                             id="store_name"
                                             v-model="inputStoreName"
-                                            class=" text-sm sm:text-base border border-gray-300 duration-300 rounded-lg"
+                                            class="text-sm sm:text-base border border-gray-300 duration-300 rounded-lg"
                                             type="text" />
                                     </div>
                                     <div class="flex flex-col">
@@ -110,8 +120,12 @@ const handleStore = async () => {
                                             id="store_address"
                                             v-model="inputEmail"
                                             :disabled="user"
-                                            :class="user ? ' cursor-not-allowed opacity-50' : ' '"
-                                            class=" text-sm sm:text-base border border-gray-300 duration-300 rounded-lg"
+                                            :class="
+                                                user
+                                                    ? ' cursor-not-allowed opacity-50'
+                                                    : ' '
+                                            "
+                                            class="text-sm sm:text-base border border-gray-300 duration-300 rounded-lg"
                                             type="email" />
                                     </div>
                                     <div class="flex flex-col">
@@ -125,30 +139,43 @@ const handleStore = async () => {
                                             v-model="inputPassword"
                                             autocomplete="current-password"
                                             :disabled="user"
-                                            :class="user ? ' cursor-not-allowed opacity-50' : ' '"
-                                            class=" text-sm sm:text-base border border-gray-300 duration-300 rounded-lg"
-                                            :type="user ? 'text' : 'password'" />
+                                            :class="
+                                                user
+                                                    ? ' cursor-not-allowed opacity-50'
+                                                    : ' '
+                                            "
+                                            class="text-sm sm:text-base border border-gray-300 duration-300 rounded-lg"
+                                            :type="
+                                                user ? 'text' : 'password'
+                                            " />
                                     </div>
                                 </div>
-                                <div class=" px-2 flex flex-row items-start gap-2">
+                                <div
+                                    class="px-2 flex flex-row items-start gap-2">
                                     <input
                                         class="rounded border w-4 h-4 border-typography-2 mt-1"
                                         v-model="termCondition"
                                         type="checkbox"
                                         name=""
                                         id="" />
-                                    <div class=" text-xs sm:text-sm text-typography-2">
-                                        Term and Condition: Lorem ipsum dolor sit amet
-                                        consectetur adipisicing elit. Amet laudantium
-                                        inventore ex eos. Quas aliquid dolores quis
-                                        laudantium impedit
+                                    <div
+                                        class="text-xs sm:text-sm text-typography-2">
+                                        Term and Condition: Lorem ipsum dolor
+                                        sit amet consectetur adipisicing elit.
+                                        Amet laudantium inventore ex eos. Quas
+                                        aliquid dolores quis laudantium impedit
                                     </div>
                                 </div>
-                                <div class=" w-full">
+                                <div class="w-full">
                                     <button
                                         :disabled="!termCondition"
-                                        :class="[!termCondition ? 'cursor-not-allowed opacity-50' : '', processing ? 'cursor-progress' : '']"
-                                        class=" w-full py-3 border rounded-xl font-bold duration-300 text-blue-600 border-blue-600 focus:bg-blue-600/30 hover:bg-blue-600/30">
+                                        :class="[
+                                            !termCondition
+                                                ? 'cursor-not-allowed opacity-50'
+                                                : '',
+                                            processing ? 'cursor-progress' : '',
+                                        ]"
+                                        class="w-full py-3 border rounded-xl font-bold duration-300 text-blue-600 border-blue-600 focus:bg-blue-600/30 hover:bg-blue-600/30">
                                         Buy Package
                                     </button>
                                 </div>

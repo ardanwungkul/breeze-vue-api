@@ -29,7 +29,7 @@ const storeResellerPackage = useResellerPackageStore()
 const resellerPackage = ref([])
 
 function formatJuta(price) {
-    return (price / 1000000).toString().replace(/\./g, ',') + 'Juta';
+    return (price / 1000000).toString().replace(/\./g, ',') + ' Jt'
 }
 
 onMounted(async () => {
@@ -38,19 +38,22 @@ onMounted(async () => {
     if (storeUser.authUser) {
         await fetchPayment()
     } else {
-        payment.value = null;
+        payment.value = null
     }
 })
 
-watch(() => storeUser.authUser, async (newValue, oldValue) => {
-    await fetchUser()
-    await fetchResellerPackage()
-    if (user.value) {
-        await fetchPayment()
-    } else {
-        payment.value = null;
-    }
-});
+watch(
+    () => storeUser.authUser,
+    async (newValue, oldValue) => {
+        await fetchUser()
+        await fetchResellerPackage()
+        if (user.value) {
+            await fetchPayment()
+        } else {
+            payment.value = null
+        }
+    },
+)
 
 async function fetchUser() {
     await storeUser.getAuth()
@@ -60,18 +63,17 @@ async function fetchUser() {
 async function fetchPayment() {
     await storePayment.paymentReseller(user.value.id)
     payment.value = storePayment.singlePayment
-
 }
 
 async function fetchResellerPackage() {
-    await storeResellerPackage.resellerPackageAll();
+    await storeResellerPackage.resellerPackageAll()
 
-    let allResellerPackage = storeResellerPackage.allResellerPackage;
+    let allResellerPackage = storeResellerPackage.allResellerPackage
 
     if (user?.value?.store) {
-        allResellerPackage = allResellerPackage.filter(P => 
-            P.id === user.value.store.reseller_package_id
-        );
+        allResellerPackage = allResellerPackage.filter(
+            P => P.id === user.value.store.reseller_package_id,
+        )
     }
 
     resellerPackage.value = allResellerPackage.map(pkg => ({
@@ -88,8 +90,8 @@ async function fetchResellerPackage() {
             { status: pkg.application_finance, name: 'Application Finance' },
             { status: pkg.application_logistic, name: 'Application Logistic' },
             { status: pkg.bonus, name: 'Bonus' },
-        ]
-    }));
+        ],
+    }))
 }
 
 const swiperModules = [Navigation, Autoplay]
@@ -105,7 +107,7 @@ const swiperConfig = {
 const Continue = async () => {
     processing.value = true
 
-    const id = payment.value.id;
+    const id = payment.value.id
 
     await storeStore.paymentReseller(id, processing)
 }
@@ -197,29 +199,61 @@ const modules = swiperModules
 
                     <template v-slot:default="{ isActive }">
                         <div
-                            class="w-full pb-8 max-w-4xl mx-auto bg-light-primary-1 rounded-xl shadow-lg max-h-[80vh] mt-4">
+                            class="w-full pb-8 max-w-4xl mx-auto bg-light-primary-1 rounded-xl overflow-hidden shadow-lg max-h-[80vh] mt-4">
                             <div
-                                class="flex justify-end p-3 bg-transparent relative">
+                                class="flex justify-between items-center p-3 bg-light-primary-1 relative w-full">
+                                <p
+                                    class="rounded-md tracking-widest text-lg uppercase font-semibold text-gray-700">
+                                    Let's Become Partner's !
+                                </p>
                                 <button
                                     @click="isActive.value = false"
-                                    class="fa-solid fa-xmark rounded-xl hover:scale-110 px-3 py-2 absolute z-10 duration-300"></button>
+                                    class="fa-solid fa-xmark rounded-xl hover:scale-110 px-3 py-2 duration-300 hover:bg-ezzora-100 hover:text-ezzora-800"></button>
                             </div>
                             <div
-                                class="p-3 invisible-scrollbar overflow-y-scroll space-y-4 max-h-[calc(80vh-56px)]">
-                                <div v-if="payment && user?.store === null && havePayment" class=" w-full border border-blue-500 rounded-md py-2 px-4 flex justify-between mt-2">
-                                    <p class="text-blue-500">You have made a payment {{ payment?.package?.name }} before. Would you like to proceed?</p>
-                                    <div class=" flex gap-2">
-                                        <button @click="Continue()" class=" text-green-500 font-semibold hover:scale-110 duration-300">Yes</button>
-                                        <p>/</p>
-                                        <button @click="havePayment = false" class=" text-red-500 font-semibold hover:scale-110 duration-300">No</button>
+                                class="p-3 invisible-scrollbar overflow-y-scroll space-y-2 max-h-[calc(80vh-56px)]">
+                                <div
+                                    v-if="
+                                        payment &&
+                                        user?.store === null &&
+                                        havePayment
+                                    "
+                                    class="w-full border border-ezzora-500 rounded-md py-2 px-4 flex justify-between -mt-2 bg-ezzora-100">
+                                    <p class="text-gray-500">
+                                        A previous transaction is still
+                                        incomplete. Do you want to continue with
+                                        the pending transaction?
+                                    </p>
+                                    <div class="flex gap-2 items-center">
+                                        <button
+                                            @click="Continue()"
+                                            class="font-semibold hover:scale-110 duration-300 border rounded-lg px-5 text-sm bg-green-500 text-white">
+                                            Yes
+                                        </button>
+                                        <p class="text-xs text-gray-500">/</p>
+                                        <button
+                                            @click="havePayment = false"
+                                            class="font-semibold hover:scale-110 duration-300 border rounded-lg px-5 text-sm bg-red-500 text-white">
+                                            No
+                                        </button>
                                     </div>
                                 </div>
                                 <swiper
+                                    v-if="resellerPackage"
                                     :modules="swiperModules"
                                     :breakpoints="{
-                                        '640': { slidesPerView: 1, spaceBetween: 10 },
-                                        '768': { slidesPerView: 3, spaceBetween: 10 },
-                                        '1024': { slidesPerView: 4, spaceBetween: 10 },
+                                        '640': {
+                                            slidesPerView: 1,
+                                            spaceBetween: 10,
+                                        },
+                                        '768': {
+                                            slidesPerView: 3,
+                                            spaceBetween: 10,
+                                        },
+                                        '1024': {
+                                            slidesPerView: 4,
+                                            spaceBetween: 10,
+                                        },
                                     }"
                                     @swiper="swiperJs">
                                     <swiper-slide
@@ -227,35 +261,52 @@ const modules = swiperModules
                                         :key="item.index"
                                         class="flex justify-center">
                                         <div
-                                            class="w-full h-full text-blue-500 text-center flex justify-center flex-col">
+                                            class="w-full h-full text-gray-500 text-center flex justify-center flex-col">
                                             <div
-                                                class="text-3xl font-semibold text-black/50 mb-4">
+                                                class="text-2xl font-semibold text-ezzora-700">
                                                 {{ item.name }}
                                             </div>
                                             <div
-                                                class="text-xl font-medium mb-4">
+                                                class="text-3xl font-bold mb-2 text-ezzora-900">
                                                 Rp. {{ formatJuta(item.price) }}
                                             </div>
                                             <div
                                                 class="w-full justify-center mb-4">
-                                                <OfficialAgentForm :resellerPackage="item" :user="user" :method="AddStore" />
+                                                <OfficialAgentForm
+                                                    :resellerPackage="item"
+                                                    :user="user"
+                                                    :method="AddStore" />
                                             </div>
-                                            <div class=" border-t flex justify-center w-full">
-                                                <div class=" py-4 px-8 pb-0 space-y-3">
-                                                    <div v-for="package_item in item.package_item"
-                                                        :key="package_item.index" 
-                                                        class="flex flex-row items-center gap-2">
-                                                        <div v-if="package_item.status"
+                                            <div
+                                                class="border-t flex justify-center w-full">
+                                                <div class="py-4 pb-0">
+                                                    <div
+                                                        v-for="package_item in item.package_item"
+                                                        :key="
+                                                            package_item.index
+                                                        "
+                                                        class="flex flex-row items-center gap-2 odd:bg-white even:bg-ezzora-100 py-1 px-2">
+                                                        <div
+                                                            v-if="
+                                                                package_item.status
+                                                            "
                                                             class="w-3 h-3 text-sm flex items-center text-secondary-3">
-                                                            <i class="fa-solid fa-check"></i>
+                                                            <i
+                                                                class="fa-solid fa-check"></i>
                                                         </div>
-                                                        <div v-if="!package_item.status"
+                                                        <div
+                                                            v-if="
+                                                                !package_item.status
+                                                            "
                                                             class="w-3 h-3 text-sm flex items-center text-red-600">
-                                                            <i class="fa-solid fa-xmark"></i>
+                                                            <i
+                                                                class="fa-solid fa-xmark"></i>
                                                         </div>
                                                         <p
-                                                            class="font-semibold text-sm">
-                                                            {{ package_item.name }}
+                                                            class="font-semibold text-sm text-start">
+                                                            {{
+                                                                package_item.name
+                                                            }}
                                                         </p>
                                                     </div>
                                                 </div>
@@ -263,6 +314,11 @@ const modules = swiperModules
                                         </div>
                                     </swiper-slide>
                                 </swiper>
+                                <div v-if="resellerPackage.length == 0">
+                                    <p class="text-center text-gray-700">
+                                        No Data Available
+                                    </p>
+                                </div>
                             </div>
                         </div>
                     </template>
