@@ -12,6 +12,12 @@ const props = defineProps({
     resellerPackage: Object,
 })
 
+const selectedProducts = ref([])
+
+const handleSelectedProducts = (data) => {
+    selectedProducts.value = data
+}
+
 const inputResellerPackageName = ref(props.resellerPackage.name)
 const inputResellerPackagePrice = ref(props.resellerPackage.price)
 const inputResellerPackagePlakat = ref(props.resellerPackage.plakat)
@@ -32,10 +38,15 @@ const inputResellerPackageApplicationLogistic = ref(
 const inputResellerPackageBonus = ref(props.resellerPackage.bonus)
 
 const handleEdit = async () => {
+    console.log(selectedProducts);
+    
     processing.value = true
     const formData = new FormData()
     formData.append('name', inputResellerPackageName.value)
     formData.append('price', inputResellerPackagePrice.value)
+
+    formData.append('selected_products', JSON.stringify(selectedProducts.value))
+    
     formData.append('plakat', inputResellerPackagePlakat.value)
     formData.append('neon_etalase', inputResellerPackageNeonEtalase.value)
     formData.append('rack_product', inputResellerPackageRackProduct.value)
@@ -109,10 +120,10 @@ const handleEdit = async () => {
                                 </div>
                                 <div class="flex flex-col gap-2 text-sm">
                                     <label for="price">Include Product</label>
-
                                     <EditResellerPackageProduct
                                         :product="product"
-                                        :package="resellerPackage" />
+                                        :resellerPackage="resellerPackage"
+                                        @update:selectedProducts="handleSelectedProducts" />
                                 </div>
                             </div>
 
