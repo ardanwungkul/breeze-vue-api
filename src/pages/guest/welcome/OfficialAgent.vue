@@ -199,13 +199,9 @@ const modules = swiperModules
 
                     <template v-slot:default="{ isActive }">
                         <div
-                            class="w-full pb-8 max-w-4xl mx-auto bg-light-primary-1 rounded-xl overflow-hidden shadow-lg max-h-[80vh] mt-4">
+                            class="w-full max-w-4xl mx-auto bg-light-primary-1 rounded-xl overflow-hidden shadow-lg h-auto max-h-[80vh] mt-4">
                             <div
-                                class="flex justify-between items-center p-3 bg-light-primary-1 relative w-full">
-                                <p
-                                    class="rounded-md tracking-widest text-lg uppercase font-semibold text-gray-700">
-                                    Let's Become Partner's !
-                                </p>
+                                class="flex justify-end items-center p-3 bg-light-primary-1 relative w-full">
                                 <button
                                     @click="isActive.value = false"
                                     class="fa-solid fa-xmark rounded-xl hover:scale-110 px-3 py-2 duration-300 hover:bg-ezzora-100 hover:text-ezzora-800"></button>
@@ -244,15 +240,15 @@ const modules = swiperModules
                                     :breakpoints="{
                                         '640': {
                                             slidesPerView: 1,
-                                            spaceBetween: 10,
+                                            spaceBetween: 20,
                                         },
                                         '768': {
                                             slidesPerView: 3,
-                                            spaceBetween: 10,
+                                            spaceBetween: 20,
                                         },
                                         '1024': {
                                             slidesPerView: 4,
-                                            spaceBetween: 10,
+                                            spaceBetween: 20,
                                         },
                                     }"
                                     @swiper="swiperJs">
@@ -270,22 +266,15 @@ const modules = swiperModules
                                                 class="text-3xl font-bold mb-2 text-ezzora-900">
                                                 Rp. {{ formatJuta(item.price) }}
                                             </div>
-                                            <div
-                                                class="w-full justify-center mb-4">
-                                                <OfficialAgentForm
-                                                    :resellerPackage="item"
-                                                    :user="user"
-                                                    :method="AddStore" />
-                                            </div>
-                                            <div
-                                                class="border-t flex justify-center w-full">
+
+                                            <div class="border-t w-full">
                                                 <div class="py-4 pb-0">
                                                     <div
                                                         v-for="package_item in item.package_item"
                                                         :key="
                                                             package_item.index
                                                         "
-                                                        class="flex flex-row items-center gap-2 odd:bg-white even:bg-ezzora-100 py-1 px-2">
+                                                        class="flex flex-row items-center gap-2 odd:bg-white even:bg-ezzora-50 py-1 px-2">
                                                         <div
                                                             v-if="
                                                                 package_item.status
@@ -310,6 +299,13 @@ const modules = swiperModules
                                                         </p>
                                                     </div>
                                                 </div>
+                                            </div>
+                                            <div
+                                                class="w-full justify-center mt-4">
+                                                <OfficialAgentForm
+                                                    :resellerPackage="item"
+                                                    :user="user"
+                                                    :method="AddStore" />
                                             </div>
                                         </div>
                                     </swiper-slide>

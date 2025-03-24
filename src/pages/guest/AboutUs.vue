@@ -4,8 +4,8 @@ import { ref, onMounted } from 'vue'
 
 import { useAboutUsStore } from '@/stores/aboutus'
 
-import aboutbg from '@/assets/images/about-us-background.png'
-import lamp from '@/assets/images/lamp.png'
+// import aboutbg from '@/assets/images/about-us-background.png'
+// import lamp from '@/assets/images/lamp.png'
 
 const tab = ref()
 const storeAboutUs = useAboutUsStore()

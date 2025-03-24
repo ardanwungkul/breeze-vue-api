@@ -55,7 +55,7 @@ const handleStore = async () => {
                 :class="
                     user?.store ? 'bg-ezzora-600/30' : 'hover:bg-ezzora-600/30'
                 "
-                class="p-3 border rounded-xl font-bold duration-300 border-ezzora-600">
+                class="px-3 py-1 border rounded-xl font-bold duration-300 border-ezzora-600 w-full">
                 {{ user?.store ? 'Packet Active' : 'Select Package' }}
             </button>
         </template>

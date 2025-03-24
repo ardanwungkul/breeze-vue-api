@@ -99,7 +99,7 @@ const routes = [
             role: 'admin',
         },
     },
-    
+
     // Admin Users
     {
         path: '/admin/user',
@@ -425,7 +425,7 @@ const routes = [
             guard: 'auth',
             role: 'admin',
         },
-    }, 
+    },
 
     // MARK:Store
     // Dashboard
@@ -530,31 +530,31 @@ const routes = [
         },
     },
     // Shop Flash Sale
-    {
-        path: '/store/shop/flash-sale',
-        name: 'store.shop.index.flash-sale',
-        component: () => import('@/pages/store/shop/FlashSale.vue'),
-        query: {
-            verified: 'verified',
-        },
-        meta: {
-            guard: 'auth',
-            reseller: true,
-        },
-    },
-    {
-        path: '/store/shop/flash-sale/:id',
-        name: 'store.shop.show.flash-sale',
-        component: () => import('@/pages/store/shop/ShowFlashSale.vue'),
-        query: {
-            verified: 'verified',
-        },
-        meta: {
-            guard: 'auth',
-            reseller: true,
-        },
-        props: true,
-    },
+    // {
+    //     path: '/store/shop/flash-sale',
+    //     name: 'store.shop.index.flash-sale',
+    //     component: () => import('@/pages/store/shop/FlashSale.vue'),
+    //     query: {
+    //         verified: 'verified',
+    //     },
+    //     meta: {
+    //         guard: 'auth',
+    //         reseller: true,
+    //     },
+    // },
+    // {
+    //     path: '/store/shop/flash-sale/:id',
+    //     name: 'store.shop.show.flash-sale',
+    //     component: () => import('@/pages/store/shop/ShowFlashSale.vue'),
+    //     query: {
+    //         verified: 'verified',
+    //     },
+    //     meta: {
+    //         guard: 'auth',
+    //         reseller: true,
+    //     },
+    //     props: true,
+    // },
     // Voucher
     {
         path: '/store/voucher',
@@ -925,6 +925,7 @@ router.beforeEach(async (to, from, next) => {
         }
         const role = store.userData.role
         const reseller = store.userData.store
+
         if (reseller) {
             next()
         } else {

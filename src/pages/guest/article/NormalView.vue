@@ -1,6 +1,6 @@
 <script setup>
-import person from '@/assets/images/person.jpeg'
-import flower from '@/assets/images/flower.jpeg'
+// import person from '@/assets/images/person.jpeg'
+// import flower from '@/assets/images/flower.jpeg'
 import { ref, computed } from 'vue'
 import banner5 from '@/assets/images/banner-5.jpeg'
 

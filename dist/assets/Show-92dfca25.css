@@ -1,0 +1,1 @@
+#divider:after{content:"§";display:inline-block;position:relative;top:-.7em;font-size:1.5em;padding:0 .25em;background:#cccccc}blockquote p:before{content:open-quote}blockquote p:after{content:close-quote}

@@ -3,14 +3,18 @@ import { ref, computed, watchEffect } from 'vue'
 import ValidationErrors from '@/components/ValidationErrors.vue'
 import { useResellerPackageStore } from '@/stores/resellerpackage'
 import EditResellerPackage from '@/components/dialog/edit/EditResellerPackage.vue'
+import SuccessMessage from '@/components/SuccessMessage.vue'
 
 const setErrors = ref([])
 const errors = computed(() => setErrors.value)
+const setSuccess = ref([])
+const success = computed(() => setSuccess.value)
 
 const storeResellerPackage = useResellerPackageStore()
 
 const props = defineProps({
     resellerPackage: Array,
+    product: Array,
     fetchResellerPackage: Function,
 })
 const searchResellerPackage = ref('')
@@ -28,28 +32,39 @@ function formatPrice(price) {
 }
 
 const pageCount = computed(() => {
-    return Math.ceil(filteredResellerPackage.value.length / itemsPerPageResellerPackage.value)
+    return Math.ceil(
+        filteredResellerPackage.value.length /
+            itemsPerPageResellerPackage.value,
+    )
 })
 
 const filteredResellerPackage = computed(() => {
     return props.resellerPackage.filter(resellerPackage => {
-        return resellerPackage.name.toLowerCase().includes(searchResellerPackage.value)
+        return resellerPackage.name
+            .toLowerCase()
+            .includes(searchResellerPackage.value)
     })
 })
 
 const editResellerPackage = async (updateResellerPackage, id) => {
-    await storeResellerPackage.editResellerPackage(updateResellerPackage, setErrors, processing, id)
+    await storeResellerPackage.editResellerPackage(
+        updateResellerPackage,
+        setErrors,
+        setSuccess,
+        processing,
+        id,
+    )
     watchEffect(() => {
         props.fetchResellerPackage()
     }, props.resellerPackage)
 }
 
 const processing = ref(false)
-
 </script>
 <template>
     <div class="relative">
         <ValidationErrors class="w-full" :errors="errors" />
+        <SuccessMessage class="w-full" :messages="success" />
         <div
             class="bg-light-primary-1 dark:bg-dark-primary-2 p-5 rounded-lg space-y-3 shadow-lg">
             <div class="flex justify-end items-center">
@@ -79,7 +94,10 @@ const processing = ref(false)
                 </template>
                 <template v-slot:item.id="{ item }">
                     <div class="flex gap-3 items-center justify-center text-xs">
-                        <EditResellerPackage :resellerPackage="item" :method="editResellerPackage" />
+                        <EditResellerPackage
+                            :product="product"
+                            :resellerPackage="item"
+                            :method="editResellerPackage" />
                     </div>
                 </template>
             </v-data-table>

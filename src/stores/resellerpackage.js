@@ -32,14 +32,22 @@ export const useResellerPackageStore = defineStore({
                 this.loading = false
             }
         },
-        async editResellerPackage(updateResellerPackage, setErrors, processing, id) {
+        async editResellerPackage(
+            updateResellerPackage,
+            setErrors,
+            setSuccess,
+            processing,
+            id,
+        ) {
             await csrf()
             processing.value = true
-            console.log(updateResellerPackage);
             axios
                 .post(`/api/reseller-package/${id}`, updateResellerPackage)
                 .then(response => {
                     processing.value = false
+                    setSuccess.value = Object.values([
+                        response.data.message,
+                    ]).flat()
                 })
                 .catch(error => {
                     console.log(error)
@@ -55,5 +63,7 @@ export const useResellerPackageStore = defineStore({
 })
 
 if (import.meta.hot) {
-    import.meta.hot.accept(acceptHMRUpdate(useResellerPackageStore, import.meta.hot))
+    import.meta.hot.accept(
+        acceptHMRUpdate(useResellerPackageStore, import.meta.hot),
+    )
 }

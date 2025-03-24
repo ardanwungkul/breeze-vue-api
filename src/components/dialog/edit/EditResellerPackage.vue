@@ -1,5 +1,6 @@
 <script setup>
 import { ref } from 'vue'
+import EditResellerPackageProduct from '@/components/dialog/edit/EditResellerPackageProduct.vue'
 
 const processing = ref(false)
 const props = defineProps({
@@ -7,6 +8,7 @@ const props = defineProps({
         type: Function,
         required: true,
     },
+    product: Array,
     resellerPackage: Object,
 })
 
@@ -15,10 +17,18 @@ const inputResellerPackagePrice = ref(props.resellerPackage.price)
 const inputResellerPackagePlakat = ref(props.resellerPackage.plakat)
 const inputResellerPackageNeonEtalase = ref(props.resellerPackage.neon_etalase)
 const inputResellerPackageRackProduct = ref(props.resellerPackage.rack_product)
-const inputResellerPackageInteriorDesign = ref(props.resellerPackage.interior_design)
-const inputResellerPackageApplicationCrm = ref(props.resellerPackage.application_crm)
-const inputResellerPackageApplicationFinance = ref(props.resellerPackage.application_finance)
-const inputResellerPackageApplicationLogistic = ref(props.resellerPackage.application_logistic)
+const inputResellerPackageInteriorDesign = ref(
+    props.resellerPackage.interior_design,
+)
+const inputResellerPackageApplicationCrm = ref(
+    props.resellerPackage.application_crm,
+)
+const inputResellerPackageApplicationFinance = ref(
+    props.resellerPackage.application_finance,
+)
+const inputResellerPackageApplicationLogistic = ref(
+    props.resellerPackage.application_logistic,
+)
 const inputResellerPackageBonus = ref(props.resellerPackage.bonus)
 
 const handleEdit = async () => {
@@ -30,9 +40,15 @@ const handleEdit = async () => {
     formData.append('neon_etalase', inputResellerPackageNeonEtalase.value)
     formData.append('rack_product', inputResellerPackageRackProduct.value)
     formData.append('interior_design', inputResellerPackageInteriorDesign.value)
-    formData.append('aplication_crm', inputResellerPackageApplicationCrm.value)
-    formData.append('application_finance', inputResellerPackageApplicationFinance.value)
-    formData.append('application_logistic', inputResellerPackageApplicationLogistic.value)
+    formData.append('application_crm', inputResellerPackageApplicationCrm.value)
+    formData.append(
+        'application_finance',
+        inputResellerPackageApplicationFinance.value,
+    )
+    formData.append(
+        'application_logistic',
+        inputResellerPackageApplicationLogistic.value,
+    )
     formData.append('bonus', inputResellerPackageBonus.value)
     formData.append('_method', 'PUT')
 
@@ -66,9 +82,11 @@ const handleEdit = async () => {
                 <div class="px-5 py-3">
                     <form @submit.prevent="handleEdit">
                         <div class="space-y-3">
-                            <div class="grid grid-cols-2 gap-3">
+                            <div class="flex flex-col gap-3">
                                 <div class="flex flex-col gap-2 text-sm">
-                                    <label for="name">Reseller Package Name</label>
+                                    <label for="name"
+                                        >Reseller Package Name</label
+                                    >
                                     <input
                                         class="text-sm rounded-lg bg-gray-100 w-full"
                                         type="text"
@@ -78,7 +96,9 @@ const handleEdit = async () => {
                                         required />
                                 </div>
                                 <div class="flex flex-col gap-2 text-sm">
-                                    <label for="price">Reseller Package Name</label>
+                                    <label for="price"
+                                        >Reseller Package Price</label
+                                    >
                                     <input
                                         class="text-sm rounded-lg bg-gray-100 w-full"
                                         type="number"
@@ -87,13 +107,25 @@ const handleEdit = async () => {
                                         placeholder="Enter Reseller Package rpice"
                                         required />
                                 </div>
+                                <div class="flex flex-col gap-2 text-sm">
+                                    <label for="price">Include Product</label>
+
+                                    <EditResellerPackageProduct
+                                        :product="product"
+                                        :package="resellerPackage" />
+                                </div>
                             </div>
-                            <div class="w-full grid grid-cols-2 gap-3">
+
+                            <fieldset
+                                class="w-full grid grid-cols-2 gap-1 border rounded-lg px-5 py-2">
+                                <legend class="px-3" align="center">
+                                    Include Item
+                                </legend>
                                 <div class="flex items-center gap-2">
                                     <input
                                         type="checkbox"
                                         v-model="inputResellerPackagePlakat"
-                                        class="border border-typography-2"
+                                        class="border border-typography-2 rounded-full"
                                         id="plakat"
                                         :true-value="1"
                                         :false-value="0" />
@@ -102,74 +134,98 @@ const handleEdit = async () => {
                                 <div class="flex items-center gap-2">
                                     <input
                                         type="checkbox"
-                                        v-model="inputResellerPackageNeonEtalase"
-                                        class="border border-typography-2"
+                                        v-model="
+                                            inputResellerPackageNeonEtalase
+                                        "
+                                        class="border border-typography-2 rounded-full"
                                         id="neon_etalase"
                                         :true-value="1"
-                                        :false-value="0"/>
-                                    <label for="neon_etalase">Neon Etalase</label>
+                                        :false-value="0" />
+                                    <label for="neon_etalase"
+                                        >Neon Etalase</label
+                                    >
                                 </div>
                                 <div class="flex items-center gap-2">
                                     <input
                                         type="checkbox"
-                                        v-model="inputResellerPackageRackProduct"
-                                        class="border border-typography-2"
-                                        id="neon_etalase"
+                                        v-model="
+                                            inputResellerPackageRackProduct
+                                        "
+                                        class="border border-typography-2 rounded-full"
+                                        id="rack_product"
                                         :true-value="1"
-                                        :false-value="0"/>
-                                    <label for="neon_etalase">Rack Product</label>
+                                        :false-value="0" />
+                                    <label for="rack_product"
+                                        >Rack Product</label
+                                    >
                                 </div>
                                 <div class="flex items-center gap-2">
                                     <input
                                         type="checkbox"
-                                        v-model="inputResellerPackageInteriorDesign"
-                                        class="border border-typography-2"
-                                        id="neon_etalase"
+                                        v-model="
+                                            inputResellerPackageInteriorDesign
+                                        "
+                                        class="border border-typography-2 rounded-full"
+                                        id="interior_design"
                                         :true-value="1"
-                                        :false-value="0"/>
-                                    <label for="neon_etalase">Interior Design</label>
+                                        :false-value="0" />
+                                    <label for="interior_design"
+                                        >Interior Design</label
+                                    >
                                 </div>
                                 <div class="flex items-center gap-2">
                                     <input
                                         type="checkbox"
-                                        v-model="inputResellerPackageApplicationCrm"
-                                        class="border border-typography-2"
-                                        id="neon_etalase"
+                                        v-model="
+                                            inputResellerPackageApplicationCrm
+                                        "
+                                        class="border border-typography-2 rounded-full"
+                                        id="crm_application"
                                         :true-value="1"
-                                        :false-value="0"/>
-                                    <label for="neon_etalase">Application CRM</label>
+                                        :false-value="0" />
+                                    <label for="crm_application"
+                                        >Application CRM</label
+                                    >
                                 </div>
                                 <div class="flex items-center gap-2">
                                     <input
                                         type="checkbox"
-                                        v-model="inputResellerPackageApplicationFinance"
-                                        class="border border-typography-2"
-                                        id="neon_etalase"
+                                        v-model="
+                                            inputResellerPackageApplicationFinance
+                                        "
+                                        class="border border-typography-2 rounded-full"
+                                        id="finance_application"
                                         :true-value="1"
-                                        :false-value="0"/>
-                                    <label for="neon_etalase">Application Finance</label>
+                                        :false-value="0" />
+                                    <label for="finance_application"
+                                        >Application Finance</label
+                                    >
                                 </div>
                                 <div class="flex items-center gap-2">
                                     <input
                                         type="checkbox"
-                                        v-model="inputResellerPackageApplicationLogistic"
-                                        class="border border-typography-2"
-                                        id="neon_etalase"
+                                        v-model="
+                                            inputResellerPackageApplicationLogistic
+                                        "
+                                        class="border border-typography-2 rounded-full"
+                                        id="logistic_application"
                                         :true-value="1"
-                                        :false-value="0"/>
-                                    <label for="neon_etalase">Application Logistic</label>
+                                        :false-value="0" />
+                                    <label for="logistic_application"
+                                        >Application Logistic</label
+                                    >
                                 </div>
                                 <div class="flex items-center gap-2">
                                     <input
                                         type="checkbox"
                                         v-model="inputResellerPackageBonus"
-                                        class="border border-typography-2"
-                                        id="neon_etalase"
+                                        class="border border-typography-2 rounded-full"
+                                        id="bonus"
                                         :true-value="1"
-                                        :false-value="0"/>
-                                    <label for="neon_etalase">bonus</label>
+                                        :false-value="0" />
+                                    <label for="bonus">Bonus</label>
                                 </div>
-                            </div>
+                            </fieldset>
                             <button
                                 class="bg-secondary-3 hover:bg-opacity-90 text-white px-3 py-2 rounded-lg text-sm cursor-pointer flex justify-center items-center gap-3">
                                 <p>Save</p>
