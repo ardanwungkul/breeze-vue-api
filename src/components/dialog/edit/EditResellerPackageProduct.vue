@@ -1,12 +1,16 @@
 <script setup>
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 
 const props = defineProps({
     product: Array,
     resellerPackage: Object,
 })
 
-const selectedProducts = computed(() => props.resellerPackage?.products || [])
+const emit = defineEmits(['update:selectedProducts'])
+
+const products = ref(props.resellerPackage?.products || [])
+
+const selectedProducts = ref([...products.value])
 
 const selectedCount = computed(() => selectedProducts.value.length)
 
@@ -17,7 +21,16 @@ const toggleSelection = item => {
     } else {
         selectedProducts.value.push(item)
     }
-    props.resellerPackage.products = selectedProducts.value
+    products.value = selectedProducts.value
+    emit('update:selectedProducts', selectedProducts.value)
+}
+
+const updateQuantity = (item, event) => {
+    const product = selectedProducts.value.find(p => p.id === item.id)
+    if (product) {
+        product.quantity = Math.max(0, parseInt(event.target.value) || 0) // Pastikan nilai minimal 0
+    }
+    emit('update:selectedProducts', selectedProducts.value)
 }
 </script>
 <template>
@@ -42,13 +55,13 @@ const toggleSelection = item => {
                         class="fa-solid fa-x rounded-xl hover:bg-gray-100 px-3 py-2"></button>
                 </div>
                 <div class="p-5 overflow-y-scroll space-y-3 max-h-[70vh]">
-                    {{ selectedProducts }}
-                    <div class="flex items-center justify-end">
+                    <!-- {{ products }} -->
+                    <!-- <div class="flex items-center justify-end">
                         <button
                             class="!text-light-primary-1 px-3 py-2 rounded-lg text-sm cursor-pointer flex justify-center items-center gap-3 bg-secondary-3 hover:bg-opacity-90">
                             Save
                         </button>
-                    </div>
+                    </div> -->
                     <div class="rounded-lg overflow-hidden border">
                         <table class="w-full">
                             <thead>
@@ -70,9 +83,7 @@ const toggleSelection = item => {
                                     <td
                                         class="border border-gray-300 px-3 py-2 text-center">
                                         <input
-                                            :checked="
-                                                selectedProducts.includes(item)
-                                            "
+                                            :checked="selectedProducts.some(p => p.id === item.id)"
                                             @change="toggleSelection(item)"
                                             type="checkbox"
                                             class="border rounded-full" />
@@ -87,7 +98,10 @@ const toggleSelection = item => {
                                         class="border border-gray-300 px-3 py-2 text-center">
                                         <input
                                             type="number"
+                                            :disabled="!selectedProducts.some(p => p.id === item.id)"
                                             min="0"
+                                            :value="selectedProducts.find(p => p.id === item.id)?.quantity || 0"
+                                            @input="updateQuantity(item, $event)"
                                             class="rounded-lg border text-sm w-16 text-center" />
                                     </td>
                                 </tr>
