@@ -27,9 +27,9 @@ const removeError = index => {
                     <span class="sr-only">Info</span>
                     <div>{{ error }}</div>
                     <button
-                        @click="removeError(index)"
                         class="ml-2 text-red-600 hover:text-red-800 focus:outline-none focus:text-red-800"
-                        title="Close">
+                        title="Close"
+                        @click="removeError(index)">
                         <svg
                             class="w-4 h-4"
                             aria-hidden="true"

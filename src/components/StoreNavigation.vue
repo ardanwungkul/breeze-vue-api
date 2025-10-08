@@ -25,11 +25,11 @@ const sidebarItem = ref([
         title: 'Products',
         isHasChild: true,
         child: [
-            {
-                title: 'Product Category',
-                icon: 'fa-regular fa-layer-group',
-                to: 'store.category.index',
-            },
+            // {
+            //     title: 'Product Category',
+            //     icon: 'fa-regular fa-layer-group',
+            //     to: 'store.category.index',
+            // },
             {
                 title: 'Product Item',
                 icon: 'fa-regular fa-box',
@@ -40,11 +40,11 @@ const sidebarItem = ref([
                 icon: 'fa-regular fa-cubes-stacked',
                 to: 'store.stock.index',
             },
-            {
-                icon: 'fa-regular fa-tags',
-                title: 'Vouchers',
-                to: 'store.voucher.index',
-            },
+            // {
+            //     icon: 'fa-regular fa-tags',
+            //     title: 'Vouchers',
+            //     to: 'store.voucher.index',
+            // },
         ],
     },
     // {

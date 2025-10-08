@@ -5,7 +5,6 @@ import router from './router'
 import './index.css'
 import '@/assets/css/font-awesome.css'
 import '@/assets/js/font-awesome.min.js'
-
 import '../node_modules/flowbite-vue/dist/index.css'
 import { createVuetify } from 'vuetify'
 import * as components from 'vuetify/components'
@@ -13,6 +12,9 @@ import * as directives from 'vuetify/directives'
 import { aliases, mdi } from 'vuetify/iconsets/mdi-svg'
 import VueDatePicker from '@vuepic/vue-datepicker'
 import '@vuepic/vue-datepicker/dist/main.css'
+
+import VueTelInput from 'vue-tel-input'
+import 'vue-tel-input/vue-tel-input.css'
 
 const vuetify = createVuetify({
     components,
@@ -27,7 +29,6 @@ const vuetify = createVuetify({
 })
 const app = createApp(App)
 const pinia = createPinia()
-
 app.use(
     pinia.use(({ store }) => {
         store.router = markRaw(router)
@@ -37,4 +38,5 @@ app.component('VueDatePicker', VueDatePicker)
 
 app.use(router)
 app.use(vuetify)
+app.use(VueTelInput, { mode: 'auto' })
 app.mount('#app')

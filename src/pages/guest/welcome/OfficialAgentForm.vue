@@ -1,189 +1,178 @@
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { onMounted, ref } from 'vue'
+import { useUsers } from '../../../stores/user'
+import { computed } from 'vue'
+import { useResponseStore } from '../../../stores/response'
 
 const props = defineProps({
     method: {
         type: Function,
         required: true,
     },
-    resellerPackage: Object,
-    user: Object,
 })
 
-const user = props.user
+const responseStore = useResponseStore()
 
-const processing = ref(false)
-const setErrors = ref([])
-const inputUsername = ref(user?.name ?? '')
-const inputStoreName = ref('')
-const inputEmail = ref(user?.email ?? '')
-const inputPassword = ref(user ? '********' : '')
-const termCondition = ref('')
+const form = ref({
+    username: null,
+    store_name: null,
+    email: null,
+    password: null,
+    tnc: null,
+})
 
-function formatPrice(price) {
-    return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')
-}
+const userStore = useUsers()
 
-const resellerPackage = computed(() => props.resellerPackage)
+onMounted(async () => {
+    if (userStore.authUser) {
+        if (!userStore.hasUserData) {
+            userStore.getData()
+        }
+    }
+})
 
 const handleStore = async () => {
-    processing.value = true
+    await props.method(form.value)
+}
 
-    const formData = new FormData()
-
-    formData.append('user_id', user?.id)
-    formData.append('name', inputUsername.value)
-    formData.append('store_name', inputStoreName.value)
-    formData.append('store_level', resellerPackage.value.level)
-    formData.append('email', inputEmail.value)
-    formData.append('password', inputPassword.value)
-    formData.append('package_id', resellerPackage.value.id)
-    formData.append('package_name', resellerPackage.value.name)
-    formData.append('package_price', resellerPackage.value.price)
-
-    await props.method(formData, processing)
-    // processing.value = false
+async function addError(messages) {
+    responseStore.addError(messages)
 }
 </script>
 
 <template>
-    <v-dialog>
-        <template v-slot:activator="{ props: activatorProps }">
-            <button
-                v-bind="activatorProps"
-                :disabled="user?.store"
-                :class="
-                    user?.store ? 'bg-ezzora-600/30' : 'hover:bg-ezzora-600/30'
-                "
-                class="px-3 py-1 border rounded-xl font-bold duration-300 border-ezzora-600 w-full">
-                {{ user?.store ? 'Packet Active' : 'Select Package' }}
-            </button>
-        </template>
-
-        <template v-slot:default="{ isActive }">
-            <div
-                class="w-full max-w-4xl mx-auto bg-light-primary-1 rounded-xl shadow-lg max-h-[80vh] py-3 sm:py-5 mt-4 relative">
+    <div>
+        <v-dialog>
+            <template #activator="{ props: activatorProps }">
                 <button
-                    @click="isActive.value = false"
-                    class="fa-solid fa-xmark rounded-xl hover:bg-gray-100 px-3 py-2 absolute top-3 right-3 z-10"></button>
+                    v-if="!userStore.hasUserData"
+                    class="text-sm bg-secondary-3 hover:bg-opacity-80 text-typography-1 font-medium p-2 px-3 duration-300 hover:border-transparent rounded-xl w-full"
+                    v-bind="activatorProps">
+                    Join Us
+                </button>
+                <button
+                    v-else
+                    class="text-sm bg-secondary-3 hover:bg-opacity-80 text-typography-1 font-medium p-2 px-3 duration-300 hover:border-transparent rounded-xl w-full"
+                    @click="
+                        addError(
+                            'You Already Login on Another User. Please Logout First',
+                        )
+                    ">
+                    Join Us
+                </button>
+            </template>
+
+            <template #default="{ isActive }">
                 <div
-                    class="px-5 py-3 max-h-full overflow-y-scroll relative invisible-scrollbar">
+                    class="w-full max-w-xl mx-auto bg-light-primary-1 rounded-xl shadow-lg py-3 sm:py-5 mt-4 relative">
+                    <button
+                        class="fa-solid fa-xmark rounded-xl hover:bg-gray-100 px-3 py-2 absolute top-3 right-3 z-10"
+                        @click="isActive.value = false"></button>
                     <div
-                        class="w-full flex flex-col overflow-auto bg-white rounded-lg text-base font-normal px-2 space-y-3">
-                        <div class="text-xl sm:text-2xl">
-                            Upgrade Your Plan {{ resellerPackage.name }}
-                        </div>
-                        <div class="text-sm sm:text-base text-gray-500 mb-7">
-                            Price : Rp{{ formatPrice(resellerPackage.price) }}
-                        </div>
-                        <form @submit.prevent="handleStore">
-                            <div class="w-full space-y-3">
-                                <div
-                                    class="grid grid-cols-1 text-sm sm:text-base sm:grid-cols-2 gap-3 sm:gap-5 mb-7">
-                                    <div class="flex flex-col">
-                                        <label
-                                            class="text-blue-600 font-medium mb-2"
-                                            for="username"
-                                            >Username</label
-                                        >
-                                        <input
-                                            id="username"
-                                            v-model="inputUsername"
-                                            :disabled="user"
-                                            :class="
-                                                user
-                                                    ? ' cursor-not-allowed opacity-50'
-                                                    : ' '
-                                            "
-                                            class="text-sm sm:text-base border border-gray-300 duration-300 rounded-lg"
-                                            type="text" />
-                                    </div>
-                                    <div class="flex flex-col">
-                                        <label
-                                            class="text-blue-600 font-medium mb-2"
-                                            for="store_name"
-                                            >Store Name</label
-                                        >
-                                        <input
-                                            id="store_name"
-                                            v-model="inputStoreName"
-                                            class="text-sm sm:text-base border border-gray-300 duration-300 rounded-lg"
-                                            type="text" />
-                                    </div>
-                                    <div class="flex flex-col">
-                                        <label
-                                            class="text-blue-600 font-medium mb-2"
-                                            for="store_address"
-                                            >Email</label
-                                        >
-                                        <input
-                                            id="store_address"
-                                            v-model="inputEmail"
-                                            :disabled="user"
-                                            :class="
-                                                user
-                                                    ? ' cursor-not-allowed opacity-50'
-                                                    : ' '
-                                            "
-                                            class="text-sm sm:text-base border border-gray-300 duration-300 rounded-lg"
-                                            type="email" />
-                                    </div>
-                                    <div class="flex flex-col">
-                                        <label
-                                            class="text-blue-600 font-medium mb-2"
-                                            for="password"
-                                            >Password</label
-                                        >
-                                        <input
-                                            id="password"
-                                            v-model="inputPassword"
-                                            autocomplete="current-password"
-                                            :disabled="user"
-                                            :class="
-                                                user
-                                                    ? ' cursor-not-allowed opacity-50'
-                                                    : ' '
-                                            "
-                                            class="text-sm sm:text-base border border-gray-300 duration-300 rounded-lg"
-                                            :type="
-                                                user ? 'text' : 'password'
-                                            " />
-                                    </div>
-                                </div>
-                                <div
-                                    class="px-2 flex flex-row items-start gap-2">
-                                    <input
-                                        class="rounded border w-4 h-4 border-typography-2 mt-1"
-                                        v-model="termCondition"
-                                        type="checkbox"
-                                        name=""
-                                        id="" />
+                        class="px-5 py-3 relative invisible-scrollbar max-h-[80vh] overflow-y-scroll">
+                        <div
+                            class="w-full flex flex-col bg-white rounded-lg text-base font-normal px-2 space-y-3">
+                            <form @submit.prevent="handleStore">
+                                <div class="w-full space-y-3">
                                     <div
-                                        class="text-xs sm:text-sm text-typography-2">
-                                        Term and Condition: Lorem ipsum dolor
-                                        sit amet consectetur adipisicing elit.
-                                        Amet laudantium inventore ex eos. Quas
-                                        aliquid dolores quis laudantium impedit
+                                        class="grid grid-cols-2 text-sm sm:text-base gap-3 sm:gap-2 mb-2">
+                                        <div class="flex flex-col col-span-1">
+                                            <label
+                                                class="text-blue-600 font-medium mb-1 text-sm"
+                                                for="username"
+                                                >Username</label
+                                            >
+                                            <input
+                                                id="username"
+                                                v-model="form.username"
+                                                class="text-sm border border-gray-300 duration-300 rounded-lg"
+                                                autocomplete="new-username"
+                                                placeholder="Input Your username"
+                                                required
+                                                type="text" />
+                                        </div>
+                                        <div class="flex flex-col col-span-1">
+                                            <label
+                                                class="text-blue-600 font-medium mb-1 text-sm"
+                                                for="store_name"
+                                                >Store Name</label
+                                            >
+                                            <input
+                                                id="store_name"
+                                                v-model="form.store_name"
+                                                class="text-sm border border-gray-300 duration-300 rounded-lg"
+                                                autocomplete="new-storename"
+                                                placeholder="Input Your Store Name"
+                                                required
+                                                type="text" />
+                                        </div>
+                                        <div class="flex flex-col col-span-2">
+                                            <label
+                                                class="text-blue-600 font-medium mb-1 text-sm"
+                                                for="store_address"
+                                                >Email</label
+                                            >
+                                            <input
+                                                id="store_address"
+                                                v-model="form.email"
+                                                autocomplete="new-email-address"
+                                                placeholder="Input Your Company Mail Address"
+                                                class="text-sm border border-gray-300 duration-300 rounded-lg"
+                                                required
+                                                type="email" />
+                                        </div>
+                                        <div class="flex flex-col col-span-2">
+                                            <label
+                                                class="text-blue-600 font-medium mb-1 text-sm"
+                                                for="password"
+                                                >Password</label
+                                            >
+                                            <input
+                                                id="password"
+                                                v-model="form.password"
+                                                autocomplete="new-password"
+                                                placeholder="Input Your Password"
+                                                type="password"
+                                                required
+                                                class="text-sm border border-gray-300 duration-300 rounded-lg" />
+                                        </div>
+                                    </div>
+                                    <div
+                                        class="px-2 flex flex-row items-start gap-2">
+                                        <input
+                                            v-model="form.tnc"
+                                            class="rounded border w-4 h-4 border-typography-2 mt-1"
+                                            type="checkbox"
+                                            required
+                                            name="" />
+                                        <div class="text-xs text-typography-2">
+                                            Term and Condition: Lorem ipsum
+                                            dolor sit amet consectetur
+                                            adipisicing elit. Amet laudantium
+                                            inventore ex eos. Quas aliquid
+                                            dolores quis laudantium impedit
+                                        </div>
+                                    </div>
+                                    <div class="w-full">
+                                        <button
+                                            :class="[
+                                                !form.tnc
+                                                    ? 'cursor-not-allowed opacity-50'
+                                                    : '',
+                                                processing
+                                                    ? 'cursor-progress'
+                                                    : '',
+                                            ]"
+                                            class="w-full py-2 border rounded-xl font-bold duration-300 text-blue-600 border-blue-600 focus:bg-blue-600/30 hover:bg-blue-600/30">
+                                            Register to Be Partner
+                                        </button>
                                     </div>
                                 </div>
-                                <div class="w-full">
-                                    <button
-                                        :disabled="!termCondition"
-                                        :class="[
-                                            !termCondition
-                                                ? 'cursor-not-allowed opacity-50'
-                                                : '',
-                                            processing ? 'cursor-progress' : '',
-                                        ]"
-                                        class="w-full py-3 border rounded-xl font-bold duration-300 text-blue-600 border-blue-600 focus:bg-blue-600/30 hover:bg-blue-600/30">
-                                        Buy Package
-                                    </button>
-                                </div>
-                            </div>
-                        </form>
+                            </form>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </template>
-    </v-dialog>
+            </template>
+        </v-dialog>
+    </div>
 </template>

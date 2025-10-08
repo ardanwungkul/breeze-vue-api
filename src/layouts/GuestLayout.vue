@@ -1,5 +1,6 @@
 <script setup>
 import ApplicationLogo from '@/components/ApplicationLogo.vue'
+import logo from '@/assets/images/logo/logo-original.png'
 </script>
 
 <template>
@@ -10,12 +11,10 @@ import ApplicationLogo from '@/components/ApplicationLogo.vue'
             <div class="p-4 group hidden md:block">
                 <div
                     class="overflow-hidden rounded-2xl relative shadow-inner w-full">
-                    <div class="absolute top-0 left-0 z-20 p-4">
+                    <div
+                        class="absolute top-3 left-3 z-20 px-4 py-2 backdrop-blur-sm bg-ezzora-100/10 rounded-xl">
                         <router-link to="/">
-                            <p
-                                class="font-poppins text-3xl leading-none font-medium uppercase group-hover:text-white transition-all duration-1000 drop-shadow-2xl text-gray-700">
-                                Ezzora
-                            </p>
+                            <img :src="logo" class="h-6" alt="" />
                         </router-link>
                     </div>
                     <div

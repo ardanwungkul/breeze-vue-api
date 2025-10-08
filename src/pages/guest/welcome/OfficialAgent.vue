@@ -7,23 +7,14 @@ import ValidationErrors from '@/components/ValidationErrors.vue'
 
 import placeholderImage from '@/assets/images/placeholder-image.jpg'
 
-import { useUsers } from '@/stores/user'
 import { useStoreStore } from '@/stores/store'
-import { usePaymentStore } from '@/stores/payment'
 import { useResellerPackageStore } from '@/stores/resellerpackage'
 
 const setErrors = ref([])
-const cekAuth = ref(false)
 const errors = computed(() => setErrors.value)
 
-const user = ref(null)
-const storeUser = useUsers()
 const storeStore = useStoreStore()
 const processing = ref(false)
-
-const storePayment = usePaymentStore()
-const payment = ref(null)
-const havePayment = ref(true)
 
 const storeResellerPackage = useResellerPackageStore()
 const resellerPackage = ref([])
@@ -33,50 +24,13 @@ function formatJuta(price) {
 }
 
 onMounted(async () => {
-    await fetchUser()
     await fetchResellerPackage()
-    if (storeUser.authUser) {
-        await fetchPayment()
-    } else {
-        payment.value = null
-    }
 })
 
-watch(
-    () => storeUser.authUser,
-    async (newValue, oldValue) => {
-        await fetchUser()
-        await fetchResellerPackage()
-        if (user.value) {
-            await fetchPayment()
-        } else {
-            payment.value = null
-        }
-    },
-)
-
-async function fetchUser() {
-    await storeUser.getAuth()
-    user.value = storeUser.userAuth
-}
-
-async function fetchPayment() {
-    await storePayment.paymentReseller(user.value.id)
-    payment.value = storePayment.singlePayment
-}
-
 async function fetchResellerPackage() {
-    await storeResellerPackage.resellerPackageAll()
+    await storeResellerPackage.getAllData()
 
-    let allResellerPackage = storeResellerPackage.allResellerPackage
-
-    if (user?.value?.store) {
-        allResellerPackage = allResellerPackage.filter(
-            P => P.id === user.value.store.reseller_package_id,
-        )
-    }
-
-    resellerPackage.value = allResellerPackage.map(pkg => ({
+    resellerPackage.value = storeResellerPackage.datas.map(pkg => ({
         id: pkg.id,
         name: pkg.name,
         price: pkg.price,
@@ -104,16 +58,8 @@ const swiperConfig = {
     },
 }
 
-const Continue = async () => {
-    processing.value = true
-
-    const id = payment.value.id
-
-    await storeStore.paymentReseller(id, processing)
-}
-
-const AddStore = async newStore => {
-    await storeStore.buyPackage(newStore, setErrors, processing)
+const register = async newStore => {
+    await storeStore.registerReseller(newStore, setErrors, processing)
 }
 
 const modules = swiperModules
@@ -155,7 +101,7 @@ const modules = swiperModules
                                 aspect-ratio="1"
                                 class="min-h-full"
                                 cover>
-                                <template v-slot:placeholder>
+                                <template #v-slot:[`placeholder`]>
                                     <div
                                         class="w-full h-full flex justify-center items-center">
                                         <v-progress-circular
@@ -189,7 +135,7 @@ const modules = swiperModules
             </swiper>
             <div class="flex justify-center mt-10">
                 <v-dialog>
-                    <template v-slot:activator="{ props: activatorProps }">
+                    <template #activator="{ props: activatorProps }">
                         <button
                             v-bind="activatorProps"
                             class="rounded-md tracking-widest uppercase font-semibold text-gray-700 transition-all duration-500 hover:bg-[#f8f8f6] hover:shadow px-10 py-2">
@@ -197,43 +143,17 @@ const modules = swiperModules
                         </button>
                     </template>
 
-                    <template v-slot:default="{ isActive }">
+                    <template #default="{ isActive }">
                         <div
-                            class="w-full max-w-4xl mx-auto bg-light-primary-1 rounded-xl overflow-hidden shadow-lg h-auto max-h-[80vh] mt-4">
+                            class="w-full max-w-4xl mx-auto bg-light-primary-1 rounded-xl overflow-hidden shadow-lg h-auto max-h-[90vh] mt-10 p-3">
                             <div
                                 class="flex justify-end items-center p-3 bg-light-primary-1 relative w-full">
                                 <button
-                                    @click="isActive.value = false"
-                                    class="fa-solid fa-xmark rounded-xl hover:scale-110 px-3 py-2 duration-300 hover:bg-ezzora-100 hover:text-ezzora-800"></button>
+                                    class="fa-solid fa-xmark rounded-xl hover:scale-110 px-3 py-2 duration-300 hover:bg-ezzora-100 hover:text-ezzora-800"
+                                    @click="isActive.value = false"></button>
                             </div>
                             <div
                                 class="p-3 invisible-scrollbar overflow-y-scroll space-y-2 max-h-[calc(80vh-56px)]">
-                                <div
-                                    v-if="
-                                        payment &&
-                                        user?.store === null &&
-                                        havePayment
-                                    "
-                                    class="w-full border border-ezzora-500 rounded-md py-2 px-4 flex justify-between -mt-2 bg-ezzora-100">
-                                    <p class="text-gray-500">
-                                        A previous transaction is still
-                                        incomplete. Do you want to continue with
-                                        the pending transaction?
-                                    </p>
-                                    <div class="flex gap-2 items-center">
-                                        <button
-                                            @click="Continue()"
-                                            class="font-semibold hover:scale-110 duration-300 border rounded-lg px-5 text-sm bg-green-500 text-white">
-                                            Yes
-                                        </button>
-                                        <p class="text-xs text-gray-500">/</p>
-                                        <button
-                                            @click="havePayment = false"
-                                            class="font-semibold hover:scale-110 duration-300 border rounded-lg px-5 text-sm bg-red-500 text-white">
-                                            No
-                                        </button>
-                                    </div>
-                                </div>
                                 <swiper
                                     v-if="resellerPackage"
                                     :modules="swiperModules"
@@ -266,7 +186,6 @@ const modules = swiperModules
                                                 class="text-3xl font-bold mb-2 text-ezzora-900">
                                                 Rp. {{ formatJuta(item.price) }}
                                             </div>
-
                                             <div class="border-t w-full">
                                                 <div class="py-4 pb-0">
                                                     <div
@@ -298,17 +217,37 @@ const modules = swiperModules
                                                             }}
                                                         </p>
                                                     </div>
+                                                    <div
+                                                        class="flex flex-row items-center gap-2 odd:bg-white even:bg-ezzora-50 py-1 px-2">
+                                                        <p
+                                                            class="font-semibold text-sm text-start">
+                                                            <span>
+                                                                {{
+                                                                    (item?.products?.reduce(
+                                                                        (
+                                                                            total,
+                                                                            product,
+                                                                        ) => {
+                                                                            return (
+                                                                                total +
+                                                                                product.quantity
+                                                                            )
+                                                                        },
+                                                                        0,
+                                                                    ),
+                                                                    0)
+                                                                }}
+                                                            </span>
+                                                            Total Products
+                                                        </p>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                            <div
-                                                class="w-full justify-center mt-4">
-                                                <OfficialAgentForm
-                                                    :resellerPackage="item"
-                                                    :user="user"
-                                                    :method="AddStore" />
                                             </div>
                                         </div>
                                     </swiper-slide>
+                                    <div class="w-full justify-center mt-4">
+                                        <OfficialAgentForm :method="register" />
+                                    </div>
                                 </swiper>
                                 <div v-if="resellerPackage.length == 0">
                                     <p class="text-center text-gray-700">

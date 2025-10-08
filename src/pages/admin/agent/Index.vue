@@ -13,17 +13,74 @@ onMounted(async () => {
 })
 async function fetchUsers() {
     await storeUser.userAll()
-    users.value = storeUser.allUser.map(user => ({
-        id: user.id,
-        name: user.name,
-        email: user.email,
-    }))
+    users.value = storeUser.allUser.filter(usr => {
+        return usr.store
+    })
 }
+const searchUser = ref('')
+const pageUser = ref(1)
+const itemsPerPageUser = ref(10)
+
+const headersUser = [
+    { key: 'name', title: 'User Name' },
+    { key: 'name', title: 'Store Name' },
+    { key: 'email', title: 'Email' },
+    { key: 'id', title: 'Action', align: 'center' },
+]
+const pageCount = computed(() => {
+    return Math.ceil(filteredUsers.value.length / itemsPerPageUser.value)
+})
+
+const filteredUsers = computed(() => {
+    return users.value.filter(user => {
+        return user.name.toLowerCase().includes(searchUser.value)
+    })
+})
+
+const processing = ref(false)
+
+const setErrors = ref([])
+const errors = computed(() => setErrors.value)
 </script>
 <template>
     <AdminLayout title="List Agent">
         <div class="w-full">
-            <UserTable :users="users" :fetchUsers="fetchUsers" />
+            <div class="relative">
+                <ValidationErrors class="w-full" :errors="errors" />
+                <div
+                    class="bg-light-primary-1 dark:bg-dark-primary-2 p-5 rounded-lg space-y-3 shadow-lg">
+                    <div class="flex justify-between items-center">
+                        <AddUser :method="addUser"></AddUser>
+                        <input
+                            type="text"
+                            v-model="searchUser"
+                            class="rounded-lg text-sm min-w-52 dark:!border-gray-500 border !border-typography-2/20 shadow-lg bg-light-primary-1 dark:bg-dark-primary-1 text-typography-3 dark:text-white"
+                            placeholder="Search Agents" />
+                    </div>
+                    <v-data-table
+                        v-model:page="pageUser"
+                        :search="searchUser"
+                        :headers="headersUser"
+                        :items="users"
+                        hide-default-footer
+                        :header-props="{
+                            class: 'dark:bg-dark-primary-1 bg-light-primary-2 dark:!text-white border-b dark:!border-white/30',
+                        }"
+                        item-key="id"
+                        class="border dark:!border-typography-2/20 shadow-lg dark:!bg-dark-primary-1 !bg-light-primary-2 dark:!text-typography-1">
+                        <template v-slot:item.id="{ item }">
+                            <div
+                                class="flex gap-3 items-center justify-center text-xs"></div>
+                        </template>
+                    </v-data-table>
+                    <v-pagination
+                        v-model="pageUser"
+                        :length="pageCount"
+                        class="bg-light-primary-2 border !border-typography-2/20 shadow-lg rounded-lg dark:bg-dark-primary-1 dark:text-white"
+                        :total-visible="5">
+                    </v-pagination>
+                </div>
+            </div>
         </div>
     </AdminLayout>
 </template>

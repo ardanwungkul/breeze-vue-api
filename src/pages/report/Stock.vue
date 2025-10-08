@@ -1,32 +1,51 @@
 <script setup>
-import ReportLayout from '@/layouts/ReportLayout.vue';
-import TableStokInWarehouse from '@/components/Report/TableStokInWarehouse.vue';
-// data dummy
-const products = [
-    { product: 'Nightcream', stock: 150, sold: 2400 },
-    { product: 'Daycream', stock: 1001, sold: 2400 },
-    { product: 'Sunscreen', stock: 170, sold: 23400 },
-    { product: 'Moisturizer', stock: 1000, sold: 2400 },
-    { product: 'Toner', stock: 1100, sold: 24300 }
-];
+import ReportLayout from '@/layouts/ReportLayout.vue'
+import TableStokInWarehouse from '@/components/Report/TableStokInWarehouse.vue'
+import { useProductStore } from '../../stores/product'
+import { onMounted, ref } from 'vue'
+import { useStockStore } from '../../stores/stock'
+import { useExpenseStore } from '../../stores/expense'
+
+const productStore = useProductStore()
+const stockStore = useStockStore()
+const expenseStore = useExpenseStore()
+const processing = ref(false)
+
+const stockInShop = ref([])
+const stockInAgent = ref([])
+const stockInAgentAndPurchase = ref([])
+const product = ref([])
+const stock = ref([])
+const expense = ref([])
+
+onMounted(async () => {
+    await stockStore.stockAll()
+    await expenseStore.expenseAll()
+    fetchData()
+})
+async function fetchData() {
+    product.value = stockStore.products
+    expense.value = expenseStore.expenses
+}
 
 const header = [
-    { key: 'product', title: 'Product' },
+    { key: 'product_name', title: 'Product' },
     { key: 'stock', title: 'Stock' },
     { key: 'sold', title: 'Sold' },
 ]
 const headerExpensesDetail = [
     { key: 'date', title: 'Date' },
-    { key: 'keterangan', title: 'Information' },
+    { key: 'information', title: 'Information' },
     { key: 'amount', title: 'Amount' },
     { key: 'expense', title: 'Expense Convidence' },
 ]
-const bodyExpensesDetail = [
-    { date: '2024-04-01', keterangan: 'Pembuatan botol skincare', amount: 'Rp 8.500,000' },
-    { date: '2024-04-02', keterangan: 'Transportasi', amount: 'Rp 150,000' }
+function formatPrice(price) {
+    return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')
+}
 
-]
-// end data dummy
+const downloadExpense = async id => {
+    await expenseStore.downloadExpense(id, processing)
+}
 </script>
 <template>
     <ReportLayout title="Stock Report">
@@ -38,8 +57,9 @@ const bodyExpensesDetail = [
                         class="dark:bg-light-primary-1 bg-light-primary-2 text-typography-2 rounded-full p-3 w-14 h-14 flex-none flex items-center justify-center">
                         <i class="fa-solid fa-box text-3xl"></i>
                     </div>
-                    <div class="flex flex-col justify-center items-center w-full">
-                        <p class="text-xl font-medium">0</p>
+                    <div
+                        class="flex flex-col justify-center items-center w-full">
+                        <p class="text-xl font-medium">{{ product.length }}</p>
                         <p class="text-sm text-center">Total Product</p>
                     </div>
                 </div>
@@ -49,8 +69,17 @@ const bodyExpensesDetail = [
                         class="dark:bg-light-primary-1 bg-light-primary-2 text-typography-2 rounded-full p-3 w-14 h-14 flex-none flex items-center justify-center">
                         <i class="fa-solid fa-warehouse text-3xl"></i>
                     </div>
-                    <div class="flex flex-col justify-center items-center w-full">
-                        <p class="text-xl font-medium">0</p>
+                    <div
+                        class="flex flex-col justify-center items-center w-full">
+                        <p class="text-xl font-medium">
+                            {{
+                                stock.filter(stc => {
+                                    return (
+                                        stc.product_stock_status == 'warehouse'
+                                    )
+                                }).length
+                            }}
+                        </p>
                         <p class="text-sm text-center">Stock in Warehouse</p>
                     </div>
                 </div>
@@ -60,7 +89,8 @@ const bodyExpensesDetail = [
                         class="dark:bg-light-primary-1 bg-light-primary-2 text-typography-2 rounded-full p-3 w-14 h-14 flex-none flex items-center justify-center">
                         <i class="fa-solid fa-shop text-3xl"></i>
                     </div>
-                    <div class="flex flex-col justify-center items-center w-full">
+                    <div
+                        class="flex flex-col justify-center items-center w-full">
                         <p class="text-xl font-medium">0</p>
                         <p class="text-sm text-center">Stock in Shop</p>
                     </div>
@@ -71,17 +101,22 @@ const bodyExpensesDetail = [
                         class="dark:bg-light-primary-1 bg-light-primary-2 text-typography-2 rounded-full p-3 w-14 h-14 flex-none flex items-center justify-center">
                         <i class="fa-solid fa-user text-3xl"></i>
                     </div>
-                    <div class="flex flex-col justify-center items-center w-full">
+                    <div
+                        class="flex flex-col justify-center items-center w-full">
                         <p class="text-xl font-medium">0</p>
                         <p class="text-sm text-center">Stock in Agent</p>
                     </div>
                 </div>
             </div>
             <div class="grid grid-cols-2 gap-3">
-                <TableStokInWarehouse />
-                <div class="bg-light-primary-1 dark:bg-dark-primary-2 p-5 w-full space-y-4 rounded-lg shadow-lg">
+                <TableStokInWarehouse :product="product" />
+                <!-- Stock in Shop -->
+                <div
+                    class="bg-light-primary-1 dark:bg-dark-primary-2 p-5 w-full space-y-4 rounded-lg shadow-lg">
                     <div class="flex justify-between items-center">
-                        <div class="text-lg dark:text-typography-1">Stok in Shop</div>
+                        <div class="text-lg dark:text-typography-1">
+                            Stok in Shop
+                        </div>
                         <select
                             class="rounded-xl border text-sm min-w-40 dark:bg-dark-primary-1 dark:text-typography-1 dark:!border-typography-2">
                             <option value="">All</option>
@@ -90,22 +125,31 @@ const bodyExpensesDetail = [
                             <option value="">Glowing shop</option>
                         </select>
                     </div>
-                    <hr class="border-typography-2 !mb-4">
+                    <hr class="border-typography-2 !mb-4" />
                     <div class="space-y-4">
-                        <v-data-table :headers="header" :items="products" hide-default-footer
+                        <v-data-table
+                            :headers="header"
+                            :items="stockInShop"
+                            hide-default-footer
                             class="border dark:!border-typography-2/20 !rounded-lg !shadow-lg dark:!bg-dark-primary-1 !bg-light-primary-2 dark:!text-typography-1"
                             :header-props="{
                                 class: 'dark:bg-dark-primary-1 bg-light-primary-2 dark:!text-white border-b dark:!border-white/30',
                             }"></v-data-table>
-                        <v-pagination v-model="pageUser" :length="pageCount"
+                        <v-pagination
+                            v-model="pageUser"
+                            :length="pageCount"
                             class="bg-light-primary-2 border !border-typography-2/20 shadow-lg rounded-lg dark:bg-dark-primary-1 dark:text-white"
                             :total-visible="5">
                         </v-pagination>
                     </div>
                 </div>
-                <div class="bg-light-primary-1 dark:bg-dark-primary-2 p-5 space-y-4 w-full rounded-lg shadow-lg">
+                <!-- Stock in Agent -->
+                <div
+                    class="bg-light-primary-1 dark:bg-dark-primary-2 p-5 space-y-4 w-full rounded-lg shadow-lg">
                     <div class="flex justify-between items-center">
-                        <div class="text-lg dark:text-typography-1">Stok in Agent</div>
+                        <div class="text-lg dark:text-typography-1">
+                            Stok in Agent
+                        </div>
                         <select
                             class="rounded-xl border text-sm min-w-40 dark:bg-dark-primary-1 dark:text-typography-1 dark:!border-typography-2">
                             <option value="">Beauty shop</option>
@@ -114,22 +158,31 @@ const bodyExpensesDetail = [
                             <option value="">Beautygirl shop</option>
                         </select>
                     </div>
-                    <hr class="border-typography-2 !mb-4">
+                    <hr class="border-typography-2 !mb-4" />
                     <div class="space-y-4">
-                        <v-data-table :headers="header" :items="products" hide-default-footer
+                        <v-data-table
+                            :headers="header"
+                            :items="stockInAgent"
+                            hide-default-footer
                             class="border dark:!border-typography-2/20 !rounded-lg shadow-lg dark:!bg-dark-primary-1 !bg-light-primary-2 dark:!text-typography-1"
                             :header-props="{
                                 class: 'dark:bg-dark-primary-1 bg-light-primary-2 dark:!text-white border-b dark:!border-white/30',
                             }"></v-data-table>
-                        <v-pagination v-model="pageUser" :length="pageCount"
+                        <v-pagination
+                            v-model="pageUser"
+                            :length="pageCount"
                             class="bg-light-primary-2 border !border-typography-2/20 shadow-lg rounded-lg dark:bg-dark-primary-1 dark:text-white"
                             :total-visible="5">
                         </v-pagination>
                     </div>
                 </div>
-                <div class="bg-light-primary-1 dark:bg-dark-primary-2 p-5 space-y-4 w-full rounded-lg shadow-lg">
+                <!-- Agent Stock and Purchase -->
+                <div
+                    class="bg-light-primary-1 dark:bg-dark-primary-2 p-5 space-y-4 w-full rounded-lg shadow-lg">
                     <div class="flex justify-between gap-3 items-center">
-                        <div class="text-lg dark:text-typography-1 text-wrap">Agent Stock and Purchase</div>
+                        <div class="text-lg dark:text-typography-1 text-wrap">
+                            Agent Stock and Purchase
+                        </div>
                         <select
                             class="rounded-xl border text-sm min-w-40 dark:bg-dark-primary-1 dark:text-typography-1 dark:!border-typography-2">
                             <option value="">All</option>
@@ -138,48 +191,73 @@ const bodyExpensesDetail = [
                             <option value="">Glowing shop</option>
                         </select>
                     </div>
-                    <hr class="border-typography-2 !mb-4">
+                    <hr class="border-typography-2 !mb-4" />
                     <div class="space-y-4">
-                        <v-data-table :headers="header" :items="products" hide-default-footer
+                        <v-data-table
+                            :headers="header"
+                            :items="stockInAgentAndPurchase"
+                            hide-default-footer
                             class="border dark:!border-typography-2/20 !rounded-lg shadow-lg dark:!bg-dark-primary-1 !bg-light-primary-2 dark:!text-typography-1"
                             :header-props="{
                                 class: 'dark:bg-dark-primary-1 bg-light-primary-2 dark:!text-white border-b dark:!border-white/30',
                             }"></v-data-table>
-                        <v-pagination v-model="pageUser" :length="pageCount"
+                        <v-pagination
+                            v-model="pageUser"
+                            :length="pageCount"
                             class="bg-light-primary-2 border !border-typography-2/20 shadow-lg rounded-lg dark:bg-dark-primary-1 dark:text-white"
                             :total-visible="5">
                         </v-pagination>
                     </div>
                 </div>
             </div>
-            <div class="bg-light-primary-1 dark:bg-dark-primary-2 p-5 rounded-lg shadow-lg space-y-4">
+            <div
+                class="bg-light-primary-1 dark:bg-dark-primary-2 p-5 rounded-lg shadow-lg space-y-4">
                 <div class="border-gray-200">
-                    <div class="text-lg dark:text-typography-1">Detailed expenses</div>
+                    <div class="text-lg dark:text-typography-1">
+                        Detailed Expenses
+                    </div>
                 </div>
-                <hr class="border-typography-2 !mb-4">
+                <hr class="border-typography-2 !mb-4" />
                 <div class="space-y-4">
-                    <v-data-table :headers="headerExpensesDetail" :items="bodyExpensesDetail" hide-default-footer
+                    <v-data-table
+                        :headers="headerExpensesDetail"
+                        :items="expense"
+                        hide-default-footer
                         class="border dark:!border-typography-2/20 !rounded-lg shadow-lg dark:!bg-dark-primary-1 !bg-light-primary-2 dark:!text-typography-1"
                         :header-props="{
                             class: 'dark:bg-dark-primary-1 bg-light-primary-2 dark:!text-white border-b dark:!border-white/30',
                         }">
-                        <template v-slot:[`item.expense`]>
+                        <template v-slot:item.date="{ item }">
+                            <p>{{ item.expense_date }}</p>
+                        </template>
+                        <template v-slot:item.information="{ item }">
+                            <p>{{ item.expense_name }}</p>
+                        </template>
+                        <template v-slot:item.amount="{ item }">
+                            <p>Rp. {{ formatPrice(item.expense_cost) }}</p>
+                        </template>
+                        <template v-slot:item.expense="{ item }">
                             <div class="flex items-center gap-2">
                                 <div
                                     class="py-2 px-4 text-sm bg-[#71d86e] hover:opacity-90 text-typography-1 rounded-full">
-                                    View</div>
-                                <div
-                                    class="py-2 px-4 gap-1 items-center flex text-sm bg-[#ffa755] hover:opacity-90 text-typography-1 rounded-full">
-                                    <i class="fa-regular fa-pen-to-square"></i>Edit
+                                    View
                                 </div>
                                 <div
+                                    class="py-2 px-4 gap-1 items-center flex text-sm bg-[#ffa755] hover:opacity-90 text-typography-1 rounded-full">
+                                    <i class="fa-regular fa-pen-to-square"></i
+                                    >Edit
+                                </div>
+                                <div
+                                    @click="downloadExpense(item.id)"
                                     class="py-2 px-4 text-sm bg-[#6610F2] hover:bg-[#510bc4] text-typography-1 rounded-full">
                                     <i class="fa-solid fa-download"></i>
                                 </div>
                             </div>
                         </template>
                     </v-data-table>
-                    <v-pagination v-model="pageUser" :length="pageCount"
+                    <v-pagination
+                        v-model="pageUser"
+                        :length="pageCount"
                         class="bg-light-primary-2 border !border-typography-2/20 shadow-lg rounded-lg dark:bg-dark-primary-1 dark:text-white"
                         :total-visible="5">
                     </v-pagination>

@@ -2,10 +2,15 @@
 import { ref, watchEffect, provide, onBeforeMount } from 'vue'
 import Navigation from '@/components/StoreNavigation.vue'
 import { useUsers } from '@/stores/user'
+import UnverifiedEmail from '../components/dialog/UnverifiedEmail.vue'
+import UnverifiedStore from '../components/dialog/UnverifiedStore.vue'
 
 const store = useUsers()
 const props = defineProps({
-    title: String,
+    title: {
+        default: null,
+        type: String,
+    },
 })
 
 onBeforeMount(() => {
@@ -29,6 +34,12 @@ provide('rail', rail)
         class="!bg-light-primary-2 dark:!bg-dark-primary-1 font-inter !transition-colors !duration-500"
         :class="isDark ? 'dark' : ''">
         <Navigation />
+        <div v-if="store?.userData?.store?.status === 'INVITED'">
+            <UnverifiedEmail :user="store?.userData" />
+        </div>
+        <div v-if="!store?.userData.store?.status_kyc">
+            <UnverifiedStore :user="store?.userData" />
+        </div>
         <v-main>
             <v-container class="!py-0 !max-w-none">
                 <div class="py-5 px-10">
@@ -43,10 +54,10 @@ provide('rail', rail)
                                     class="fa-light fa-sun-bright text-gray-900 dark:text-gray-600"></i>
                                 <div id="page">
                                     <input
-                                        @click="toggleDarkMode"
-                                        type="checkbox"
                                         id="theme-toggle"
-                                        v-model="isDark" />
+                                        v-model="isDark"
+                                        type="checkbox"
+                                        @click="toggleDarkMode" />
                                     <label for="theme-toggle"
                                         ><span></span
                                     ></label>

@@ -4,7 +4,7 @@ import { defineStore, acceptHMRUpdate } from 'pinia'
 const csrf = () => axios.get('/sanctum/csrf-cookie')
 
 export const useArticlePageStore = defineStore({
-    id: 'article',
+    id: 'articlePage',
     state: () => ({
         data: [],
         loading: false,

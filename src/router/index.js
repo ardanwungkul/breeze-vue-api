@@ -437,11 +437,22 @@ const routes = [
             verified: 'verified',
         },
         meta: {
+            role: 'reseller',
             guard: 'auth',
             reseller: true,
         },
     },
     // Dashboard
+    {
+        path: '/store/verification/',
+        name: 'store.verification',
+        component: () => import('@/pages/store/Verification.vue'),
+        meta: {
+            role: 'reseller',
+            guard: 'auth',
+            reseller: true,
+        },
+    },
     {
         path: '/store/re-registeration/',
         name: 'store.reregister',

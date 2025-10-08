@@ -38,13 +38,12 @@ const filteredData = computed(() => {
         <div class="flex justify-between items-center">
             <select
                 name=""
-                id=""
                 v-model="filter"
                 class="border rounded-lg dark:!border-typography-2 text-sm shadow-lg bg-light-primary-1 dark:bg-dark-primary-1">
                 <option value="" selected>All</option>
                 <option
-                    value=""
                     v-for="(category, index) in categories"
+                    value=""
                     :key="index">
                     {{ category.sub_category_name }}
                 </option>
@@ -77,7 +76,13 @@ const filteredData = computed(() => {
                     </p>
                 </template>
                 <template v-slot:item.sold="{ item }">
-                    <p>0</p>
+                    <p>
+                        {{
+                            item.stock.filter(s => {
+                                return s.product_stock_status == 'delivered'
+                            }).length
+                        }}
+                    </p>
                 </template>
             </v-data-table>
         </div>

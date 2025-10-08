@@ -4,6 +4,7 @@ import { ref, onMounted, onBeforeMount } from 'vue'
 import { Collapse } from 'flowbite'
 import { useUsers } from '@/stores/user'
 import { useCartStore } from '@/stores/cart'
+import logo from '@/assets/images/logo/logo-original.png'
 
 const store = useUsers()
 const storeCart = useCartStore()
@@ -55,12 +56,9 @@ const submitLogout = () => {
         <div class="max-w-[1140px] mx-auto px-1">
             <div class="flex justify-between h-[56px] items-center">
                 <!-- Logo -->
-                <div class="shrink-0 flex items-center py-[5px] pr-4">
+                <div class="shrink-0 flex items-center py-[5px] px-4">
                     <router-link to="/">
-                        <p
-                            class="font-poppins text-xl font-extralight uppercase">
-                            Ezzora
-                        </p>
+                        <img :src="logo" class="h-8" alt="" />
                     </router-link>
                 </div>
 
@@ -91,7 +89,7 @@ const submitLogout = () => {
                             </div>
                         </router-link>
                         <v-menu>
-                            <template v-slot:activator="{ props }">
+                            <template #activator="{ props }">
                                 <div
                                     v-bind="props"
                                     class="rounded-full w-[30px] h-[30px] border flex items-center justify-center border-white cursor-pointer">
@@ -132,7 +130,10 @@ const submitLogout = () => {
                                         </router-link>
                                     </li>
                                     <li
-                                        v-if="store.userData.store && store.userData.role == 'user'">
+                                        v-if="
+                                            store.userData.store &&
+                                            store.userData.role == 'reseller'
+                                        ">
                                         <router-link
                                             :to="{ name: 'store.dashboard' }">
                                             <div
@@ -151,8 +152,8 @@ const submitLogout = () => {
                                     </li>
                                     <li v-if="store.authUser">
                                         <div
-                                            @click="submitLogout"
-                                            class="tracking-wide font-semibold hover:bg-white px-3 py-2 rounded-lg text-gray-600 cursor-pointer">
+                                            class="tracking-wide font-semibold hover:bg-white px-3 py-2 rounded-lg text-gray-600 cursor-pointer"
+                                            @click="submitLogout">
                                             Log Out
                                         </div>
                                     </li>
@@ -165,10 +166,10 @@ const submitLogout = () => {
                 <!-- Hamburger -->
                 <div class="block md:hidden">
                     <button
-                        type="button"
                         id="triggerEl"
-                        aria-expanded="false"
-                        class="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600">
+                        class="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
+                        type="button"
+                        aria-expanded="false">
                         <svg
                             class="w-5 h-5"
                             aria-hidden="true"

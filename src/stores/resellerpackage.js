@@ -1,13 +1,12 @@
 import axios from '@/lib/axios'
 import { defineStore, acceptHMRUpdate } from 'pinia'
-import EditResellerPackage from '../components/dialog/edit/EditResellerPackage.vue'
 
 const csrf = () => axios.get('/sanctum/csrf-cookie')
 
 export const useResellerPackageStore = defineStore({
-    id: 'aboutus',
+    id: 'resellerPackages',
     state: () => ({
-        resellerPackage: [],
+        datas: [],
         loading: false,
         error: null,
         singleResellerPackage: {},
@@ -18,13 +17,13 @@ export const useResellerPackageStore = defineStore({
         getError: state => state.error,
     },
     actions: {
-        async resellerPackageAll() {
+        async getAllData() {
             this.loading = true
             try {
                 const response = await axios
                     .get('/api/reseller-package')
                     .then(response => {
-                        this.resellerPackage = response.data
+                        this.datas = response.data
                     })
             } catch (error) {
                 this.error = error
