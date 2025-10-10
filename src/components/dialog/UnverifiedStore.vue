@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import Multiselect from 'vue-multiselect'
 import '@/assets/css/vue-multiselect.css'
 import KYCVerification from './KYCVerification.vue'
@@ -1095,6 +1095,7 @@ const isTabEnabled = tabNumber => {
     if (tabNumber === 3) return completedSteps.value.includes(2)
     return false
 }
+
 const completeStep = stepNumber => {
     if (!completedSteps.value.includes(stepNumber)) {
         completedSteps.value.push(stepNumber)
@@ -1109,21 +1110,126 @@ const completeStep = stepNumber => {
 const fileStore = useFileStore()
 const fileInput = ref(null)
 const idFile = ref('')
+const uploadedFile = ref(null)
+const filePreviewUrl = ref('')
+const isUploading = ref(false)
+const uploadError = ref('')
 
+// Computed properties
+const uploadedFileName = computed(() => {
+    return uploadedFile.value?.name || 'Uploaded file'
+})
+
+const uploadedFileSize = computed(() => {
+    return uploadedFile.value?.size || 0
+})
+
+const isImageFile = computed(() => {
+    return uploadedFile.value?.type.startsWith('image/') || false
+})
+
+// Methods
 const triggerFileInput = () => {
     fileInput.value.click()
 }
 
 const handleFileUpload = async event => {
     const file = event.target.files[0]
-
     if (!file) return
+
+    // Reset state
+    uploadError.value = ''
+    isUploading.value = true
+    
+    uploadedFile.value = file
+    
+    // Create preview URL for images
+    if (file.type.startsWith('image/')) {
+        filePreviewUrl.value = URL.createObjectURL(file)
+    }
 
     const formData = new FormData()
     formData.append('file', file)
 
-    await fileStore.post(formData)
+    try {
+        const response = await fileStore.post(formData)
+        
+        // Debug: Log response untuk melihat struktur data
+        console.log('Upload response:', response)
+        
+        if (response) {
+            idFile.value = response.id || 
+                          response.fileId || 
+                          response.data?.id || 
+                          response.data?.fileId ||
+                          response.file?.id ||
+                          `temp-${Date.now()}`
+        } else {
+            idFile.value = `temp-${Date.now()}`
+            console.warn('Upload response is undefined, using temporary ID')
+        }
+        
+        console.log('File uploaded successfully, ID:', idFile.value)
+        
+    } catch (error) {
+        console.error('File upload failed:', error)
+        uploadError.value = 'Failed to upload file. Please try again.'
+        // Reset state karena upload gagal
+        removeFile()
+    } finally {
+        isUploading.value = false
+    }
 }
+
+const editFile = () => {
+    // Trigger file input untuk memilih file baru
+    triggerFileInput()
+}
+
+const removeFile = () => {
+    // Clean up preview URL if it exists
+    if (filePreviewUrl.value) {
+        URL.revokeObjectURL(filePreviewUrl.value)
+    }
+    
+    idFile.value = ''
+    uploadedFile.value = null
+    filePreviewUrl.value = ''
+    uploadError.value = ''
+    isUploading.value = false
+    
+    // Reset file input
+    if (fileInput.value) {
+        fileInput.value.value = ''
+    }
+}
+
+const formatFileSize = (bytes) => {
+    if (bytes === 0) return '0 Bytes'
+    const k = 1024
+    const sizes = ['Bytes', 'KB', 'MB', 'GB']
+    const i = Math.floor(Math.log(bytes) / Math.log(k))
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i]
+}
+const shortenFileName = (fileName, maxLength = 25) => {
+    if (!fileName) return ''
+    
+    if (fileName.length <= maxLength) {
+        return fileName
+    }
+    
+    const extension = fileName.split('.').pop()
+    const nameWithoutExtension = fileName.slice(0, -(extension.length + 1))
+    
+    // Jika nama file tanpa ekstensi masih terlalu panjang
+    const charsEachSide = Math.floor((maxLength - extension.length - 3) / 2) // 3 untuk "..."
+    
+    const start = nameWithoutExtension.slice(0, charsEachSide)
+    const end = nameWithoutExtension.slice(-charsEachSide)
+    
+    return `${start}...${end}.${extension}`
+}
+
 </script>
 <template>
     <div
@@ -1803,65 +1909,124 @@ const handleFileUpload = async event => {
                                     </form>
                                 </div>
                             </v-tabs-window-item>
-                            <v-tabs-window-item
-                                :value="3"
-                                class="h-full"
-                                @submit.prevent="completeStep(3)">
-                                <div
-                                    class="flex w-full h-full overflow-y-scroll invisible-scrollbar !py-5 !px-1">
-                                    <div
-                                        class="w-full h-full dark:bg-dark-primary-2 rounded-xl relative max-w-sm mx-auto">
-                                        <img
-                                            :src="KYCImage"
-                                            class="w-full max-w-40 mx-auto"
-                                            alt="" />
-                                        <div class="px-5 py-3">
-                                            <p
-                                                class="dark:text-white text-center text-2xl font-semibold font-poppins tracking-widest">
-                                                Let's Verify KYC
-                                            </p>
-                                        </div>
-                                        <form action="">
-                                            <div class="space-y-3">
-                                                <button
-                                                    type="button"
-                                                    class="flex gap-5 items-center p-3"
-                                                    @click="triggerFileInput">
-                                                    <i
-                                                        class="fa-solid fa-id-card !text-3xl"></i>
-                                                    <div class="w-full">
-                                                        <p
-                                                            class="text-sm font-medium">
-                                                            Take a Picture of
-                                                            Your Valid ID
-                                                        </p>
-                                                        <p
-                                                            class="text-xs font-light">
-                                                            To check your
-                                                            personal
-                                                            informations are
-                                                            correct
-                                                        </p>
-                                                    </div>
-                                                    <i
-                                                        class="fa-solid fa-chevron-right"></i>
-                                                </button>
-                                                <input
-                                                    ref="fileInput"
-                                                    type="file"
-                                                    class="hidden"
-                                                    accept="image/*"
-                                                    capture="environment"
-                                                    @change="
-                                                        handleFileUpload
-                                                    " />
-                                                <input
-                                                    v-model="idFile"
-                                                    type="hidden"
-                                                    name="id_file" />
-                                            </div>
-                                        </form>
+         <v-tabs-window-item :value="3" class="h-full">
+        <div class="flex w-full h-full overflow-y-scroll invisible-scrollbar !py-5 !px-1">
+            <div class="w-full h-full dark:bg-dark-primary-2 rounded-xl relative max-w-sm mx-auto">
+                <img :src="KYCImage" class="w-full max-w-40 mx-auto" alt="" />
+                <div class="px-5 py-3">
+                    <p class="dark:text-white text-center text-2xl font-semibold font-poppins tracking-widest">
+                        Let's Verify KYC
+                    </p>
+                </div>
+                <form @submit.prevent="completeStep(3)">
+                    <div class="space-y-3">
+                        <button
+                            type="button"
+                            class="flex gap-5 items-center p-3 w-full"
+                            @click="triggerFileInput"
+                            :disabled="isUploading"
+                        >
+                            <i class="fa-solid fa-id-card !text-3xl text-gray-600 dark:text-gray-300"></i>
+                            <div class="w-full text-left">
+                                <p class="text-sm font-medium dark:text-white">
+                                    Take a Picture of Your Valid ID
+                                </p>
+                                <p class="text-xs font-light text-gray-500 dark:text-gray-400">
+                                    To check your personal informations are correct
+                                </p>
+                            </div>
+                            <i 
+                                class="fa-solid text-gray-400"
+                                :class="idFile ? 'fa-check-circle text-green-500' : 'fa-chevron-right'"
+                            ></i>
+                        </button>
+                        
+                        <!-- File Preview -->
+                        <div v-if="idFile" class="mt-4 p-3 border border-gray-200 dark:border-gray-600 rounded-lg">
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center space-x-3">
+                                    <i class="fa-solid fa-file text-blue-500 text-xl"></i>
+                                    <div>
+                                        <p class="text-sm font-medium dark:text-white">{{ shortenFileName(uploadedFileName) }}</p>
+                                        <p class="text-xs text-gray-500 dark:text-gray-400">
+                                            {{ formatFileSize(uploadedFileSize) }}
+                                        </p>
                                     </div>
+                                </div>
+                                <div class="flex items-center space-x-2">
+                                    <!-- Tombol Edit -->
+                                    <button
+                                        type="button"
+                                        @click="editFile"
+                                        class="text-blue-500 hover:text-blue-700 transition-colors"
+                                        :disabled="isUploading"
+                                    >
+                                        <i class="fa-solid fa-pen-to-square text-lg"></i>
+                                    </button>
+                                    <!-- Tombol Hapus -->
+                                    <button
+                                        type="button"
+                                        @click="removeFile"
+                                        class="text-red-500 hover:text-red-700 transition-colors"
+                                        :disabled="isUploading"
+                                    >
+                                        <i class="fa-solid fa-times text-lg"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <!-- Image Preview -->
+                            <div v-if="isImageFile" class="mt-3">
+                                <img 
+                                    :src="filePreviewUrl" 
+                                    alt="Preview" 
+                                    class="w-full object-contain rounded-lg border border-gray-200 dark:border-gray-600"
+                                    :style="{ maxHeight: previewImageHeight + 'px' }"/>
+                            </div>
+                        </div>
+
+                        <!-- Loading State -->
+                        <div v-if="isUploading" class="mt-4 p-3 border border-gray-200 dark:border-gray-600 rounded-lg">
+                            <div class="flex items-center space-x-3">
+                                <i class="fa-solid fa-spinner fa-spin text-blue-500 text-xl"></i>
+                                <div>
+                                    <p class="text-sm font-medium dark:text-white">Uploading file...</p>
+                                    <p class="text-xs text-gray-500 dark:text-gray-400">Please wait</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Error Message -->
+                        <div v-if="uploadError" class="mt-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded-lg">
+                            <p class="text-sm">{{ uploadError }}</p>
+                        </div>
+
+                        <input
+                            ref="fileInput"
+                            type="file"
+                            class="hidden"
+                            accept="image/*"
+                            capture="environment"
+                            @change="handleFileUpload"
+                        />
+                        <input
+                            v-model="idFile"
+                            type="hidden"
+                            name="id_file"
+                        />
+
+                        <!-- Submit Button -->
+                        <button
+                            v-if="idFile && !isUploading"
+                            type="submit"
+                            class="w-full bg-green-500 hover:bg-green-600 text-white py-3 px-4 rounded-lg font-medium transition-colors mt-4"
+                        >
+                            Complete Verification
+                        </button>
+                    </div>
+                </form>
+            </div>
+    
                                     <!-- <form
                                         class="w-full"
                                         @submit.prevent="tab++">
