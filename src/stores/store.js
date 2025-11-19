@@ -41,6 +41,18 @@ export const useStoreStore = defineStore({
                     processing.value = false
                 })
         },
+        async kyc(form) {
+            await csrf()
+            axios
+                .post('/api/store-kyc', form.value)
+                .then(response => {
+                    console.log(response)
+                })
+                .catch(error => {
+                    console.log(error)
+                    if (error.response.status !== 422) throw error
+                })
+        },
         async addStore(newStore, setErrors, processing) {
             await csrf()
             processing.value = true

@@ -12,19 +12,23 @@ export const useFileStore = defineStore({
         file: {},
     }),
     actions: {
-        async post(form) {
+        async post(form, input, loading) {
             await csrf()
             console.log(form)
+            loading.value = true
 
             axios
                 .post('api/xendit/file', form, {
                     headers: { 'Content-Type': 'multipart/form-data' },
                 })
                 .then(response => {
+                    input.value.kyc_documents[0].file_id = response.data.id
+                    loading.value = false
                     console.log(response)
                 })
                 .catch(error => {
                     console.log(error)
+                    loading.value = false
                     if (error.response.status !== 422) throw error
 
                     // setErrors.value = Object.values(
