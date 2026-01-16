@@ -19,7 +19,7 @@ const toggleSelection = item => {
     if (index !== -1) {
         selectedProducts.value.splice(index, 1)
     } else {
-        selectedProducts.value.push(item)
+        selectedProducts.value.push({ ...item, quantity: 1 })
     }
     products.value = selectedProducts.value
     emit('update:selectedProducts', selectedProducts.value)
@@ -99,7 +99,7 @@ const updateQuantity = (item, event) => {
                                         <input
                                             type="number"
                                             :disabled="!selectedProducts.some(p => p.id === item.id)"
-                                            min="0"
+                                            :min="selectedProducts.some(p => p.id === item.id) ? 1 : 0" 
                                             :value="selectedProducts.find(p => p.id === item.id)?.quantity || 0"
                                             @input="updateQuantity(item, $event)"
                                             class="rounded-lg border text-sm w-16 text-center" />
